@@ -4,6 +4,182 @@
 
     
   <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_7_Working_with_Forms/</loc>
+    <lastmod>2019-11-05T03:46:24.848Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 7 表单</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_3_Getting_Started_with_React_and_TypeScript/</loc>
+    <lastmod>2019-11-05T03:46:24.839Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 3 开始在React中使用TS</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_2_TypeScript_3/</loc>
+    <lastmod>2019-11-05T03:46:24.832Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 2 TypeScript3的新特性</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_1_TypeScript_Basics/</loc>
+    <lastmod>2019-11-05T03:46:24.821Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 1 基础</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_6_Component_Patterns/</loc>
+    <lastmod>2019-11-05T03:46:24.817Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 6 Component Patterns</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_5_Advanced_Types/</loc>
+    <lastmod>2019-11-05T03:46:24.812Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 5 高级类型</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
+    <lastmod>2019-11-05T03:46:24.808Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 8 React Redux</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_4_Routing_with_React_Router/</loc>
+    <lastmod>2019-11-05T03:46:24.802Z</lastmod>
+    <data>
+        <display>
+        <title>Learning React with Typescript3 - chapter 4 React Router</title>
+        <pubTime>2019-11-27T07:50:44.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://galudisu.info/2019/10/21/jira/jira-install/</loc>
     <lastmod>2019-11-05T03:31:35.052Z</lastmod>
     <data>
@@ -1233,7 +1409,7 @@
 
     
   <url>
-    <loc>http://galudisu.info/2017/08/04/auth/oauth2/oauth2-authentication-models/</loc>
+    <loc>http://galudisu.info/2017/08/04/auth-oauth2/oauth2-authentication-models/</loc>
     <lastmod>2019-08-27T09:05:47.471Z</lastmod>
     <data>
         <display>

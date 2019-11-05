@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>Learning React with Typescript3 - chapter 8 React Redux</title><link rel="stylesheet" href="/css/layout.css">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css"><link rel="shortcut icon" href="/img/favicon.ico"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav><div id="mobile-menu-toggle" class="toggle-menu"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">Learning React with Typescript3 - chapter 8 React Redux</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2019-11-27</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tags"> </i><a href="/tags/react/" class="tag-link">react<span class="tag">, </span></a><a href="/tags/typescript/" class="tag-link">typescript</a></p><p class="meta-item meta-category"><span class="meta-item-title"></span><i class="icon-bookmark"> </i><a href="/categories/react/" class="category-link">react</a></p></div><div class="article-content"><ul>
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><li>Principles and key concepts</li>
+<li>Installing Redux</li>
+<li>Creating reducers</li>
+<li>Creating actions</li>
+<li>Creating a store</li>
+<li>Connecting our React App to the store</li>
+<li>Managing state with use Reducer</li>
+</ul>
+<h2><span id="principles-and-key-concepts">Principles and key concepts</span></h2>
+<h3><span id="principles">Principles</span></h3>
+<p>Redux的三大原则：</p>
+<ul>
+<li><strong>Single source of truth</strong>：意味着整个项目的状态被存储在一个单一对象。在一个真实应用系统中，这个对象很可能包含了一个复杂的内嵌对象树。</li>
+<li><strong>State is read-only</strong>：意味着状态不能被直接改变。就是说不能通过组件来改变状态。在Redux中，唯一能改变状态的方法是通过action进行传递(dispatch)。</li>
+<li><strong>Changes are made with pure functions</strong>：那些能够改变状态的函数被称为“<code>reducer</code>”。</li>
+</ul>
+<p>接下来的环节，会深入介绍action和reducer以及消息的store内容。</p>
+<h3><span id="key-concepts">Key concepts</span></h3>
+<p>Redux内存活的整个应用的状态被称为一个<code>store</code>。状态被存储在一个JavaScript对象中，形式如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  products: [&#123; id: 1, name: "Table", ...&#125;, &#123;...&#125;, ...],</span><br><span class="line">  productsLoading: false,</span><br><span class="line">  currentProduct: &#123; id: 2, xname: "Chair", ... &#125;,</span><br><span class="line">  basket: [&#123; product: &#123; id: 2, xname: "Chair" &#125;, quantity: 1 &#125;],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>状态不会包含有任何函数、setter或者getter。它就是一个简单的JavaScript对象。</p>
+<p>要更新一个store中的state，就是派遣一个<strong>action</strong>。其中action又是另外一个简单的JavaScript对象，格式如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  type: "PRODUCTS/LOADING"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>type</code>属性决定了哪种action需要被处理。<code>type</code>是必须的，否则reducer不知道如何改变状态。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  type: "PRODUCTS/GETSINGLE",</span><br><span class="line">  product: &#123; id: 1, name: "Table", ...&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个带有一个额外的属性值，因为reducer除了要知道action的类型外，还要获取更新的内容。</p>
+<p>因此，reducer是纯函数。</p>
+<blockquote>
+<p>纯函数就是不依赖于外部自由变量的函数，对于给定的输入，总能得到相同的结果。</p>
+</blockquote>
+<p>下面是reducer的一个示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">export const productsReducer = (state = initialProductState, action) =&gt; &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case &quot;PRODUCTS/LOADING&quot;: &#123;</span><br><span class="line">	  return &#123;</span><br><span class="line">	    ...state,</span><br><span class="line">		productsLoading: true</span><br><span class="line">	  &#125;;</span><br><span class="line">	&#125;</span><br><span class="line">	case &quot;PRODUCTS/GETSINGLE&quot;: &#123;</span><br><span class="line">	  return &#123;</span><br><span class="line">	    ...state,</span><br><span class="line">		currentProduct: action.product,</span><br><span class="line">		productsLoading: false</span><br><span class="line">	  &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">	default:</span><br><span class="line">  &#125;</span><br><span class="line">  return state || initialProductState;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>关于reducer有几点：</p>
+<ul>
+<li>reducer接收两个参数，current state 和要处理的action</li>
+<li>reducer第一次被调用时，state参数默认为一个初始化状态对象</li>
+<li>这里需要使用switch语句处理不同的action类型</li>
+<li>返回语句表示创建一个新的状态覆盖原来已有的状态属性</li>
+<li>reducer返回新的(更新的)状态</li>
+</ul>
+<p>你会注意action和reducer都不是TypeScript类型的。下面开始实战。</p>
+<h2><span id="installing-redux">Installing Redux</span></h2>
+<p>在使用Redux之前，需要安装依赖项。另外还需要安装一个库<code>redux-thunk</code>，以实现异步的ation:</p>
+<ol>
+<li>安装redux,</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add redux</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>安装具体的redux的关联框架，</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add rect-redux</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>对应TS，</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add -D @types/react-redux</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>安装<code>redux-thunk</code>，</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yarn add redux-thunk</span><br><span class="line">yarn add -D @types/redux-thunk</span><br></pre></td></tr></table></figure>
+<h2><span id="creating-actions">Creating actions</span></h2>
+<p>这里将沿用前面章节使用的代码，将Redux集成到产品页面上。本小节，我们会创建action获取产品内容。以及使用另外一个action更改新的状态。</p>
+<p>在此之前，首先在<code>ProductsData.ts</code>创建一个假的API，</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts = <span class="keyword">async</span> (): <span class="built_in">Promise</span>&lt;IProduct[]&gt; =&gt; &#123;</span><br><span class="line">  <span class="keyword">await</span> wait(<span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">return</span> products;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该函数异步等待返回的产品信息。</p>
+<h3><span id="creating-state-and-action-types">Creating state and action types</span></h3>
+</div></article><div id="base-discus"><div id="disqus_thread"></div><script>var disqus_shortname = 'barudisshu-github-io';
+var disqus_identifier = '2019/11/27/react-ts/chapter_8_React_Redux/';
+var disqus_title = 'Learning React with Typescript3 - chapter 8 React Redux';
+var disqus_url = 'http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/';
+(function () {
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//barudisshu-github-io.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2019 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css"><script src="/js/base.js"></script><script src="/js/rabbit-lyrics.js"></script></div><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
