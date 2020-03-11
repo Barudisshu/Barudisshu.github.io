@@ -3,6 +3,241 @@
   
     
     <entry>
+      <title><![CDATA[2020年学习计划]]></title>
+      <url>/2020/03/11/learning-plan/2020_03_11_study_plan/</url>
+      <content type="html"><![CDATA[<p>不得不说，2019制定的学习计划很糟糕，受干扰的因素太多。另外一方面是自我没有养成良好的习惯。定了7、8个任务，结果也就勉强完成了一半。</p>
+<p>后面发现，学习之前，首先要学会如何学习，于是我硬着头皮去看完了一些如何管理时间、排除外界干扰的一些书籍，例如《刻意学习》、《行为组织管理》、《原则》等。不得不说，结合自身情况后，从书本上也看到自己很多弱点，有些弱点貌似怎么也绕不过去。譬如：</p>
+<a id="more"></a>
+<ol>
+<li>三天打鱼两天晒网。这是职场人士的通病，因为只有一个原因，就是“太累”了。上班一天的脑力劳动，不知烧死了多少细胞，头发还健在不？</li>
+<li>外界干扰。貌似这是不可避免的，例如来场说走就走的旅行，公司突然搞个活动，楼下天天大排档，大病一场… 从《原则》上所说的，如何避免重复犯错，如何进行决策，走倾向于最小风险和最大收获的方向，这是需要以后不断思考的问题。</li>
+<li>习惯就是力量。这是真的，毕业三年后，和同学来个深度对比。就会发现，最后混的好的，不是成绩优秀的人、也不是学生会那帮饕餮之辈，而是拥有良好习惯，善于思考，做事有准备的人。这里的混得好，不是指赚了很多钱，而是能够妥善应对和解决自身的问题。例如，安置家人，发现自己的人生目标并作出成就，学会一项新技能，譬如学个车、考个外语证、打球很溜…</li>
+<li>善于总结。</li>
+<li>向有经验的人请教以及如何请教。</li>
+<li>勇敢说“不”。</li>
+<li>太快或不专心从而导致忽略了上层原理。</li>
+</ol>
+<p>嗯哼！天呀，我怎么这么多缺点… 不活了…</p>
+<p>下面是正题：</p>
+<p>去年基本看完了rust、kubernates、spring cloud、微服务、cassandra。花了比较多精力在看rust，有点难啃，而且社区还在继续改进中。另外还折腾了一下React，做了一个前后端的token登录的例子；重新折腾了以前github的一些项目。修改一些以前实现上的缺陷或不对的地方。</p>
+<p>今年计划补完：</p>
+<ol>
+<li>Learning React with TypeScript (20%)</li>
+<li>think in python (60%)</li>
+<li>learning-go (80%)</li>
+</ol>
+<p>另外一点需要补充的，需要转变思维。学习用数学建模和算法思维解决问题。这一点是从《原则》的作者中学习得到的，任何凭直觉和自己的经验处理问题的方式，最终都是一种懒惰的技能。用数据来说服自己和他人，是最有力的！</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> study </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Flink 集群搭建教程]]></title>
+      <url>/2020/03/04/flink/installation/</url>
+      <content type="html"><![CDATA[<a id="more"></a>
+<h2><span id="先决条件">先决条件</span></h2>
+<p>在部署Flink之前，请确认集群的每个节点都符合以下条件：</p>
+<ol>
+<li>已安装Java 1.8.x或以上版本（推荐1.8版本）</li>
+<li>节点两两之间可以SSH免密码登录</li>
+<li>已部署Hadoop（如果只是部署Standalone Cluster则不需要Hadoop）</li>
+</ol>
+<p>如果你已经按照<a href="/2020/03/04/hadoop/installation.md">Hadoop集群搭建教程</a>成功建立了Hadoop集群，那么以上条件均已满足。</p>
+<h3><span id="下载flink二进制文件">下载Flink二进制文件</span></h3>
+<p>在Flink的<a href="https://flink.apache.org/downloads.html" target="_blank" rel="noopener">下载页面</a>中有多个版本可以选择，因为之前选择了Hadoop 2.7.7版本，所以这里选择与之对应的 <a href="https://www.apache.org/dyn/closer.lua/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.12.tgz" target="_blank" rel="noopener">Apache Flink 1.9.2 for Scala 2.12</a>版本，Scala版本选择最新的2.12。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.12.tgz</span><br><span class="line">tar -xzvf flink-1.9.2-bin-scala_2.12.tgz</span><br></pre></td></tr></table></figure>
+<h3><span id="配置flink">配置Flink</span></h3>
+<blockquote>
+<p>注意：如果只需要部署Flink on YARN，那么可以跳过这小节，因为YARN会帮你打理好一切。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/flink-1.9.2/conf</span><br></pre></td></tr></table></figure>
+<h4><span id="flink-confyaml">flink-conf.yaml</span></h4>
+<p>将<code>jobmanager.rpc.address</code>指向master节点，其它配置可以按照机器实际硬件情况填写，此处使用默认值。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The host/IP of JobManager</span></span><br><span class="line"><span class="string">jobmanager.rpc.address:</span> <span class="string">huawei-01</span></span><br><span class="line"><span class="comment"># The heap size for the JobManager JVM</span></span><br><span class="line"><span class="string">jobmanager.heap.size:</span> <span class="number">1024</span><span class="string">m</span></span><br><span class="line"><span class="comment"># The heap size for the TaskManager JVM</span></span><br><span class="line"><span class="string">taskmanager.heap.size:</span> <span class="number">1024</span><span class="string">m</span></span><br><span class="line"><span class="comment"># The number of task slots that each TaskManager offers. Each slot runs one parallel pipeline.</span></span><br><span class="line"><span class="string">taskmanager.numberOfTaskSlots:</span> <span class="number">1</span></span><br><span class="line"><span class="comment"># The parallelism used for programs that did not specify and other parallelism.</span></span><br><span class="line"><span class="string">parallelism.default:</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3><span id="slaves">slaves</span></h3>
+<p>向slaves文件写入slave节点的host/IP地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">huawei-02</span><br><span class="line">huawei-03</span><br></pre></td></tr></table></figure>
+<h3><span id="将配置好的flink分发到其它节点">将配置好的Flink分发到其它节点</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r /opt/flink-1.9.2 huawei-02:/opt/flink-1.9.2</span><br><span class="line">scp -r /opt/flink-1.9.2 huawei-03:/opt/flink-1.9.2</span><br></pre></td></tr></table></figure>
+<h3><span id="以standalone模式启动flink">以Standalone模式启动Flink</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd $FLINK_HOME</span><br><span class="line">./bin/start-cluster.sh</span><br></pre></td></tr></table></figure>
+<p>然后可以在<code>huawei-01:8081</code>查看Flink集群的运行情况</p>
+<p><img src="/img/flink/flink-dashboard.png" alt="flink-dashboard.png"></p>
+<p><code>./examples</code>路径下游许多打包好的实例程序，可以用于验证Flink集群是否正常运行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/flink run ./exmaple/batch/WordCount.jar</span><br></pre></td></tr></table></figure>
+<p>上面的命令会向 Flink 集群提交一个 wordcount 任务，这个示例程序可以指定输入和输出路径，这里没有指定，因此输入文件为程序自带的一小段文本，结果直接输出在屏幕上。 如果 Flink 集群工作正常，应该会在屏幕上输出以下结果：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 省略前面的输出</span></span><br><span class="line">(wrong,1)</span><br><span class="line">(you,1)</span><br><span class="line">Program execution finished</span><br><span class="line">Job with JobID d7df697505c1f68d4eda2828b6eb18e2 has finished.</span><br><span class="line">Job Runtime: 3158 ms</span><br><span class="line">Accumulator Results:</span><br><span class="line">- 47b31488879a3449d67aca67f5b75188 (java.util.ArrayList) [170 elements]</span><br></pre></td></tr></table></figure>
+<h2><span id="以flink-on-yarn模式启动">以Flink on YARN模式启动</span></h2>
+<p>把 Flink 运行在 YARN 上有两种方式，第一种方式是建立一个长期运行的 Flink YARN Session，然后向这个 Session 提交 Flink Job，多个任务同时运行时会共享资源。第二种方式是为单个任务启动一个 Flink 集群，这个任务会独占 Flink 集群的所有资源，任务结束即代表集群被回收。</p>
+<p>另外，Flink on YARN 模式需要系统中设置了 YARN_CONF_DIR 或 HADOOP_CONF_DIR 环境变量，如果未设置，请在 <code>~/.profile</code> 中加入以下内容，然后使用 <code>source ~/.profile</code> 命令使修改立即生效。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在这条命令前定义HADOOP_HOME环境变量</span></span><br><span class="line">export HADOOP_CONF_DIR=$&#123;HADOOP_HOME&#125;/etc/hadoop</span><br></pre></td></tr></table></figure>
+<h3><span id="flink-yarn-session">Flink YARN Session</span></h3>
+<p>由于新版本的Flink已经不包含Hadoop依赖项，需要自己添加依赖。首先下载<a href="https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop-2-uber/2.7.5-10.0/flink-shaded-hadoop-2-uber-2.7.5-10.0.jar" target="_blank" rel="noopener">Pre-bundled Hadoop 2.7.5</a> 包。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd cd $FLINK_HOME/lib</span><br><span class="line">wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop-2-uber/2.7.5-10.0/flink-shaded-hadoop-2-uber-2.7.5-10.0.jar</span><br></pre></td></tr></table></figure>
+<p>使用下列命令来启动一个拥有 2 个 TaskManager 的 Flink 集群，每个 TaskManager 有 2 GB 内存，2 个 slot。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/YARN-session.sh -n 2 -jm 1024m -tm 2048</span><br></pre></td></tr></table></figure>
+<p>完整的参数列表如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Usage:</span><br><span class="line">   Required</span><br><span class="line">     -n,--container &lt;arg&gt;   Number of YARN container to allocate (=Number of Task Managers)</span><br><span class="line">   Optional</span><br><span class="line">     -D &lt;arg&gt;                        Dynamic properties</span><br><span class="line">     -d,--detached                   Start detached</span><br><span class="line">     -jm,--jobManagerMemory &lt;arg&gt;    Memory for JobManager Container with optional unit (default: MB)</span><br><span class="line">     -nm,--name                      Set a custom name for the application on YARN</span><br><span class="line">     -q,--query                      Display available YARN resources (memory, cores)</span><br><span class="line">     -qu,--queue &lt;arg&gt;               Specify YARN queue.</span><br><span class="line">     -s,--slots &lt;arg&gt;                Number of slots per TaskManager</span><br><span class="line">     -tm,--taskManagerMemory &lt;arg&gt;   Memory per TaskManager Container with optional unit (default: MB)</span><br><span class="line">     -z,--zookeeperNamespace &lt;arg&gt;   Namespace to create the Zookeeper sub-paths for HA mode</span><br></pre></td></tr></table></figure>
+<p>启动 YARN Session 以后会输出 JobManager 的 Web Interface 地址，打开以后是这样的：</p>
+<p><img src="/img/flink/tracking-ui.png" alt="hadop-application"></p>
+<p><img src="/img/flink/yarn-session.png" alt="yarn-session.png"></p>
+<p>仔细一看，Task Managers，Task Slots 怎么都是 0 呢？难道是哪里出了问题？其实并没有问题，从某个版本开始 Flink 允许动态分配资源，在没有任务的时候不分配 TaskManager。接下来我们就提交一个任务试试。</p>
+<p>因为启动 YARN Session 以后 Flink Client 会一直在前台运行，所以先用 <code>Ctrl + Z</code> 快捷键把 Client 转到后台，然后再提交任务。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/flink run ./examples/batch/WordCount.jar</span><br></pre></td></tr></table></figure>
+<p><img src="/img/flink/wordcount-job.png" alt="wordcount-job.png"></p>
+<p>在任务运行期间观察 Web Interface，会发现 Task Managers 变为 1，Task Slots 变为 2 ，与启动集群时指定的参数不符，这是因为 YARN 集群中只有两个 NodeManager，huawei-02 和 huawei-03，其中一个作为 JobManager，因此只剩一个节点可以作为 TaskManager。</p>
+<p>任务的运行结果和 Standalone 模式下完全一样。</p>
+<h3><span id="single-flink-job-on-yarn">Single Flink job on YARN</span></h3>
+<p>下面这条命令会为 wordcount 任务启动一个独占的 Flink 集群，任务结束集群即被回收。其中 -m 选项指定 Flink 集群的启动模式，-yn 选项指定 TaskManager 的数目。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./bin/flink run -m YARN-cluster -yn 2 ./examples/batch/WordCount.jar</span><br></pre></td></tr></table></figure>
+<p>任务的运行结果和 Standalone 模式下完全一样。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> flink </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hadoop 集群搭建教程]]></title>
+      <url>/2020/03/04/hadoop/installation/</url>
+      <content type="html"><![CDATA[<a id="more"></a>
+<p>这篇文章介绍了搭建一个三节点Hadoop集群时的顺序，三台机为内网IP。对应的hostname分别为huawei-01，huawei-03，huawei-03。其中第一台作为master，后面两台作为slaves。</p>
+<h2><span id="先决条件">先决条件</span></h2>
+<p>在安装Hadoop之前，请确认集群的每台机器上均安装JDK，以及搭配环境变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Java Environment</span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8.0_181-amd64/</span><br><span class="line">export JRE_HOME=$&#123;JAVA_HOME&#125;/jre</span><br><span class="line">export CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/lib</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:$PATH</span><br></pre></td></tr></table></figure>
+<p>另外，需要在三台机器<code>/etc/hosts</code>写入对应机器。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 三台机的私有网络IP</span><br><span class="line"></span><br><span class="line">192.168.0.125	huawei-02</span><br><span class="line">192.168.0.160	huawei-01</span><br><span class="line">192.168.0.56	huawei-03</span><br></pre></td></tr></table></figure>
+<p>还要修改对应hostname，因为DataNode上的日志文件后解释hostname（不知是不是这原因）。</p>
+<h2><span id="下载二进制文件">下载二进制文件</span></h2>
+<p>Hadoop有很多版本选择，考虑会后续Hadoop会部署其它应用，所以选择兼容性最好的2.7.7版本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz</span><br><span class="line">tar -zxvf hadoop-2.7.7.tar.gz -C .</span><br></pre></td></tr></table></figure>
+<h2><span id="修改配置文件">修改配置文件</span></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="meta">#</span><span class="bash"> Flink Environment</span></span><br><span class="line">export HADOOP_HOME=/opt/hadoop-2.7.7</span><br><span class="line">export PATH=$PATH:$&#123;HADOOP_HOME&#125;/bin:$&#123;HADOOP_HOME&#125;/sbin</span><br></pre></td></tr></table></figure>
+<h3><span id="core-sitexml">core-site.xml</span></h3>
+<p>指定NameNode的IP地址和端口号，</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.default.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://huawei-01:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3><span id="hdfs-sitexml">hdfs-site.xml</span></h3>
+<p><code>dfs.replication</code> 指定备份数目为 3，<code>dfs.name.dir</code> 指定 NameNode 的文件存储路径，<code>dfs.data.dir</code> 指定 DataNode 的文件存储路径。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>3<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/opt/hadoop-2.7.7/data/namenode<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/opt/hadoop-2.7.7/data/datanode<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3><span id="mapred-sitexml">mapred-site.xml</span></h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp mapred-site.xml.template mapred-site.xml</span><br></pre></td></tr></table></figure>
+<p>然后修改<code>mapred-site.xml</code>的内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3><span id="yarn-sitexml">yarn-site.xml</span></h3>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>huawei-01:8025<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.scheduler.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>huawei-01:8030<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>huawei-01:8050<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3><span id="slaves">slaves</span></h3>
+<p>添加slave节点的hostname到该文件中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">huawei-02</span><br><span class="line">huawei-03</span><br></pre></td></tr></table></figure>
+<h3><span id="hadoop-envsh"></span></h3>
+<p>设置环境变量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/java/jdk1.8.0_181-amd64/</span><br></pre></td></tr></table></figure>
+<h2><span id="分发配置文件">分发配置文件</span></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r /opt/hadoop-2.7.7 huawei-02:/opt/hadoop-2.7.7</span><br><span class="line">scp -r /opt/hadoop-2.7.7 huawei-03:/opt/hadoop-2.7.7</span><br></pre></td></tr></table></figure>
+<h2><span id="启动集群">启动集群</span></h2>
+<h3><span id="格式化hdfs">格式化HDFS</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs namenode -format</span><br></pre></td></tr></table></figure>
+<h3><span id="启动集群">启动集群</span></h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">start-dfs.sh</span><br><span class="line">start-yarn.sh</span><br></pre></td></tr></table></figure>
+<p>使用jps命令查看服务运行情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> master节点中运行的服务</span></span><br><span class="line">25928 SecondaryNameNode</span><br><span class="line">25742 NameNode</span><br><span class="line">26387 Jps</span><br><span class="line">26078 ResourceManager</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> slave节点中运行的服务</span></span><br><span class="line">24002 NodeManager</span><br><span class="line">23899 DataNode</span><br><span class="line">24179 Jps</span><br></pre></td></tr></table></figure>
+<h2><span id="提交示例任务">提交示例任务</span></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/hadoop-2.7.7</span><br><span class="line">hdfs dfs -mkdir /wordcount/input</span><br><span class="line"><span class="meta">#</span><span class="bash"> 把当前路径下的 LICENSE.txt 文件复制到 HDFS 中</span></span><br><span class="line">hadoop fs -put ./LICENSE.txt /wordcount/input</span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交任务，最后两个参数分别指定任务的输入和输出</span></span><br><span class="line">hadoop jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.7.jar wordcount /wordcount/input /wordcount/output</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看输出路径</span></span><br><span class="line">hadoop fs -ls /wordcount/output</span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果一切正常，该路径下包含两个文件</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 第一个文件是空文件，表示任务运行成功</span></span><br><span class="line">/wordcount/output/_SUCCESS</span><br><span class="line"><span class="meta">#</span><span class="bash"> 第二个文件是输出文件，统计了 LICENSE.txt 中每个单词出现的次数</span></span><br><span class="line">/wordcount/output/part-r-00000</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> hadoop </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Akka Typed 协议和行为]]></title>
+      <url>/2020/01/03/akka/typed/akka-typed/</url>
+      <content type="html"><![CDATA[<p>2019年11月6号LightBend公司发布了AKKA 2.6版本，带来了类型安全的actor，新的Akka Cluster底层通信设施——Artery，带来了更好的稳定性，使用Jackson进行消息序列化，支持SLF4J日志接口。</p>
+<h2><span id="why-akka-typed">Why Akka Typed</span></h2>
+<p>actor编程模型是一个强有力的抽象模型，尤其擅长解决真实世界建模，容错、并发、分布式系统问题。actor抽象编程模型构建于在互相独立的actor之间发送消息的基础之上，actor可以创建子actor，并负责监管，当子actor出现错误的时候可以重启或者重新创建，这套容错机制给整个actor系统带来了自愈能力。</p>
+<p>经典的Akka actor API非常简单，就是提供一组处理和接收消息的函数：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the Actor trait (AbstractActor class in Java) is the entry point for using the API</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderProcessor</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// receive方法处理消息</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">    <span class="keyword">case</span> order @ <span class="type">OrderProcessor</span>.<span class="type">ProcessOrder</span> =&gt;</span><br><span class="line">	  <span class="comment">// actor方法繁衍新的actor</span></span><br><span class="line">	  <span class="keyword">val</span> connection = context.actorOf(</span><br><span class="line">	    <span class="type">BankConnection</span>.props(order.bankIndentifier)</span><br><span class="line">	  )</span><br><span class="line">	  <span class="comment">// !方法表示即发即弃</span></span><br><span class="line">	  connection ! <span class="type">BankConnection</span>.<span class="type">ExecuteOrder</span>(order)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种编程模型和API在多线程环境中具有显著的优势，每个actor顺序处理接收到的消息，actor的内部状态也只有它本身可以修改，这比并发的修改共享状态容易多了。</p>
+<p>天下没有免费的午餐，actor编程模型也有它的缺点，槽点在这篇文章中有提到：<a href="https://manuel.bernhardt.io/2017/05/29/akka-anti-patterns-overview/" target="_blank" rel="noopener">Akka anti-patterns series</a></p>
+<p>这些年来我在一些稍微大一些的Akka工程中见到的最大的问题是actor系统随着业务越做越大，并且非常难以扩展。根本原因是这套Akka API没有强制用户采用“协议优先”的规范。实际上Akka官方教程里最先讲述的就是清晰的定义组件之间的通信协议（也就是消息），并使用全路径访问消息。已上面的例子来说，OrderProcessor的通信协议定义如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 伴生对象存放了消息的定义</span></span><br><span class="line"><span class="comment">// 对于集群或持久化系统，消息定义需要使用合适的序列化机制，譬如protobuf</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">OrderProcessor</span> </span>&#123;</span><br><span class="line">  <span class="keyword">sealed</span> <span class="class"><span class="keyword">trait</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class">  <span class="title">final</span> <span class="title">case</span> <span class="title">class</span> <span class="title">ProcessOrder</span>(<span class="params">bank: <span class="type">BankId</span>, fromAccount: <span class="type">AccountId</span>, toAccount: <span class="type">AccountId</span>, amount: <span class="type">Amount</span></span>) <span class="keyword">extends</span> <span class="title">Command</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>即便你遵照Akka最佳实践，但还是无法保证给actor发送一些它不支持消息，actor的receive方法会接受任意类型的消息，当它收到不支持的消息时，便自动转给unhandled方法，此方法默认只会打日志记录一下（需要正确的配置日志打印机制），这对新人来说太坑了，你找不到任何错误，但是系统就是无法正常工作。</p>
+<p>更深层次的原因在于缺少一种机制来帮助我们维护actor之间的通信协议。随着消息类型增多，很容易忘记这些actor都支持什么类型的消息。通过单元测试和严格的日志级别会有助于缓解这种问题（只要接受到不支持的消息就打warn日志），但是仍然无法完全避免。</p>
+<p>Akka Typed就是为了解决这个问题，新的API是为“协议优先”设计的，在实现功能之前，你必须花一点时间想一想每一个actor要处理哪些消息。经典的Actor API的最佳实践也是如此，但却是可选的，你需要在实现的过程中使要处理消息条理清晰。</p>
+<p>看过许多真实的Akka System分享之后，有一点必须强调一下：开发Akka Typed的目的不仅仅是为了以结构化的方式组织消息以及防止丢失那一点点actor不支持的消息，它的主要目的是引导我们优先考虑系统设计。设计一组恰到好处的actor，适当的通信粒度，正确的消息模式，这样就可以构建一个强大的系统，但是它的核心却非常简单，就像高考一样简单。但是我见到太多过度设计，大家倾向于设计过多的actor以及消息，引入了不必要的复杂度，最后尾大不掉。</p>
+<h2><span id="lets-build-a-payment-processor">Let’s build a payment processor</span></h2>
+<p>前面我们已经讲过使用Akka Typed可以非常容易的定义协议，但什么是“协议”呢？协议仅仅是“消息”吗？简单来说协议就是：定义一组消息，在两个及以上的组件之间按特定的顺序和组合传递。常见的协议有TCP、HTTPS等，而我们定义的是应用层的协议。你可以认为协议就是增强版的API：API只定义了个体之间的调用格式（参数、请求内容、响应内容等），协议描述了怎么通过组件之间的相互调用使系统到达期望的状态。</p>
+<p>在Akka Typed API中，协议由一组消息class和对应类型的actor组成。下面的例子展示了从configuration组件获取配置数据的协议：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">sealed</span> <span class="class"><span class="keyword">trait</span> <span class="title">ConfigurationMessage</span></span></span><br><span class="line"><span class="class"><span class="title">final</span> <span class="title">case</span> <span class="title">class</span> <span class="title">RetrieveConfiguration</span>(<span class="params">merchantId: <span class="type">MerchantId</span>, replyTo: <span class="type">ActorRef</span>[<span class="type">ConfigurationResponse</span>]</span>) <span class="keyword">extends</span> <span class="title">ConfigurationMessage</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">sealed</span> <span class="title">trait</span> <span class="title">ConfigurationResponse</span></span></span><br><span class="line"><span class="class"><span class="title">final</span> <span class="title">case</span> <span class="title">class</span> <span class="title">ConfigurationFound</span>(<span class="params">merchantId: <span class="type">MerchantId</span>,  merchantConfiguration: <span class="type">MerchantConfiguration</span></span>) <span class="keyword">extends</span> <span class="title">ConfigurationResponse</span></span></span><br><span class="line"><span class="class"><span class="title">final</span> <span class="title">case</span> <span class="title">class</span> <span class="title">ConfigurationNotFound</span>(<span class="params">merchanId: <span class="type">MerchantId</span></span>) <span class="keyword">extends</span> <span class="title">ConfigurationResponse</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">MerchantId</span>(<span class="params">id: <span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">AnyVal</span></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">BankIdentifier</span>(<span class="params">id: <span class="type">String</span></span>) <span class="keyword">extends</span> <span class="title">AnyVal</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">case</span> <span class="title">class</span> <span class="title">MerchantConfiguration</span>(<span class="params">bankIdentifier: <span class="type">BankIdentifier</span></span>)</span></span><br></pre></td></tr></table></figure>
+<p>这个例子遵循了请求-响应的消息设计模式，欲知更多详情，请参见本书：<a href="https://www.manning.com/books/reactive-design-patterns" target="_blank" rel="noopener">Reactive Design Patterns</a></p>
+<p>如果你以前用过经典的Actor API，你会发现这里的实现方式有两个不同的地方，第一个是消息发送者的引用包含在消息的定义中，经典的Actor API是通过Akka提供的sender()方法来获取发送者的。第二个是消息class中包含的ActorRef是有类型的，发送者使用它的时候就可以清楚的知道应该发送什么类型的消息。我们使用接口ConfigurationResponse定义了配置数据的返回格式，它有两个实现类，这样发送者就可以发送两种格式的消息。</p>
+<p>看了Actor的定义之后，就能理解为什么Akka Typed比经典的Actor更容易且更安全的解决协议问题，Configuration的定义如下：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Configuration</span>(<span class="params">context: <span class="type">ActorContext</span>[<span class="type">ConfigurationMessage</span>]</span>) <span class="keyword">extends</span> <span class="title">AbstractBehavior</span>[<span class="type">ConfigurationMessage</span>] </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们定义的actor继承<code>AbstractBehavior</code>，并带有指定的类型，它只能处理<code>ConfigurationMessage</code>类型的消息，编译器可以帮助我们检查消息的发送者发送的消息是否正确。</p>
+<p>上面的例子中我们使用面向对象的编程方式定义了Actor，稍后我们会展示函数式编程风格。</p>
+<h2><span id="implementing-our-first-typed-actor">Implementing our first typed actor</span></h2>
+<p><code>Configuration</code>提供查询功能：根据商户Id查询支付方式。我们继续使用面向对象的编程方式，如果使用过经典的Akka API，你对这种使用方式应该非常熟悉。</p>
+<p>继承<code>AbstractBehavior</code>就必须实现<code>onMessage</code>方法，它返回一个<code>Behavior</code>：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// the AbstractBehavior trait is the entry point for using the object-oriented style API</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Configuration</span>(<span class="params">context: <span class="type">ActorContext</span>[<span class="type">ConfigurationMessage</span>]</span>) <span class="keyword">extends</span> <span class="title">AbstractBehavior</span>[<span class="type">ConfigurationMessage</span>] </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// the mutable state here holds the configuration values of each merchant we know about</span></span><br><span class="line">  <span class="keyword">var</span> configurations: <span class="type">Map</span>[<span class="type">MerchantId</span>, <span class="type">MerchantConfiguration</span>] = <span class="type">Map</span>.empty</span><br><span class="line"></span><br><span class="line">  <span class="comment">// the onMessage method defines the initial behavior applied to a message upon reception</span></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">onMessage</span></span>(msg: <span class="type">ConfigurationMessage</span>): <span class="type">Behavior</span>[<span class="type">ConfigurationMessage</span>] = msg <span class="keyword">match</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">RetrieveConfiguration</span>(merchantId, replyTo) =&gt;</span><br><span class="line">      configurations.get(merchantId) <span class="keyword">match</span> &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="type">Some</span>(configuration) =&gt;</span><br><span class="line">          <span class="comment">// reply to the sender using the fire-and-forget paradigm</span></span><br><span class="line">          replyTo ! <span class="type">ConfigurationFound</span>(merchantId, configuration)</span><br><span class="line">        <span class="keyword">case</span> <span class="type">None</span> =&gt;</span><br><span class="line">          <span class="comment">// reply to the sender using the fire-and-forget paradigm</span></span><br><span class="line">          replyTo ! <span class="type">ConfigurationNotFound</span>(merchantId)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// lastly, return the Behavior to be applied to the next received message</span></span><br><span class="line">      <span class="comment">// in this case, that's just the same Behavior as we already have</span></span><br><span class="line">      <span class="keyword">this</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个actor与我们在本文开头使用经典的actor API定义的actor非常相似：覆盖onMessage方法，并根据指定的消息类型做出对应的响应。</p>
+<p>不同点在于onMessage对应的方法返回的是一个Behavior，一个actor接收到消息之后的行为包含如下3个步骤：</p>
+<p>发送一条或多条消息给其他的actor<br>
+创建子acotr<br>
+返回一个新的行为，准备接收下一个消息<br>
+在Akka Typed API中，一个Behavior即代表了处理当前消息的行为，也表明了如何处理下一个消息——通过返回一个新的Behavior。也可以只是返回当前行为（就像上面的例子一样），因为使用面向对象风格的actor继承自AbstractBehavior，它本身就是一个Behavior，所以可以使用return this。</p>
+<p>本系列教程后面会讨论更多关于Behavior的用法，使用Akka Typed API定义的actor的一个优点就是非常容易组合和测试。</p>
+<p>Typed Akka TestKit可以帮助你轻而易举的对actor进行测试：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConfigurationSpec</span> <span class="keyword">extends</span> <span class="title">ScalaTestWithActorTestKit</span> <span class="keyword">with</span> <span class="title">WordSpecLike</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="string">"The Configuration actor"</span> should &#123;</span><br><span class="line"></span><br><span class="line">    <span class="string">"not find a configuration for an unknown merchant"</span> in &#123;</span><br><span class="line">      <span class="comment">// define a probe which allows it to easily send messages</span></span><br><span class="line">      <span class="keyword">val</span> probe = createTestProbe[<span class="type">ConfigurationResponse</span>]()</span><br><span class="line"></span><br><span class="line">      <span class="comment">// spawn a new Configuration actor as child of the TestKit's guardian actor</span></span><br><span class="line">      <span class="keyword">val</span> configurationActor = spawn(<span class="type">Configuration</span>())</span><br><span class="line"></span><br><span class="line">      <span class="comment">// send a message to the actor under test with the probe's reference as sender</span></span><br><span class="line">      configurationActor ! <span class="type">Configuration</span>.<span class="type">RetrieveConfiguration</span>(<span class="type">MerchantId</span>(<span class="string">"unknown"</span>), probe.ref)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// expect a certain type of message as response. there are many different ways to retrieve</span></span><br><span class="line">      <span class="comment">// or to expect messages</span></span><br><span class="line">      <span class="keyword">val</span> response = probe.expectMessageType[<span class="type">Configuration</span>.<span class="type">ConfigurationNotFound</span>]</span><br><span class="line">      response.merchanId shouldBe <span class="type">MerchantId</span>(<span class="string">"unknown"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="supervising-and-starting-the-actor">Supervising and starting the actor</span></h2>
+<p>actor System为actor提供运行环境、分配资源、基础设施。在这个系统中，每一个actor都有一个父actor，最顶层的actor叫做根节点（<code>root</code>)，使用<code>/</code>代表，它的两个直接子actor是<code>/user</code>和<code>/system</code>，<code>/user</code>用于在用户空间创建子actor，<code>/system</code>属于akka系统内部管理，所以我们创建的所有的actor都从属于<code>/user</code>。</p>
+<p>Akka Typed与经典的Actor API有一个非常重要的不同点：<code>/user</code>的处理逻辑。在经典的Akka API中，Akka提供的<code>/useractor</code>负责监管一切；但是Akka Typed把这个权力交给了用户。也就是说应用程序的开发者在实现actor的时候同时也必须多考虑一下actor都会有哪些行为。</p>
+<p>在创建<code>Configuration</code> actor的时候，我们大可以直接把它传给<code>ActorSystem</code>并把它作为监管者，但当创建更多actor的时候，这些actor全部都由<code>Configuration</code> actor监管就不合适了。而且在actor模型中父监管机制采用级联的方式处理actor失败的问题：父actor负责决定如何处理子actor（当它抛异常的时候），因此如何对actor分组直接影响了监管策略。同样的我们应该使用一个专用的父actor做为监管actor，由它来决定如何处理子actor的失败问题。Akka Typed API中默认的监管策略是停止失败的子actor（经典的Akka API是重启）。由我们指定监管actor可以开发更灵活的监管策略，根据不同的异常做出相应的决策。综上所述我们决定使用<code>PaymentProcessor</code> actor做为所有actor的监管者，actor层级如下图所示：</p>
+<p>![/img/akka/typed/supervison.png]</p>
+<p><code>PaymentProcessor</code>的功能目前非常简单，启动的时候创建一个子actor——Configuration，它是无状态的，也不接收任何消息，这次我们使用函数式编程的风格，无需继承任何接口，只需要返回一个Behavior：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">PaymentProcessor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>() = <span class="type">Behaviors</span>.setup[<span class="type">Nothing</span>] &#123; context =&gt;</span><br><span class="line">    context.log.info(<span class="string">"Typed Payment Processor started"</span>)</span><br><span class="line">    context.spawn(<span class="type">Configuration</span>(), <span class="string">"config"</span>)</span><br><span class="line">    <span class="type">Behaviors</span>.empty</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Behaviors.setup()</code>方法是创建<code>Behavior</code>的入口，该方法包含一个<code>ActorContext</code>变量，我们用它打日志，记录actor已经启动，并使用<code>spawn()</code>方法创建了一个<code>Configuration actor</code>，第一个参数用于创建actor，第二个参数是actor的名字，它在actor路径中是<code>/user/config</code>。</p>
+<p>因为<code>PaymentProcessor</code>不处理任何消息，所以这里使用了<code>setup[Nothing]</code>。</p>
+<p><code>Configuration</code> actor使用静态的create函数创建<code>Behavior</code>：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Configuration</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>(): <span class="type">Behavior</span>[<span class="type">ConfigurationMessage</span>] = <span class="type">Behaviors</span>.setup(context =&gt; <span class="keyword">new</span> <span class="type">Configuration</span>(context))</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在万事俱备，只欠东风，需要启动<code>ActorSystem</code>来创建我们的监管actor。Akka提供了静态方法用来创建监管actor：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Main</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="type">ActorSystem</span>[<span class="type">Nothing</span>](<span class="type">PaymentProcessor</span>(), <span class="string">"typed-payment-processor"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>搞定！现在运行<code>Main</code>方法，就可以看到<code>PaymentProcessor</code>启动了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[info] Running io.bernhardt.typedpayment.Main</span><br><span class="line">[INFO] [07/10/2019 09:36:42.483] [typed-payment-processor-akka.actor.default-dispatcher-5] [akka://typed-payment-processor/user] Typed Payment Processor started</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> akka </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> akka-typed </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[第八章 React Redux]]></title>
       <url>/2019/11/27/react-ts/chapter_8_React_Redux/</url>
       <content type="html"><![CDATA[<ul>
@@ -71,6 +306,204 @@
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts = <span class="keyword">async</span> (): <span class="built_in">Promise</span>&lt;IProduct[]&gt; =&gt; &#123;</span><br><span class="line">  <span class="keyword">await</span> wait(<span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">return</span> products;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>该函数异步等待返回的产品信息。</p>
 <h3><span id="creating-state-and-action-types">Creating state and action types</span></h3>
+<p>下面使用Redux来增强React shop。首先，创建一些state类型，以及action类型。</p>
+<ol>
+<li>在<code>src</code>文件夹创建一个新的文件<code>ProductsTypes.ts</code>，</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; IProduct &#125; <span class="keyword">from</span> <span class="string">"./ProductsData"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>添加两种不同类型的action枚举，</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">enum</span> ProductsActionTypes &#123;</span><br><span class="line">  GETALL = <span class="string">"PRODUCTS/GETALL"</span>,</span><br><span class="line">  LOADING = <span class="string">"PRODUCTS/LOADING"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Redux并没有要求action类型为字符串形式。这里我们选择用字符串来表述。同时要确保字符串是全局唯一的。我们定义的字符串中包含了两点重要信息：</p>
+<ul>
+<li>存储的action被关联。这里它是<code>PRODUCTS</code>。</li>
+<li>特定的具体操作被指示。这里，<code>GETALL</code>表示获取所有商品，<code>LOADING</code>表示商品正在获取中。</li>
+</ul>
+<p>当然我们也可以写成类似<code>PRODUCTS-GETALL</code>或者<code>Get All Products</code>。我们只需要确保字符串是唯一的。</p>
+<ol start="3">
+<li>下面为上述两种Action定义接口：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IProductsGetAllAction &#123;</span><br><span class="line">  <span class="keyword">type</span>: ProductsActionTypes.GETALL,</span><br><span class="line">  products: IProduct[]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IProductsLoadingAction &#123;</span><br><span class="line">  <span class="keyword">type</span>: ProductsActionTypes.LOADING</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>IProductsGetAllAction</code>用作获取商品时的派遣动作。<code>IProductsLoadingAction</code>用作加载状态。</p>
+<ol start="4">
+<li>组合为一个新的union type:</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> ProductsActions = </span><br><span class="line">  | IProductsGetAllAction</span><br><span class="line">  | IProductsLoadingAction</span><br></pre></td></tr></table></figure>
+<p>该类型将被传递在reducer的参数上。</p>
+<ol start="5">
+<li>最后，为这种存储状态创建一个接口：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IProductsState &#123;</span><br><span class="line">  readonly products: IProduct[];</span><br><span class="line">  readonly productsLoading: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的state将包含了一组商品信息，以及商品是否正在加载。</p>
+<p>注意到属性前面引入了<code>readonly</code>关键字。它帮助我们避免对状态的直接修改。</p>
+<p>有了state和action的类型后，接下来创建一些具体的action。</p>
+<h3><span id="creating-actions">Creating actions</span></h3>
+<p>本小节，将创建两个action。获取商品的action，商品处于加载的action。</p>
+<ol>
+<li>创建一个<code>ProductsActions.ts</code>文件，</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ActionCreator, AnyAction, Dispatch &#125; <span class="keyword">from</span> <span class="string">"redux"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里用到几个action类型需要实现。</p>
+<ol start="2">
+<li>其中一个action用作异步操作。需要导入<code>redux-thunk</code></li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ThunkAction &#125; <span class="keyword">from</span> <span class="string">"redux-thunk"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>另外导入之前的模拟API。</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; getProducts <span class="keyword">as</span> getProductsFromAPI &#125; <span class="keyword">from</span> <span class="string">"./ProductsData"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里需要重命名<code>getProductsFromAPI</code>，避免和<code>getProducts</code>的action冲突。</p>
+<ol start="4">
+<li>将先前定义的action类型导入。</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; IProductsGetAllAction, IProductsLoadingAction, IProductsState, ProductsActionTypes &#125; <span class="keyword">from</span> <span class="string">"./ProductsTypes"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>接下来，创建一个action creator，顾名思义：它是一个函数，创建并返回一个action！</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loading: ActionCreator&lt;IProductsLoadingAction&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="keyword">type</span>: ProductsActionTypes.LOADING</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们使用了泛型<code>ActionCreator</code>作为函数签名</li>
+<li>函数仅仅返回要求的action对象</li>
+</ul>
+<p>还可以使用隐式返回语句另函数更为简洁</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loading: ActionCreator&lt;IProductsLoadingAction&gt; = <span class="function"><span class="params">()</span> =&gt;</span> (&#123;</span><br><span class="line">  <span class="keyword">type</span>: ProductsActionTypes.LOADING,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们将用到这个简短语法用于action creator的实现。</p>
+<ol start="6">
+<li>添加另一个action creator的实现，这稍微更复杂一些：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts: ActionCreator&lt;ThunkAction&lt;</span><br><span class="line">  <span class="built_in">Promise</span>&lt;AnyAction&gt;,</span><br><span class="line">  IProductsState,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  IProductsGetAllAction</span><br><span class="line">&gt;&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<p>因为这里的action是异步的，需要进行一层包装。这里使用了<code>ThunkAction</code>泛型类型来包装同步action，它包含4个参数：</p>
+<ul>
+<li>第一个参数是返回类型，理想上应该是<code>Promise&lt;IProductsGetAllAction&gt;</code>。然而，TypeScript编译器无法处理，因此折中放宽为<code>Promise&lt;AnyAction&gt;</code>类型。</li>
+<li>第二个参数为关联的state接口。</li>
+<li>第三个参数是传递给到action creator的函数参数的类型，因为我们的action creator没有定义参数，这里传递null。</li>
+<li>最后一个参数是action的类型。</li>
+</ul>
+<p>我们对这些action creator进行暴露，因为最终会被<code>ProductsPage</code>组件调用。</p>
+<ol start="7">
+<li>异步action需要返回一个异步函数，最终派遣我们的action：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts: ActionCreator&lt;ThunkAction&lt;</span><br><span class="line">  <span class="built_in">Promise</span>&lt;AnyAction&gt;,</span><br><span class="line">  IProductsState,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  IProductsGetAllAction</span><br><span class="line">&gt;&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">async</span> (dispatch: Dispatch) =&gt; &#123;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>因此，函数第一件事是返回另一个函数，使用<code>async</code>关键字标记为异步的。内部函数以Dispatcher作为回调参数。</p>
+<ol start="8">
+<li>下面实现内部函数：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts: ActionCreator&lt;ThunkAction&lt;</span><br><span class="line">  <span class="built_in">Promise</span>&lt;AnyAction&gt;,</span><br><span class="line">  IProductsState,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  IProductsGetAllAction</span><br><span class="line">&gt;&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">async</span> (dispatch: Dispatch) =&gt; &#123;</span><br><span class="line">    dispatch(loading());</span><br><span class="line">    <span class="keyword">const</span> products = <span class="keyword">await</span> getProductsFromAPI();</span><br><span class="line">    <span class="keyword">return</span> dispatch(&#123;</span><br><span class="line">      products,</span><br><span class="line">      <span class="keyword">type</span>: ProductsActionTypes.GETALL,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先做的，dispatch 启动action，以得到最终的loading state。</li>
+<li>然后异步的方式，从模拟API获取商品信息</li>
+<li>最后一步dispatch 要求的action。</li>
+</ul>
+<p>目前创建了好几个action了，接下来创建相应的reducer。</p>
+<h3><span id="creating-reducers">Creating reducers</span></h3>
+<p>一个reducer，就是一个传入给定的action，产生新的state的一个函数。因此，这个函数在当前state，接收了一个action，返回新的state。</p>
+<ol>
+<li>在<code>src</code>目录新建文件<code>ProductsReducer.ts</code>：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Reducer &#125; <span class="keyword">from</span> <span class="string">"redux"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; IProductsState, ProductsActions, ProductsActionTypes &#125; <span class="keyword">from</span> <span class="string">"./ProductsTypes"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里导入了<code>Reducer</code>依赖，以及前面定义的action和state。</p>
+<ol start="2">
+<li>定义初始state：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialProductState: IProductsState = &#123;</span><br><span class="line">  products: [],</span><br><span class="line">  productsLoading: <span class="literal">false</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>初始状态下，商品信息为空数组，处于非加载状态。</p>
+<ol start="3">
+<li>接下来创建reducer函数：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> productsReducer: Reducer&lt;IProductsState, ProductsActions&gt; = (</span><br><span class="line">  state = initialProductState,</span><br><span class="line">  action</span><br><span class="line">) =&gt; &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">	<span class="comment">// TODO - change the state</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> state;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>该函数返回<code>Reducer</code>，包含有state和action。</li>
+<li>函数接收的参数由Redux提供。</li>
+<li>状态默认为初始化时的状态。</li>
+<li>对于不能识别的switch语句，返回默认的state。</li>
+</ul>
+<ol start="4">
+<li>实现我们商品的reducer：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">  <span class="keyword">case</span> ProductsActionTypes.LOADING: &#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		...state,</span><br><span class="line">		productsLoading: <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">case</span> ProductsActionTypes.GETALL: &#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		...state,</span><br><span class="line">		products: action.products,</span><br><span class="line">		productsLoading: <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们为每个action实现了对应的reducer，合并旧的state，并返回一个新的state。</p>
+<p>这样，我们的第一个reducer完成了。接下来创建我们的store。</p>
+<h3><span id="creating-a-store">Creating a store</span></h3>
+<p>本小节，将创建一个store，用于存放我们的state并管理这些action和reducer：</p>
+<ol>
+<li>新建文件<code>Store.tsx</code>文件，导入相应的需要的组件。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; applyMiddleware, combineReducers, createStore, Store &#125; from &quot;redux&quot;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>createStore</code> 创建store的函数</li>
+<li>我们需要<code>applyMiddleware</code>函数，因为我们使用了redux thunk中间件来管理异步action。</li>
+<li><code>combineReducers</code>函数用于合并reducer</li>
+<li><code>Store</code>是一个TypeScript版的store对象</li>
+</ul>
+<ol start="2">
+<li>导入<code>redux-thunk</code>：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import thunk from &quot;redux-thunk&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>最后，导入reducer和state，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import &#123; productsReducer &#125; from &quot;./ProductsReducer&quot;;</span><br><span class="line">import &#123; IProductsState &#125; from &quot;./ProductsTypes&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>store的关键部分是state。因此，定义一个接口：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export interface IApplicationState &#123;</span><br><span class="line">  products: IProductsState;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个接口仅仅包含了商品的state。</p>
+<ol start="5">
+<li>将reducer添加到Redux的<code>combineReducer</code>函数，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const rootReducer = combineReducers&lt;IApplicationState&gt;(&#123;</span><br><span class="line">  products: productsReducer</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>定义好state和reducer后，我们可以创建我们的store了。实际上我们是创建一个函数：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export default function configureStore(): Store&lt;IApplicationState&gt; &#123;</span><br><span class="line">  const store = createStore(rootReducer, undefined, applyMiddleware(thunk));</span><br><span class="line">  return store;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>函数<code>configureStore</code>返回泛型<code>Store</code></li>
+<li>Redux中的函数<code>createStore</code>，我们传入定义的reducer以及Redux Thunk中间件，传递<code>undefined</code>作为初始化状态。</li>
+</ul>
+<p>接下来，如何连接到我们创建的store？</p>
+<h2><span id="connecting-our-react-app-to-the-store">Connecting our React app to the store</span></h2>
+<p>在本小节，我们将<code>Products</code>页面连接到store。第一件要做的工作室添加React Redux的<code>Provider</code>组件。</p>
+<h3><span id="adding-the-store-provider-component">Adding the store Provider component</span></h3>
+<p><code>Provider</code>组件可以在它任意下层的组件传递store。因此，本小节，需要将<code>Provider</code>添加到组件的最高层级，这样其它组件都可以访问。</p>
+<ol>
+<li>打开原先的<code>index.tsx</code>，导入<code>Provider</code>。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Provider &#125; from &quot;react-redux&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>另外把<code>Store</code>也导入进来。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Store &#125; from &quot;redux&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>其它用到的store和state也导入进来。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import configureStore from &quot;./Store&quot;;</span><br><span class="line">import &#123; IApplicationState &#125; from &quot;./Store&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>创建一些功能组件，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">interface IProps &#123;</span><br><span class="line">  store: Store&lt;IApplicationState&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const Root: React.SFC&lt;IProps&gt; = props =&gt; &#123;</span><br><span class="line">  return();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>Root</code>组件将会成为我们新的root element。它将store作为一个prop。</p>
+<ol start="5">
+<li>这样一来，我们需要导入旧的根元素，<code>Routes</code>，放置在新的root组件中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const Root: React.SFC&lt;IProps&gt; = props =&gt; &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;Routes /&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>另外还要把<code>Provider</code>组件加进来：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">return (</span><br><span class="line">  &lt;Provider store=&#123;props.store&#125;&gt;</span><br><span class="line">    &lt;Routes /&gt;</span><br><span class="line">  &lt;/Provider&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>现在已经将<code>Provider</code>组件的最上层，以及将store传递进去。</p>
+<ol start="7">
+<li>另外还要更改根部渲染函数，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const store = configureStore();</span><br><span class="line">ReactDOM.render(&lt;Root store=&#123;store&#125; /&gt;, document.getElementById(&quot;root&quot;) as HTMLElement);</span><br></pre></td></tr></table></figure>
+<p>首先通过<code>configureStore</code>函数创建了全局的store，并将它传递给<code>Root</code>组件。</p>
+<p>这样一来，所有组件都已经连接到了这个store。接下来，需要需要在其它子层组件中对其进行连接。</p>
+<h3><span id="connecting-components-to-the-store">Connecting components to the store</span></h3>
+<h4><span id="connecting-productspage-to-the-store">Connecting ProductsPage to the store</span></h4>
+<p>首先连接的组件是<code>ProductsPage</code>,</p>
+<p>下面开始对其进行重构，</p>
+<ol>
+<li>导入<code>connect</code>函数，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; connect &#125; from &quot;react-redux&quot;;</span><br></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
@@ -4070,61 +4503,6 @@ Connect to each server, stop the mongod service (If there is service running), a
     </entry>
     
     <entry>
-      <title><![CDATA[Akka技术架构的一些架构建议]]></title>
-      <url>/2018/10/26/ideal/ideal-reference/</url>
-      <content type="html"><![CDATA[<a id="more"></a>
-<h2><span id="社交设计">社交设计</span></h2>
-<p><a href="http://serendip.me/" target="_blank" rel="noopener">Serendip.me</a>为人们提供<strong>社交音乐服务</strong>，帮助人们发现朋友们分享的优秀音乐，并为他们介绍“知音”——那些靠近他们的社交圈子，有相似音乐品味的陌生人。</p>
-<p>serendip运行在AWS智商，采用了如下这些技术：<a href="http://www.scala-lang.org/" target="_blank" rel="noopener">scala</a>(还有一些Java)，<a href="http://akka.io/" target="_blank" rel="noopener">akka</a>(用来处理并发)，<a href="http://www.playframework.com/" target="_blank" rel="noopener">Play</a>框架(Web和API前端)，<a href="http://www.mongodb.org/" target="_blank" rel="noopener">MongoDB</a>和<a href="http://elasticsearch.org/" target="_blank" rel="noopener">Elasticsearch</a>。</p>
-<h2><span id="技术栈的选择">技术栈的选择</span></h2>
-<p>Serendip的主要功能是从公共音乐服务中收集Twitter上分享的所有音乐，所以它需要处理大量的数据，所以Serendip在选择语言和技术时，首先要考虑它们的扩展能力。</p>
-<p>因为JVM久经考验的性能和工具，并且还有很多采用这门语言开发的开源系统(比如Elasticsearch)，所以他们选择JVM作为系统的基石。</p>
-<p>而在JVM的体系中，scala又脱颖而出，成为了一个有趣的选择。Scala可以用现代的方式写代码，又可以跟Java全面互通。此外还有一个很重要的原因，akka actor框架是非常合适的流处理基础设施(绝对是！)。刚刚开始流行起来的Play框架看起来也很不错。Serendip开始于2011年初，当时这些都是非常前沿的技术。到了2011年末，scala和akka合并成<a href="http://typesafe.com/" target="_blank" rel="noopener">Typesafe</a>，Play也在不久之后加入。</p>
-<p>选择MongoDB是因为它对开发者友好，易用，功能集和可能的扩展能力(采用了自动分片技术)。但因为Serendip使用和查询数据的方式需要在MongoDB上创建很多大索引，而这样会很快引发性能和内存方面的问题。所以他们主要是用MongoDB存储键-值文档，还有几个需要计数器的功能依赖于它的原子增长。</p>
-<p>事实证明，这样使用时MongoDB非常牢靠。还容易操作，但主要是因为尽量避免使用分片，并且只有一个复制集(MongoDB的分片架构相当复杂)。</p>
-<p>查询数据需要一个完全成熟的搜索系统。在开源的搜索解决方案中，Elasticsearch是扩展性最强，并且面向云端的系统。它有动态索引机制，还提供了很多搜索和切面的可能性，可以在其上构建很多功能。因此，Elasticsearch成为了serendip架构中的一个中心组件。</p>
-<p>Serendip决定自己管理MongoDB和Elasticsearch，主要有两个原因。第一，Serendip要完全控制两个系统。不想在软件的升级/降级上依赖于其它元素。第二，因为serendip要处理大量数据，采用托管方案要比他们直接在EC2上自己管理昂贵得多。</p>
-<h2><span id="一些数字">一些数字</span></h2>
-<p>Serendip的“抽水泵” (处理Twitter公众流和Facebook用户订阅源的那部分)每天要消化大概5,000,000条信息项。这些信息项要经过一系列的“过滤器”，对它们进行检测，并解析出受支持服务(YouTube、Soundcloud、Bandcamp等)上的音乐链接，还要添加一些元数据上去。抽水泵和过滤器是akka的actor，并且整个过程是用单个m1.large EC2管理的。如果需要，可以用akka的远程actor将任务分发到集群中，轻松实现系统扩展。</p>
-<p>从这些信息项中，Serendip每天大概能得到850,000条有效的信息项(也就是真的包含相关音乐链接的信息项)。这些信息项在Elasticsearch中索引(还要在MongoDB中备份并持续计数)。因为每条有效的信息项都要更新几个对象，所以在Elasticsearch中的索引率大约为40条/秒。</p>
-<p>Serendip在Elasticsearch中保留一个月的信息项索引(微博和帖子)。每个月的索引大概包含25M信息项，有3个分片。集群运行着4个节点，每个都在m2.2xlarge实例上。这个配置有足够的内存运行Serendip所需的数据搜索。</p>
-<p>Serendip的MongoDB集群的操作频率大概是100次写/秒和300次读/秒，因为它处理更多的数据类型、技术和统计数据更新。复制集的主节点跑在一个m2.2xlarge实例上，副节点在一个m1.xlarge实例上。</p>
-<h2><span id="构建订阅源">构建订阅源</span></h2>
-<p>在设计Serendip主音乐订阅源的架构时，想让订阅源是动态的，并且可以根据用户的动作和输入作出反应。比如说，如果某位用户将一首歌标为“摇滚”，或将某位艺术家标为“趾高气昂”，那么这些动作应该马上反应到订阅源上。如果用户“不喜欢”一位艺术家，那以后就不应该再播放那些音乐。</p>
-<p>并且这个订阅源应该是几个源头的组合，比如朋友分享的音乐，喜爱的艺术家的音乐，以及有相同音乐品味的“建议”用户分享的音乐。</p>
-<p>这些需求意味着那种“fan-out-on-write”式的订阅源创建方式可能并不合适。应该实时构建订阅源，把跟用户相关的所有信号都用上。Elasticsearch的功能可以构建出这种实时的订阅源生成器。</p>
-<p>订阅源算法有几种选择信息项的“策略”，在每次订阅源的获取上都根据不同的比率动态组合。每个策略都会考虑到用户最近的动作和信号。策略的组合被转换成几种对鲜活数据的搜索，这些数据是不断地由Elasticsearch索引的。因为这些数据是基于时间的，并且索引每月创建一次，所以只需要查询全部数据中的一小部分子集。</p>
-<p>Elasticsearch非常擅于处理这些搜索。它还提供了一种扩展这种架构的著名路径-通过增加分片数量扩展写操作。通过增加更多的复制和物理节点扩展搜索。</p>
-<p>寻找“知音”的过程(根据用户的音乐品味进行匹配)充分利用了Elasticsearch的切面(聚合)能力。作为持续不断的社交流处理的一部分，系统通过计算顶级分享的艺术家来为它遇到的社交网络用户准备数据(在他们分享的音乐上使用切面搜索)。</p>
-<p>当Serendip用户给出一个信号(播放音乐或跟订阅源交互)时，它能为那位用户重新触发一次知音计算过程。这个算法按照喜爱艺术家(这个是不断在更新的)列表来寻找匹配程度最高的其他用户，并用一些额外的参数作为权重，比如流行程度、分享次数等。然后再用另一组算法过滤掉垃圾邮件发送者(是的，有音乐垃圾邮件发送者)和异常值。</p>
-<p>实践证明，这种处理能得出很好的结果，并不需要再用一套系统来运行更加复杂的聚类或推荐算法。</p>
-<h2><span id="监测与部署">监测与部署</span></h2>
-<p>Serendip用<a href="http://www.serverdensity.com/" target="_blank" rel="noopener">ServerDensity</a>做系统监测和报警。对于初创公司而言，它是一种易于使用的托管方案，有像样的功能集和合理的价格。ServerDensity原生提供了服务器和MongoDB的监测。Serendi还大量使用了它报告定制指标的能力来报告内部系统统计数据。</p>
-<p>内部统计数据采集机制负责采集系统内发生的所有动作，并把它们保留在一个MongoDB集合内。一个定期任务每隔一分钟从MongoDB中读取一次这些统计数据，并报告给ServerDensity。这样就可以用ServerDensity对Elasticsearch及运营数据进行监测和报警。</p>
-<p>服务器的管理和部署是用亚马逊Elastic Beanstalk完成的。Elastic Beanstalk是AWS的受限PaaS解决方案。很容易上手，但它不是功能完整的PaaS，对于大部分常见用例而言，它的基本功能已经足够了。它提供了易用的自动扩展配置，还可以通过EC2完整访问。</p>
-<p>应用程序的构建是由EC2上的Jenkins实例执行的。Play程序被打包成WAR。一个构建后置脚本将这个WAR作为新版本推送到Elastic Beanstalk上。这个新版本不会自动部署到服务器上-它的部署是手动完成的。通常是先部署到临时环境中进行测试，然后经过证实后再部署到生产环境中。</p>
-<h2><span id="外卖">外卖</span></h2>
-<p>作为结论，这里有一些在构建Serendip的过程中得到的最重要的经验教训，重要程度跟顺序没什么关系。</p>
-<ol>
-<li>知道如何扩展。一开始你可能并不需要扩展，但你得知道系统的每一部分能够如何扩展，以及能扩展到什么程度。如果扩展需要时间，要预先给你自己留出充足的时间。</li>
-<li>为峰值做好准备。特别是在创业阶段，如果你总是接近满负荷运行，一个lifehacker或reddit帖子就能把你的系统宕掉。保留充足的边界空间，这样才能应对突发负载，或时刻准备好真正快速地扩展。</li>
-<li>选择一门不会拖你后腿的语言。确保你所采用的技术在你的语言中有原生客户端，或者至少有维护得很活跃的一些。不要被等着类库更新给拖住。</li>
-<li>相信炒作。你想要技术跟你的产品共同成长，不会过早死掉。一个充满活力的活跃社区，以及跟该项技术有关的一些噪音，是这种技术存活的良好迹象。</li>
-<li>不要相信炒作。看看那些批判你正在评估的技术的帖子。它们可以告诉你它的弱点。但也不要太认真，当事情不能按照期望工作时，人们通常会变得情绪化。</li>
-<li>玩得开心点。选择会让你兴奋的技术。要能让你觉得“哦，我能用它做的事情太酷啦”。毕竟那(也)是我们来这里的目的。</li>
-</ol>
-]]></content>
-      
-        
-        <tags>
-            
-            <tag> ideal </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[CentOS 7 搭建Spark2.3.1分布式集群]]></title>
       <url>/2018/10/26/spark/spark-cluster-config/</url>
       <content type="html"><![CDATA[<a id="more"></a>
@@ -4411,6 +4789,61 @@ Connect to each server, stop the mongod service (If there is service running), a
         <tags>
             
             <tag> spark </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Akka技术架构的一些架构建议]]></title>
+      <url>/2018/10/26/ideal/ideal-reference/</url>
+      <content type="html"><![CDATA[<a id="more"></a>
+<h2><span id="社交设计">社交设计</span></h2>
+<p><a href="http://serendip.me/" target="_blank" rel="noopener">Serendip.me</a>为人们提供<strong>社交音乐服务</strong>，帮助人们发现朋友们分享的优秀音乐，并为他们介绍“知音”——那些靠近他们的社交圈子，有相似音乐品味的陌生人。</p>
+<p>serendip运行在AWS智商，采用了如下这些技术：<a href="http://www.scala-lang.org/" target="_blank" rel="noopener">scala</a>(还有一些Java)，<a href="http://akka.io/" target="_blank" rel="noopener">akka</a>(用来处理并发)，<a href="http://www.playframework.com/" target="_blank" rel="noopener">Play</a>框架(Web和API前端)，<a href="http://www.mongodb.org/" target="_blank" rel="noopener">MongoDB</a>和<a href="http://elasticsearch.org/" target="_blank" rel="noopener">Elasticsearch</a>。</p>
+<h2><span id="技术栈的选择">技术栈的选择</span></h2>
+<p>Serendip的主要功能是从公共音乐服务中收集Twitter上分享的所有音乐，所以它需要处理大量的数据，所以Serendip在选择语言和技术时，首先要考虑它们的扩展能力。</p>
+<p>因为JVM久经考验的性能和工具，并且还有很多采用这门语言开发的开源系统(比如Elasticsearch)，所以他们选择JVM作为系统的基石。</p>
+<p>而在JVM的体系中，scala又脱颖而出，成为了一个有趣的选择。Scala可以用现代的方式写代码，又可以跟Java全面互通。此外还有一个很重要的原因，akka actor框架是非常合适的流处理基础设施(绝对是！)。刚刚开始流行起来的Play框架看起来也很不错。Serendip开始于2011年初，当时这些都是非常前沿的技术。到了2011年末，scala和akka合并成<a href="http://typesafe.com/" target="_blank" rel="noopener">Typesafe</a>，Play也在不久之后加入。</p>
+<p>选择MongoDB是因为它对开发者友好，易用，功能集和可能的扩展能力(采用了自动分片技术)。但因为Serendip使用和查询数据的方式需要在MongoDB上创建很多大索引，而这样会很快引发性能和内存方面的问题。所以他们主要是用MongoDB存储键-值文档，还有几个需要计数器的功能依赖于它的原子增长。</p>
+<p>事实证明，这样使用时MongoDB非常牢靠。还容易操作，但主要是因为尽量避免使用分片，并且只有一个复制集(MongoDB的分片架构相当复杂)。</p>
+<p>查询数据需要一个完全成熟的搜索系统。在开源的搜索解决方案中，Elasticsearch是扩展性最强，并且面向云端的系统。它有动态索引机制，还提供了很多搜索和切面的可能性，可以在其上构建很多功能。因此，Elasticsearch成为了serendip架构中的一个中心组件。</p>
+<p>Serendip决定自己管理MongoDB和Elasticsearch，主要有两个原因。第一，Serendip要完全控制两个系统。不想在软件的升级/降级上依赖于其它元素。第二，因为serendip要处理大量数据，采用托管方案要比他们直接在EC2上自己管理昂贵得多。</p>
+<h2><span id="一些数字">一些数字</span></h2>
+<p>Serendip的“抽水泵” (处理Twitter公众流和Facebook用户订阅源的那部分)每天要消化大概5,000,000条信息项。这些信息项要经过一系列的“过滤器”，对它们进行检测，并解析出受支持服务(YouTube、Soundcloud、Bandcamp等)上的音乐链接，还要添加一些元数据上去。抽水泵和过滤器是akka的actor，并且整个过程是用单个m1.large EC2管理的。如果需要，可以用akka的远程actor将任务分发到集群中，轻松实现系统扩展。</p>
+<p>从这些信息项中，Serendip每天大概能得到850,000条有效的信息项(也就是真的包含相关音乐链接的信息项)。这些信息项在Elasticsearch中索引(还要在MongoDB中备份并持续计数)。因为每条有效的信息项都要更新几个对象，所以在Elasticsearch中的索引率大约为40条/秒。</p>
+<p>Serendip在Elasticsearch中保留一个月的信息项索引(微博和帖子)。每个月的索引大概包含25M信息项，有3个分片。集群运行着4个节点，每个都在m2.2xlarge实例上。这个配置有足够的内存运行Serendip所需的数据搜索。</p>
+<p>Serendip的MongoDB集群的操作频率大概是100次写/秒和300次读/秒，因为它处理更多的数据类型、技术和统计数据更新。复制集的主节点跑在一个m2.2xlarge实例上，副节点在一个m1.xlarge实例上。</p>
+<h2><span id="构建订阅源">构建订阅源</span></h2>
+<p>在设计Serendip主音乐订阅源的架构时，想让订阅源是动态的，并且可以根据用户的动作和输入作出反应。比如说，如果某位用户将一首歌标为“摇滚”，或将某位艺术家标为“趾高气昂”，那么这些动作应该马上反应到订阅源上。如果用户“不喜欢”一位艺术家，那以后就不应该再播放那些音乐。</p>
+<p>并且这个订阅源应该是几个源头的组合，比如朋友分享的音乐，喜爱的艺术家的音乐，以及有相同音乐品味的“建议”用户分享的音乐。</p>
+<p>这些需求意味着那种“fan-out-on-write”式的订阅源创建方式可能并不合适。应该实时构建订阅源，把跟用户相关的所有信号都用上。Elasticsearch的功能可以构建出这种实时的订阅源生成器。</p>
+<p>订阅源算法有几种选择信息项的“策略”，在每次订阅源的获取上都根据不同的比率动态组合。每个策略都会考虑到用户最近的动作和信号。策略的组合被转换成几种对鲜活数据的搜索，这些数据是不断地由Elasticsearch索引的。因为这些数据是基于时间的，并且索引每月创建一次，所以只需要查询全部数据中的一小部分子集。</p>
+<p>Elasticsearch非常擅于处理这些搜索。它还提供了一种扩展这种架构的著名路径-通过增加分片数量扩展写操作。通过增加更多的复制和物理节点扩展搜索。</p>
+<p>寻找“知音”的过程(根据用户的音乐品味进行匹配)充分利用了Elasticsearch的切面(聚合)能力。作为持续不断的社交流处理的一部分，系统通过计算顶级分享的艺术家来为它遇到的社交网络用户准备数据(在他们分享的音乐上使用切面搜索)。</p>
+<p>当Serendip用户给出一个信号(播放音乐或跟订阅源交互)时，它能为那位用户重新触发一次知音计算过程。这个算法按照喜爱艺术家(这个是不断在更新的)列表来寻找匹配程度最高的其他用户，并用一些额外的参数作为权重，比如流行程度、分享次数等。然后再用另一组算法过滤掉垃圾邮件发送者(是的，有音乐垃圾邮件发送者)和异常值。</p>
+<p>实践证明，这种处理能得出很好的结果，并不需要再用一套系统来运行更加复杂的聚类或推荐算法。</p>
+<h2><span id="监测与部署">监测与部署</span></h2>
+<p>Serendip用<a href="http://www.serverdensity.com/" target="_blank" rel="noopener">ServerDensity</a>做系统监测和报警。对于初创公司而言，它是一种易于使用的托管方案，有像样的功能集和合理的价格。ServerDensity原生提供了服务器和MongoDB的监测。Serendi还大量使用了它报告定制指标的能力来报告内部系统统计数据。</p>
+<p>内部统计数据采集机制负责采集系统内发生的所有动作，并把它们保留在一个MongoDB集合内。一个定期任务每隔一分钟从MongoDB中读取一次这些统计数据，并报告给ServerDensity。这样就可以用ServerDensity对Elasticsearch及运营数据进行监测和报警。</p>
+<p>服务器的管理和部署是用亚马逊Elastic Beanstalk完成的。Elastic Beanstalk是AWS的受限PaaS解决方案。很容易上手，但它不是功能完整的PaaS，对于大部分常见用例而言，它的基本功能已经足够了。它提供了易用的自动扩展配置，还可以通过EC2完整访问。</p>
+<p>应用程序的构建是由EC2上的Jenkins实例执行的。Play程序被打包成WAR。一个构建后置脚本将这个WAR作为新版本推送到Elastic Beanstalk上。这个新版本不会自动部署到服务器上-它的部署是手动完成的。通常是先部署到临时环境中进行测试，然后经过证实后再部署到生产环境中。</p>
+<h2><span id="外卖">外卖</span></h2>
+<p>作为结论，这里有一些在构建Serendip的过程中得到的最重要的经验教训，重要程度跟顺序没什么关系。</p>
+<ol>
+<li>知道如何扩展。一开始你可能并不需要扩展，但你得知道系统的每一部分能够如何扩展，以及能扩展到什么程度。如果扩展需要时间，要预先给你自己留出充足的时间。</li>
+<li>为峰值做好准备。特别是在创业阶段，如果你总是接近满负荷运行，一个lifehacker或reddit帖子就能把你的系统宕掉。保留充足的边界空间，这样才能应对突发负载，或时刻准备好真正快速地扩展。</li>
+<li>选择一门不会拖你后腿的语言。确保你所采用的技术在你的语言中有原生客户端，或者至少有维护得很活跃的一些。不要被等着类库更新给拖住。</li>
+<li>相信炒作。你想要技术跟你的产品共同成长，不会过早死掉。一个充满活力的活跃社区，以及跟该项技术有关的一些噪音，是这种技术存活的良好迹象。</li>
+<li>不要相信炒作。看看那些批判你正在评估的技术的帖子。它们可以告诉你它的弱点。但也不要太认真，当事情不能按照期望工作时，人们通常会变得情绪化。</li>
+<li>玩得开心点。选择会让你兴奋的技术。要能让你觉得“哦，我能用它做的事情太酷啦”。毕竟那(也)是我们来这里的目的。</li>
+</ol>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> ideal </tag>
             
         </tags>
         
@@ -12558,32 +12991,6 @@ $$</p>
     </entry>
     
     <entry>
-      <title><![CDATA[test]]></title>
-      <url>/2016/04/27/miscellaneous/test/</url>
-      <content type="html"><![CDATA[<h4><span id="我是帅哥我会乱说吗">我是帅哥我会乱说吗</span></h4>
-<figure class="highlight scala"><figcaption><span>actor模型</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">ActorPath</span>, <span class="type">ActorSelection</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @author Barudisshu</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Name</span>(<span class="params">name: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  <span class="title">class</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Name</span>(n) =&gt; println(<span class="string">"Hello "</span> + n)</span><br><span class="line">      <span class="keyword">case</span> name: <span class="type">String</span> =&gt; println(<span class="string">"Goodbye "</span> + name)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"greetings"</span>)</span><br><span class="line">  <span class="keyword">val</span> a      = system.actorOf(<span class="type">Props</span>[<span class="type">GreetingsActor</span>], name = <span class="string">"greetings-actor"</span>)</span><br><span class="line"></span><br><span class="line">  a ! <span class="type">Name</span>(<span class="string">"Nilanjan"</span>)</span><br><span class="line">  a ! <span class="string">"World"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> path          : <span class="type">ActorPath</span>      = system / <span class="string">"GreetingsActor"</span></span><br><span class="line">  <span class="keyword">val</span> actorSelection: <span class="type">ActorSelection</span> = system.actorSelection(path)</span><br><span class="line"></span><br><span class="line">  actorSelection ! <span class="type">Name</span></span><br><span class="line"></span><br><span class="line">  <span class="type">Thread</span>.sleep(<span class="number">50</span>)</span><br><span class="line">  system.shutdown()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> scala </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> highlight </tag>
-            
-            <tag> akka </tag>
-            
-            <tag> actor </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[Hello World]]></title>
       <url>/2016/04/27/miscellaneous/hello-world/</url>
       <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
@@ -12747,6 +13154,32 @@ $$</p>
         <tags>
             
             <tag> git </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[test]]></title>
+      <url>/2016/04/27/miscellaneous/test/</url>
+      <content type="html"><![CDATA[<h4><span id="我是帅哥我会乱说吗">我是帅哥我会乱说吗</span></h4>
+<figure class="highlight scala"><figcaption><span>actor模型</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">ActorPath</span>, <span class="type">ActorSelection</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @author Barudisshu</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Name</span>(<span class="params">name: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  <span class="title">class</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Name</span>(n) =&gt; println(<span class="string">"Hello "</span> + n)</span><br><span class="line">      <span class="keyword">case</span> name: <span class="type">String</span> =&gt; println(<span class="string">"Goodbye "</span> + name)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"greetings"</span>)</span><br><span class="line">  <span class="keyword">val</span> a      = system.actorOf(<span class="type">Props</span>[<span class="type">GreetingsActor</span>], name = <span class="string">"greetings-actor"</span>)</span><br><span class="line"></span><br><span class="line">  a ! <span class="type">Name</span>(<span class="string">"Nilanjan"</span>)</span><br><span class="line">  a ! <span class="string">"World"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> path          : <span class="type">ActorPath</span>      = system / <span class="string">"GreetingsActor"</span></span><br><span class="line">  <span class="keyword">val</span> actorSelection: <span class="type">ActorSelection</span> = system.actorSelection(path)</span><br><span class="line"></span><br><span class="line">  actorSelection ! <span class="type">Name</span></span><br><span class="line"></span><br><span class="line">  <span class="type">Thread</span>.sleep(<span class="number">50</span>)</span><br><span class="line">  system.shutdown()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> scala </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> highlight </tag>
+            
+            <tag> akka </tag>
+            
+            <tag> actor </tag>
             
         </tags>
         

@@ -65,6 +65,204 @@
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts = <span class="keyword">async</span> (): <span class="built_in">Promise</span>&lt;IProduct[]&gt; =&gt; &#123;</span><br><span class="line">  <span class="keyword">await</span> wait(<span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">return</span> products;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>该函数异步等待返回的产品信息。</p>
 <h3><span id="creating-state-and-action-types">Creating state and action types</span></h3>
+<p>下面使用Redux来增强React shop。首先，创建一些state类型，以及action类型。</p>
+<ol>
+<li>在<code>src</code>文件夹创建一个新的文件<code>ProductsTypes.ts</code>，</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; IProduct &#125; <span class="keyword">from</span> <span class="string">"./ProductsData"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>添加两种不同类型的action枚举，</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">enum</span> ProductsActionTypes &#123;</span><br><span class="line">  GETALL = <span class="string">"PRODUCTS/GETALL"</span>,</span><br><span class="line">  LOADING = <span class="string">"PRODUCTS/LOADING"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Redux并没有要求action类型为字符串形式。这里我们选择用字符串来表述。同时要确保字符串是全局唯一的。我们定义的字符串中包含了两点重要信息：</p>
+<ul>
+<li>存储的action被关联。这里它是<code>PRODUCTS</code>。</li>
+<li>特定的具体操作被指示。这里，<code>GETALL</code>表示获取所有商品，<code>LOADING</code>表示商品正在获取中。</li>
+</ul>
+<p>当然我们也可以写成类似<code>PRODUCTS-GETALL</code>或者<code>Get All Products</code>。我们只需要确保字符串是唯一的。</p>
+<ol start="3">
+<li>下面为上述两种Action定义接口：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IProductsGetAllAction &#123;</span><br><span class="line">  <span class="keyword">type</span>: ProductsActionTypes.GETALL,</span><br><span class="line">  products: IProduct[]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IProductsLoadingAction &#123;</span><br><span class="line">  <span class="keyword">type</span>: ProductsActionTypes.LOADING</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>IProductsGetAllAction</code>用作获取商品时的派遣动作。<code>IProductsLoadingAction</code>用作加载状态。</p>
+<ol start="4">
+<li>组合为一个新的union type:</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> ProductsActions = </span><br><span class="line">  | IProductsGetAllAction</span><br><span class="line">  | IProductsLoadingAction</span><br></pre></td></tr></table></figure>
+<p>该类型将被传递在reducer的参数上。</p>
+<ol start="5">
+<li>最后，为这种存储状态创建一个接口：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IProductsState &#123;</span><br><span class="line">  readonly products: IProduct[];</span><br><span class="line">  readonly productsLoading: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的state将包含了一组商品信息，以及商品是否正在加载。</p>
+<p>注意到属性前面引入了<code>readonly</code>关键字。它帮助我们避免对状态的直接修改。</p>
+<p>有了state和action的类型后，接下来创建一些具体的action。</p>
+<h3><span id="creating-actions">Creating actions</span></h3>
+<p>本小节，将创建两个action。获取商品的action，商品处于加载的action。</p>
+<ol>
+<li>创建一个<code>ProductsActions.ts</code>文件，</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ActionCreator, AnyAction, Dispatch &#125; <span class="keyword">from</span> <span class="string">"redux"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里用到几个action类型需要实现。</p>
+<ol start="2">
+<li>其中一个action用作异步操作。需要导入<code>redux-thunk</code></li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ThunkAction &#125; <span class="keyword">from</span> <span class="string">"redux-thunk"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>另外导入之前的模拟API。</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; getProducts <span class="keyword">as</span> getProductsFromAPI &#125; <span class="keyword">from</span> <span class="string">"./ProductsData"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里需要重命名<code>getProductsFromAPI</code>，避免和<code>getProducts</code>的action冲突。</p>
+<ol start="4">
+<li>将先前定义的action类型导入。</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; IProductsGetAllAction, IProductsLoadingAction, IProductsState, ProductsActionTypes &#125; <span class="keyword">from</span> <span class="string">"./ProductsTypes"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>接下来，创建一个action creator，顾名思义：它是一个函数，创建并返回一个action！</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loading: ActionCreator&lt;IProductsLoadingAction&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="keyword">type</span>: ProductsActionTypes.LOADING</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>我们使用了泛型<code>ActionCreator</code>作为函数签名</li>
+<li>函数仅仅返回要求的action对象</li>
+</ul>
+<p>还可以使用隐式返回语句另函数更为简洁</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loading: ActionCreator&lt;IProductsLoadingAction&gt; = <span class="function"><span class="params">()</span> =&gt;</span> (&#123;</span><br><span class="line">  <span class="keyword">type</span>: ProductsActionTypes.LOADING,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们将用到这个简短语法用于action creator的实现。</p>
+<ol start="6">
+<li>添加另一个action creator的实现，这稍微更复杂一些：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts: ActionCreator&lt;ThunkAction&lt;</span><br><span class="line">  <span class="built_in">Promise</span>&lt;AnyAction&gt;,</span><br><span class="line">  IProductsState,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  IProductsGetAllAction</span><br><span class="line">&gt;&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<p>因为这里的action是异步的，需要进行一层包装。这里使用了<code>ThunkAction</code>泛型类型来包装同步action，它包含4个参数：</p>
+<ul>
+<li>第一个参数是返回类型，理想上应该是<code>Promise&lt;IProductsGetAllAction&gt;</code>。然而，TypeScript编译器无法处理，因此折中放宽为<code>Promise&lt;AnyAction&gt;</code>类型。</li>
+<li>第二个参数为关联的state接口。</li>
+<li>第三个参数是传递给到action creator的函数参数的类型，因为我们的action creator没有定义参数，这里传递null。</li>
+<li>最后一个参数是action的类型。</li>
+</ul>
+<p>我们对这些action creator进行暴露，因为最终会被<code>ProductsPage</code>组件调用。</p>
+<ol start="7">
+<li>异步action需要返回一个异步函数，最终派遣我们的action：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts: ActionCreator&lt;ThunkAction&lt;</span><br><span class="line">  <span class="built_in">Promise</span>&lt;AnyAction&gt;,</span><br><span class="line">  IProductsState,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  IProductsGetAllAction</span><br><span class="line">&gt;&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">async</span> (dispatch: Dispatch) =&gt; &#123;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>因此，函数第一件事是返回另一个函数，使用<code>async</code>关键字标记为异步的。内部函数以Dispatcher作为回调参数。</p>
+<ol start="8">
+<li>下面实现内部函数：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> getProducts: ActionCreator&lt;ThunkAction&lt;</span><br><span class="line">  <span class="built_in">Promise</span>&lt;AnyAction&gt;,</span><br><span class="line">  IProductsState,</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  IProductsGetAllAction</span><br><span class="line">&gt;&gt; = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">async</span> (dispatch: Dispatch) =&gt; &#123;</span><br><span class="line">    dispatch(loading());</span><br><span class="line">    <span class="keyword">const</span> products = <span class="keyword">await</span> getProductsFromAPI();</span><br><span class="line">    <span class="keyword">return</span> dispatch(&#123;</span><br><span class="line">      products,</span><br><span class="line">      <span class="keyword">type</span>: ProductsActionTypes.GETALL,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先做的，dispatch 启动action，以得到最终的loading state。</li>
+<li>然后异步的方式，从模拟API获取商品信息</li>
+<li>最后一步dispatch 要求的action。</li>
+</ul>
+<p>目前创建了好几个action了，接下来创建相应的reducer。</p>
+<h3><span id="creating-reducers">Creating reducers</span></h3>
+<p>一个reducer，就是一个传入给定的action，产生新的state的一个函数。因此，这个函数在当前state，接收了一个action，返回新的state。</p>
+<ol>
+<li>在<code>src</code>目录新建文件<code>ProductsReducer.ts</code>：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Reducer &#125; <span class="keyword">from</span> <span class="string">"redux"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; IProductsState, ProductsActions, ProductsActionTypes &#125; <span class="keyword">from</span> <span class="string">"./ProductsTypes"</span>;</span><br></pre></td></tr></table></figure>
+<p>这里导入了<code>Reducer</code>依赖，以及前面定义的action和state。</p>
+<ol start="2">
+<li>定义初始state：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialProductState: IProductsState = &#123;</span><br><span class="line">  products: [],</span><br><span class="line">  productsLoading: <span class="literal">false</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>初始状态下，商品信息为空数组，处于非加载状态。</p>
+<ol start="3">
+<li>接下来创建reducer函数：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> productsReducer: Reducer&lt;IProductsState, ProductsActions&gt; = (</span><br><span class="line">  state = initialProductState,</span><br><span class="line">  action</span><br><span class="line">) =&gt; &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">	<span class="comment">// TODO - change the state</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> state;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>该函数返回<code>Reducer</code>，包含有state和action。</li>
+<li>函数接收的参数由Redux提供。</li>
+<li>状态默认为初始化时的状态。</li>
+<li>对于不能识别的switch语句，返回默认的state。</li>
+</ul>
+<ol start="4">
+<li>实现我们商品的reducer：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">  <span class="keyword">case</span> ProductsActionTypes.LOADING: &#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		...state,</span><br><span class="line">		productsLoading: <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">case</span> ProductsActionTypes.GETALL: &#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		...state,</span><br><span class="line">		products: action.products,</span><br><span class="line">		productsLoading: <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们为每个action实现了对应的reducer，合并旧的state，并返回一个新的state。</p>
+<p>这样，我们的第一个reducer完成了。接下来创建我们的store。</p>
+<h3><span id="creating-a-store">Creating a store</span></h3>
+<p>本小节，将创建一个store，用于存放我们的state并管理这些action和reducer：</p>
+<ol>
+<li>新建文件<code>Store.tsx</code>文件，导入相应的需要的组件。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; applyMiddleware, combineReducers, createStore, Store &#125; from &quot;redux&quot;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>createStore</code> 创建store的函数</li>
+<li>我们需要<code>applyMiddleware</code>函数，因为我们使用了redux thunk中间件来管理异步action。</li>
+<li><code>combineReducers</code>函数用于合并reducer</li>
+<li><code>Store</code>是一个TypeScript版的store对象</li>
+</ul>
+<ol start="2">
+<li>导入<code>redux-thunk</code>：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import thunk from &quot;redux-thunk&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>最后，导入reducer和state，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import &#123; productsReducer &#125; from &quot;./ProductsReducer&quot;;</span><br><span class="line">import &#123; IProductsState &#125; from &quot;./ProductsTypes&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>store的关键部分是state。因此，定义一个接口：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export interface IApplicationState &#123;</span><br><span class="line">  products: IProductsState;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个接口仅仅包含了商品的state。</p>
+<ol start="5">
+<li>将reducer添加到Redux的<code>combineReducer</code>函数，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const rootReducer = combineReducers&lt;IApplicationState&gt;(&#123;</span><br><span class="line">  products: productsReducer</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>定义好state和reducer后，我们可以创建我们的store了。实际上我们是创建一个函数：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export default function configureStore(): Store&lt;IApplicationState&gt; &#123;</span><br><span class="line">  const store = createStore(rootReducer, undefined, applyMiddleware(thunk));</span><br><span class="line">  return store;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>函数<code>configureStore</code>返回泛型<code>Store</code></li>
+<li>Redux中的函数<code>createStore</code>，我们传入定义的reducer以及Redux Thunk中间件，传递<code>undefined</code>作为初始化状态。</li>
+</ul>
+<p>接下来，如何连接到我们创建的store？</p>
+<h2><span id="connecting-our-react-app-to-the-store">Connecting our React app to the store</span></h2>
+<p>在本小节，我们将<code>Products</code>页面连接到store。第一件要做的工作室添加React Redux的<code>Provider</code>组件。</p>
+<h3><span id="adding-the-store-provider-component">Adding the store Provider component</span></h3>
+<p><code>Provider</code>组件可以在它任意下层的组件传递store。因此，本小节，需要将<code>Provider</code>添加到组件的最高层级，这样其它组件都可以访问。</p>
+<ol>
+<li>打开原先的<code>index.tsx</code>，导入<code>Provider</code>。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Provider &#125; from &quot;react-redux&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>另外把<code>Store</code>也导入进来。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Store &#125; from &quot;redux&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>其它用到的store和state也导入进来。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import configureStore from &quot;./Store&quot;;</span><br><span class="line">import &#123; IApplicationState &#125; from &quot;./Store&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>创建一些功能组件，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">interface IProps &#123;</span><br><span class="line">  store: Store&lt;IApplicationState&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">const Root: React.SFC&lt;IProps&gt; = props =&gt; &#123;</span><br><span class="line">  return();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里的<code>Root</code>组件将会成为我们新的root element。它将store作为一个prop。</p>
+<ol start="5">
+<li>这样一来，我们需要导入旧的根元素，<code>Routes</code>，放置在新的root组件中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const Root: React.SFC&lt;IProps&gt; = props =&gt; &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;Routes /&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>另外还要把<code>Provider</code>组件加进来：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">return (</span><br><span class="line">  &lt;Provider store=&#123;props.store&#125;&gt;</span><br><span class="line">    &lt;Routes /&gt;</span><br><span class="line">  &lt;/Provider&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>现在已经将<code>Provider</code>组件的最上层，以及将store传递进去。</p>
+<ol start="7">
+<li>另外还要更改根部渲染函数，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const store = configureStore();</span><br><span class="line">ReactDOM.render(&lt;Root store=&#123;store&#125; /&gt;, document.getElementById(&quot;root&quot;) as HTMLElement);</span><br></pre></td></tr></table></figure>
+<p>首先通过<code>configureStore</code>函数创建了全局的store，并将它传递给<code>Root</code>组件。</p>
+<p>这样一来，所有组件都已经连接到了这个store。接下来，需要需要在其它子层组件中对其进行连接。</p>
+<h3><span id="connecting-components-to-the-store">Connecting components to the store</span></h3>
+<h4><span id="connecting-productspage-to-the-store">Connecting ProductsPage to the store</span></h4>
+<p>首先连接的组件是<code>ProductsPage</code>,</p>
+<p>下面开始对其进行重构，</p>
+<ol>
+<li>导入<code>connect</code>函数，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; connect &#125; from &quot;react-redux&quot;;</span><br></pre></td></tr></table></figure>
 </div></article><div id="base-discus"><div id="disqus_thread"></div><script>var disqus_shortname = 'barudisshu-github-io';
 var disqus_identifier = '2019/11/27/react-ts/chapter_8_React_Redux/';
 var disqus_title = '第八章 React Redux';
