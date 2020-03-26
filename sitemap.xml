@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://galudisu.info/2020/03/27/ci/devops-ha-design/</loc>
+    
+    <lastmod>2020-03-26T07:28:46.815Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
+    
+    <lastmod>2020-03-26T06:10:41.816Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://galudisu.info/2020/03/11/learning-plan/2020_03_11_study_plan/</loc>
     
-    <lastmod>2020-03-11T09:03:06.464Z</lastmod>
+    <lastmod>2020-03-11T09:21:21.471Z</lastmod>
     
   </url>
   
@@ -19,13 +33,6 @@
     <loc>http://galudisu.info/2020/03/04/flink/installation/</loc>
     
     <lastmod>2020-03-11T08:18:20.696Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
-    
-    <lastmod>2020-02-18T10:55:48.789Z</lastmod>
     
   </url>
   

@@ -3,6 +3,60 @@
   
     
     <entry>
+      <title><![CDATA[简单构建的自动化devOps方案]]></title>
+      <url>/2020/03/27/ci/devops-ha-design/</url>
+      <content type="html"><![CDATA[<a id="more"></a>
+<h2><span id="流程架构图">流程架构图</span></h2>
+<p><img src="img/ci/devops.png" alt=""></p>
+<p>简单设计了一套自动化devOps方案，其中有两个分支：</p>
+<ul>
+<li>
+<p>jenkins分支，部署在公司内部开发服务器上。用于生产环境，由jenkins搭载一套CI/CD。开发完程序代码后，提交，触发构建、检查、单元测试、质量评估。之后推送到测试服务器，提供给测试人员进行功能测试。如果有问题，反馈给开发人员；如果功能点收集完善，通知teamcity分支。</p>
+</li>
+<li>
+<p>teamcity分支，运营和项目负责人收集到功能点后，手动触发teamcity自动构建，推送镜像到harbor。邮件通知项目实施负责人。实施负责人收集功能点、汇报信息，更新k8s服务镜像，推送服务、进行灰度发布、之后上线、若有问题、回滚…</p>
+</li>
+</ul>
+<p><img src="img/ci/M2WIQ.png" alt=""></p>
+<h2><span id="系统配置">系统配置</span></h2>
+<p>安装系统监控</p>
+<figure class="highlight plain"><figcaption><span>helm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install --tls --name grafana --namespace monitoring -f grafana-settings.yaml -f grafana-dashboards.yaml grafana</span><br></pre></td></tr></table></figure>
+<p>安装harbor</p>
+<figure class="highlight plain"><figcaption><span>helm</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">helm install --wait --name harbor --namespace kube-system harbor/harbor --set persistence.enabled=false --set expose.type=nodePort --set externalURL=&quot;https://harbor.cplier.com&quot; --set expose.ingress.hosts.core=harbor.cplier.com --set expose.tls.enabled=false --set proxy.httpProxy=&apos;http://harbor.cplier.com&apos; --set proxy.httpsProxy=&apos;https://harbor.cplier.com&apos;</span><br></pre></td></tr></table></figure>
+<p>安装k9s，查看部署和服务情况</p>
+<p><img src="img/ci/k9s.png" alt=""></p>
+<p>设置外部代理</p>
+<p>nginx设置负载均衡</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">upstream harbor &#123;</span><br><span class="line">    server 192.168.0.160:30002;</span><br><span class="line">    server 192.168.0.125:30002;</span><br><span class="line">    server 192.168.0.56:30002;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name harbor.cplier.com;</span><br><span class="line">    location / &#123;</span><br><span class="line">       proxy_pass http://harbor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl;</span><br><span class="line">    server_name harbor.cplier.com;</span><br><span class="line">    ssl_certificate cert/1_harbor.cplier.com_bundle.crt;</span><br><span class="line">    ssl_certificate_key cert/2_harbor.cplier.com.key;</span><br><span class="line">    ssl_session_timeout 5m;</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    location / &#123;</span><br><span class="line">        client_max_body_size 1000m;</span><br><span class="line">        proxy_pass http://harbor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>teamcity配置好参数后，触发构建。</p>
+<p><img src="img/ci/teamcity.png" alt=""></p>
+<p>在k8s集群中，编写相应的service，进行部署，写pvc、配ingress、配字典… what ever…</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    run:</span> <span class="string">cplier-gateway</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">cplier-gateway</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      run:</span> <span class="string">cplier-gateway</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        run:</span> <span class="string">cplier-gateway</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - image:</span> <span class="string">harbor.cplier.com/library/cplier-gateway:latest</span></span><br><span class="line"><span class="attr">        name:</span> <span class="string">cplier-gateway</span></span><br><span class="line"><span class="attr">      imagePullSecrets:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">cplier-gateway</span></span><br></pre></td></tr></table></figure>
+<p><code>image</code>为你的镜像仓储。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> devOps </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> gitlab </tag>
+            
+            <tag> k8s </tag>
+            
+            <tag> jenkins </tag>
+            
+            <tag> harbor </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[2020年学习计划]]></title>
       <url>/2020/03/11/learning-plan/2020_03_11_study_plan/</url>
       <content type="html"><![CDATA[<p>不得不说，2019制定的学习计划很糟糕，受干扰的因素太多。另外一方面是自我没有养成良好的习惯。定了7、8个任务，结果也就勉强完成了一半。</p>
@@ -19,12 +73,13 @@
 </ol>
 <p>嗯哼！天呀，我怎么这么多缺点… 不活了…</p>
 <p>下面是正题：</p>
-<p>去年基本看完了rust、kubernates、spring cloud、微服务、cassandra。花了比较多精力在看rust，有点难啃，而且社区还在继续改进中。另外还折腾了一下React，做了一个前后端的token登录的例子；重新折腾了以前github的一些项目。修改一些以前实现上的缺陷或不对的地方。</p>
+<p>去年基本看完了rust、kubernates、spring cloud、微服务、cassandra。花了比较多精力在看rust，有点难啃，而且社区还在继续改进中。另外还折腾了一下React，做了一个前后端的token登录的例子，稍微写了个vue项目(emmm… 写vue的感觉像极了打酱油)；重新折腾了以前github的一些项目。修改一些以前实现上的缺陷或不对的地方。</p>
 <p>今年计划补完：</p>
 <ol>
 <li>Learning React with TypeScript (20%)</li>
 <li>think in python (60%)</li>
 <li>learning-go (80%)</li>
+<li>Mathematica (20%)</li>
 </ol>
 <p>另外一点需要补充的，需要转变思维。学习用数学建模和算法思维解决问题。这一点是从《原则》的作者中学习得到的，任何凭直觉和自己的经验处理问题的方式，最终都是一种懒惰的技能。用数据来说服自己和他人，是最有力的！</p>
 ]]></content>
@@ -504,6 +559,72 @@
 <li>导入<code>connect</code>函数，</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; connect &#125; from &quot;react-redux&quot;;</span><br></pre></td></tr></table></figure>
+<p>我们将使用<code>connect</code>将<code>ProductsPage</code>连接到store。</p>
+<ol start="2">
+<li>导入store的state，以及<code>getProducts</code>action creator。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import &#123; IApplicationState &#125; from &quot;./Store&quot;;</span><br><span class="line">import &#123; getProducts &#125; from &quot;./ProductsActions&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>组件<code>ProductPage</code>不再包含任何state，因为将由Redux store装载。因此，需要将组件原有的state接口、静态方法<code>getDerivedStateFromProps</code>、以及构造器进行整改。<code>ProductsPage</code>原来的外形是：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class ProductsPage extends React.Component&lt;RouteComponentProps&gt; &#123;</span><br><span class="line">  public async componentDidMount() &#123; ... &#125;</span><br><span class="line">  public render() &#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>组件的数据将通过props从store获得。一次，重构props接口：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">interface IProps extends RouteComponentProps &#123;</span><br><span class="line">  getProducts: typeof getProducts;</span><br><span class="line">  loading: boolean;</span><br><span class="line">  products: IProduct[];</span><br><span class="line">&#125;</span><br><span class="line">class ProductsPage extends React.Component&lt;IProps&gt; &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>因此，我们会将下面信息经由store传递给该组件：</p>
+<ul>
+<li>
+<p><code>getProducts</code> action creator</p>
+</li>
+<li>
+<p><code>loading</code>标志，表示当前是否在获取商品信息</p>
+</li>
+<li>
+<p>商品列表数组</p>
+</li>
+</ul>
+<ol start="5">
+<li>接下来调整组件的生命周期方法<code>componentDidMount</code>，通过调用<code>getProducts</code> 这个action creator来获取商品信息：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public componentDidMount() &#123;</span><br><span class="line">  this.props.getProducts();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>现在不再直接从<code>ProductsData.ts</code>中获取<code>products</code>商品列表了。将导入语句移除掉：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; IProduct &#125; from &quot;./ProductsData&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>还有一个未使用的<code>search</code>state也不需要了。如下，我们原来仅仅是将它放置在<code>render</code>方法，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public render() &#123;</span><br><span class="line">  const searchParams = new URLSearchParams(this.props.location.search);</span><br><span class="line">  const search = searchParams.get(&quot;search&quot;) || &quot;&quot;;</span><br><span class="line">  return ( ... );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>现在需要替换掉原来对<code>state</code>的引用：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul className=&quot;product-list&quot;&gt;</span><br><span class="line">  &#123;this.props.products.map(product =&gt; &#123;</span><br><span class="line">    if (!search || (search &amp;&amp; product.name.toLowerCase().indexOf(search.toLowerCase()) &gt; -1)) &#123; ... &#125;</span><br><span class="line">  &#125;)&#125;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>在export语句之前，class语句之后，创建一个函数来映射store和组件props的state：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const mapStateToProps = (store: IApplicationState) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    loading: store.products.productsLoading,</span><br><span class="line">    products: store.products.products</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来，我们可以得知商品是否在loading，以及从store存储的商品信息传递到我们的props中。</p>
+<ol start="10">
+<li>由前面得知，还有一个prop属性需要进行映射，即<code>getProducts</code>。因此创建另外一个函数来关联这种关系：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const mapDispatchToProps = (dispath: any) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    getProducts: () =&gt; dispatch(getProducts())</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="11">
+<li>剩下最后一件事，需要在该文件最后。包装React Redux的<code>connect</code> HOC（钩子）到<code>ProductsPage</code>中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export default connect (</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(ProductsPage);</span><br></pre></td></tr></table></figure>
+<p><code>connect</code>钩子将组件和Redux存储连接起来，由最高层的<code>Provider</code>提供。<code>connect</code>钩子会调用映射函数进行两者的state状态传递。</p>
+<ol start="12">
+<li>最后验证我们的结果：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm start</span><br></pre></td></tr></table></figure>
+<p>我们会发现页面的行为并没有跟原来的有差异。唯一不同的是state现在由Redux store进行管理。</p>
+<p>接下来的小节，我们将商品页面添加加载进度条。</p>
+<h2><span id="connecting-productspage-to-the-loading-store-state">Connecting ProductsPage to the loading store state</span></h2>
+<p>本小节将添加一个加载进度条。在此之前，需要将商品信息进行萃取。然后添加<code>withLoader</code>HOC到组件中：</p>
+<ol>
+<li></li>
+</ol>
 ]]></content>
       
         <categories>
@@ -4503,6 +4624,61 @@ Connect to each server, stop the mongod service (If there is service running), a
     </entry>
     
     <entry>
+      <title><![CDATA[Akka技术架构的一些架构建议]]></title>
+      <url>/2018/10/26/ideal/ideal-reference/</url>
+      <content type="html"><![CDATA[<a id="more"></a>
+<h2><span id="社交设计">社交设计</span></h2>
+<p><a href="http://serendip.me/" target="_blank" rel="noopener">Serendip.me</a>为人们提供<strong>社交音乐服务</strong>，帮助人们发现朋友们分享的优秀音乐，并为他们介绍“知音”——那些靠近他们的社交圈子，有相似音乐品味的陌生人。</p>
+<p>serendip运行在AWS智商，采用了如下这些技术：<a href="http://www.scala-lang.org/" target="_blank" rel="noopener">scala</a>(还有一些Java)，<a href="http://akka.io/" target="_blank" rel="noopener">akka</a>(用来处理并发)，<a href="http://www.playframework.com/" target="_blank" rel="noopener">Play</a>框架(Web和API前端)，<a href="http://www.mongodb.org/" target="_blank" rel="noopener">MongoDB</a>和<a href="http://elasticsearch.org/" target="_blank" rel="noopener">Elasticsearch</a>。</p>
+<h2><span id="技术栈的选择">技术栈的选择</span></h2>
+<p>Serendip的主要功能是从公共音乐服务中收集Twitter上分享的所有音乐，所以它需要处理大量的数据，所以Serendip在选择语言和技术时，首先要考虑它们的扩展能力。</p>
+<p>因为JVM久经考验的性能和工具，并且还有很多采用这门语言开发的开源系统(比如Elasticsearch)，所以他们选择JVM作为系统的基石。</p>
+<p>而在JVM的体系中，scala又脱颖而出，成为了一个有趣的选择。Scala可以用现代的方式写代码，又可以跟Java全面互通。此外还有一个很重要的原因，akka actor框架是非常合适的流处理基础设施(绝对是！)。刚刚开始流行起来的Play框架看起来也很不错。Serendip开始于2011年初，当时这些都是非常前沿的技术。到了2011年末，scala和akka合并成<a href="http://typesafe.com/" target="_blank" rel="noopener">Typesafe</a>，Play也在不久之后加入。</p>
+<p>选择MongoDB是因为它对开发者友好，易用，功能集和可能的扩展能力(采用了自动分片技术)。但因为Serendip使用和查询数据的方式需要在MongoDB上创建很多大索引，而这样会很快引发性能和内存方面的问题。所以他们主要是用MongoDB存储键-值文档，还有几个需要计数器的功能依赖于它的原子增长。</p>
+<p>事实证明，这样使用时MongoDB非常牢靠。还容易操作，但主要是因为尽量避免使用分片，并且只有一个复制集(MongoDB的分片架构相当复杂)。</p>
+<p>查询数据需要一个完全成熟的搜索系统。在开源的搜索解决方案中，Elasticsearch是扩展性最强，并且面向云端的系统。它有动态索引机制，还提供了很多搜索和切面的可能性，可以在其上构建很多功能。因此，Elasticsearch成为了serendip架构中的一个中心组件。</p>
+<p>Serendip决定自己管理MongoDB和Elasticsearch，主要有两个原因。第一，Serendip要完全控制两个系统。不想在软件的升级/降级上依赖于其它元素。第二，因为serendip要处理大量数据，采用托管方案要比他们直接在EC2上自己管理昂贵得多。</p>
+<h2><span id="一些数字">一些数字</span></h2>
+<p>Serendip的“抽水泵” (处理Twitter公众流和Facebook用户订阅源的那部分)每天要消化大概5,000,000条信息项。这些信息项要经过一系列的“过滤器”，对它们进行检测，并解析出受支持服务(YouTube、Soundcloud、Bandcamp等)上的音乐链接，还要添加一些元数据上去。抽水泵和过滤器是akka的actor，并且整个过程是用单个m1.large EC2管理的。如果需要，可以用akka的远程actor将任务分发到集群中，轻松实现系统扩展。</p>
+<p>从这些信息项中，Serendip每天大概能得到850,000条有效的信息项(也就是真的包含相关音乐链接的信息项)。这些信息项在Elasticsearch中索引(还要在MongoDB中备份并持续计数)。因为每条有效的信息项都要更新几个对象，所以在Elasticsearch中的索引率大约为40条/秒。</p>
+<p>Serendip在Elasticsearch中保留一个月的信息项索引(微博和帖子)。每个月的索引大概包含25M信息项，有3个分片。集群运行着4个节点，每个都在m2.2xlarge实例上。这个配置有足够的内存运行Serendip所需的数据搜索。</p>
+<p>Serendip的MongoDB集群的操作频率大概是100次写/秒和300次读/秒，因为它处理更多的数据类型、技术和统计数据更新。复制集的主节点跑在一个m2.2xlarge实例上，副节点在一个m1.xlarge实例上。</p>
+<h2><span id="构建订阅源">构建订阅源</span></h2>
+<p>在设计Serendip主音乐订阅源的架构时，想让订阅源是动态的，并且可以根据用户的动作和输入作出反应。比如说，如果某位用户将一首歌标为“摇滚”，或将某位艺术家标为“趾高气昂”，那么这些动作应该马上反应到订阅源上。如果用户“不喜欢”一位艺术家，那以后就不应该再播放那些音乐。</p>
+<p>并且这个订阅源应该是几个源头的组合，比如朋友分享的音乐，喜爱的艺术家的音乐，以及有相同音乐品味的“建议”用户分享的音乐。</p>
+<p>这些需求意味着那种“fan-out-on-write”式的订阅源创建方式可能并不合适。应该实时构建订阅源，把跟用户相关的所有信号都用上。Elasticsearch的功能可以构建出这种实时的订阅源生成器。</p>
+<p>订阅源算法有几种选择信息项的“策略”，在每次订阅源的获取上都根据不同的比率动态组合。每个策略都会考虑到用户最近的动作和信号。策略的组合被转换成几种对鲜活数据的搜索，这些数据是不断地由Elasticsearch索引的。因为这些数据是基于时间的，并且索引每月创建一次，所以只需要查询全部数据中的一小部分子集。</p>
+<p>Elasticsearch非常擅于处理这些搜索。它还提供了一种扩展这种架构的著名路径-通过增加分片数量扩展写操作。通过增加更多的复制和物理节点扩展搜索。</p>
+<p>寻找“知音”的过程(根据用户的音乐品味进行匹配)充分利用了Elasticsearch的切面(聚合)能力。作为持续不断的社交流处理的一部分，系统通过计算顶级分享的艺术家来为它遇到的社交网络用户准备数据(在他们分享的音乐上使用切面搜索)。</p>
+<p>当Serendip用户给出一个信号(播放音乐或跟订阅源交互)时，它能为那位用户重新触发一次知音计算过程。这个算法按照喜爱艺术家(这个是不断在更新的)列表来寻找匹配程度最高的其他用户，并用一些额外的参数作为权重，比如流行程度、分享次数等。然后再用另一组算法过滤掉垃圾邮件发送者(是的，有音乐垃圾邮件发送者)和异常值。</p>
+<p>实践证明，这种处理能得出很好的结果，并不需要再用一套系统来运行更加复杂的聚类或推荐算法。</p>
+<h2><span id="监测与部署">监测与部署</span></h2>
+<p>Serendip用<a href="http://www.serverdensity.com/" target="_blank" rel="noopener">ServerDensity</a>做系统监测和报警。对于初创公司而言，它是一种易于使用的托管方案，有像样的功能集和合理的价格。ServerDensity原生提供了服务器和MongoDB的监测。Serendi还大量使用了它报告定制指标的能力来报告内部系统统计数据。</p>
+<p>内部统计数据采集机制负责采集系统内发生的所有动作，并把它们保留在一个MongoDB集合内。一个定期任务每隔一分钟从MongoDB中读取一次这些统计数据，并报告给ServerDensity。这样就可以用ServerDensity对Elasticsearch及运营数据进行监测和报警。</p>
+<p>服务器的管理和部署是用亚马逊Elastic Beanstalk完成的。Elastic Beanstalk是AWS的受限PaaS解决方案。很容易上手，但它不是功能完整的PaaS，对于大部分常见用例而言，它的基本功能已经足够了。它提供了易用的自动扩展配置，还可以通过EC2完整访问。</p>
+<p>应用程序的构建是由EC2上的Jenkins实例执行的。Play程序被打包成WAR。一个构建后置脚本将这个WAR作为新版本推送到Elastic Beanstalk上。这个新版本不会自动部署到服务器上-它的部署是手动完成的。通常是先部署到临时环境中进行测试，然后经过证实后再部署到生产环境中。</p>
+<h2><span id="外卖">外卖</span></h2>
+<p>作为结论，这里有一些在构建Serendip的过程中得到的最重要的经验教训，重要程度跟顺序没什么关系。</p>
+<ol>
+<li>知道如何扩展。一开始你可能并不需要扩展，但你得知道系统的每一部分能够如何扩展，以及能扩展到什么程度。如果扩展需要时间，要预先给你自己留出充足的时间。</li>
+<li>为峰值做好准备。特别是在创业阶段，如果你总是接近满负荷运行，一个lifehacker或reddit帖子就能把你的系统宕掉。保留充足的边界空间，这样才能应对突发负载，或时刻准备好真正快速地扩展。</li>
+<li>选择一门不会拖你后腿的语言。确保你所采用的技术在你的语言中有原生客户端，或者至少有维护得很活跃的一些。不要被等着类库更新给拖住。</li>
+<li>相信炒作。你想要技术跟你的产品共同成长，不会过早死掉。一个充满活力的活跃社区，以及跟该项技术有关的一些噪音，是这种技术存活的良好迹象。</li>
+<li>不要相信炒作。看看那些批判你正在评估的技术的帖子。它们可以告诉你它的弱点。但也不要太认真，当事情不能按照期望工作时，人们通常会变得情绪化。</li>
+<li>玩得开心点。选择会让你兴奋的技术。要能让你觉得“哦，我能用它做的事情太酷啦”。毕竟那(也)是我们来这里的目的。</li>
+</ol>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> ideal </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[CentOS 7 搭建Spark2.3.1分布式集群]]></title>
       <url>/2018/10/26/spark/spark-cluster-config/</url>
       <content type="html"><![CDATA[<a id="more"></a>
@@ -4789,61 +4965,6 @@ Connect to each server, stop the mongod service (If there is service running), a
         <tags>
             
             <tag> spark </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Akka技术架构的一些架构建议]]></title>
-      <url>/2018/10/26/ideal/ideal-reference/</url>
-      <content type="html"><![CDATA[<a id="more"></a>
-<h2><span id="社交设计">社交设计</span></h2>
-<p><a href="http://serendip.me/" target="_blank" rel="noopener">Serendip.me</a>为人们提供<strong>社交音乐服务</strong>，帮助人们发现朋友们分享的优秀音乐，并为他们介绍“知音”——那些靠近他们的社交圈子，有相似音乐品味的陌生人。</p>
-<p>serendip运行在AWS智商，采用了如下这些技术：<a href="http://www.scala-lang.org/" target="_blank" rel="noopener">scala</a>(还有一些Java)，<a href="http://akka.io/" target="_blank" rel="noopener">akka</a>(用来处理并发)，<a href="http://www.playframework.com/" target="_blank" rel="noopener">Play</a>框架(Web和API前端)，<a href="http://www.mongodb.org/" target="_blank" rel="noopener">MongoDB</a>和<a href="http://elasticsearch.org/" target="_blank" rel="noopener">Elasticsearch</a>。</p>
-<h2><span id="技术栈的选择">技术栈的选择</span></h2>
-<p>Serendip的主要功能是从公共音乐服务中收集Twitter上分享的所有音乐，所以它需要处理大量的数据，所以Serendip在选择语言和技术时，首先要考虑它们的扩展能力。</p>
-<p>因为JVM久经考验的性能和工具，并且还有很多采用这门语言开发的开源系统(比如Elasticsearch)，所以他们选择JVM作为系统的基石。</p>
-<p>而在JVM的体系中，scala又脱颖而出，成为了一个有趣的选择。Scala可以用现代的方式写代码，又可以跟Java全面互通。此外还有一个很重要的原因，akka actor框架是非常合适的流处理基础设施(绝对是！)。刚刚开始流行起来的Play框架看起来也很不错。Serendip开始于2011年初，当时这些都是非常前沿的技术。到了2011年末，scala和akka合并成<a href="http://typesafe.com/" target="_blank" rel="noopener">Typesafe</a>，Play也在不久之后加入。</p>
-<p>选择MongoDB是因为它对开发者友好，易用，功能集和可能的扩展能力(采用了自动分片技术)。但因为Serendip使用和查询数据的方式需要在MongoDB上创建很多大索引，而这样会很快引发性能和内存方面的问题。所以他们主要是用MongoDB存储键-值文档，还有几个需要计数器的功能依赖于它的原子增长。</p>
-<p>事实证明，这样使用时MongoDB非常牢靠。还容易操作，但主要是因为尽量避免使用分片，并且只有一个复制集(MongoDB的分片架构相当复杂)。</p>
-<p>查询数据需要一个完全成熟的搜索系统。在开源的搜索解决方案中，Elasticsearch是扩展性最强，并且面向云端的系统。它有动态索引机制，还提供了很多搜索和切面的可能性，可以在其上构建很多功能。因此，Elasticsearch成为了serendip架构中的一个中心组件。</p>
-<p>Serendip决定自己管理MongoDB和Elasticsearch，主要有两个原因。第一，Serendip要完全控制两个系统。不想在软件的升级/降级上依赖于其它元素。第二，因为serendip要处理大量数据，采用托管方案要比他们直接在EC2上自己管理昂贵得多。</p>
-<h2><span id="一些数字">一些数字</span></h2>
-<p>Serendip的“抽水泵” (处理Twitter公众流和Facebook用户订阅源的那部分)每天要消化大概5,000,000条信息项。这些信息项要经过一系列的“过滤器”，对它们进行检测，并解析出受支持服务(YouTube、Soundcloud、Bandcamp等)上的音乐链接，还要添加一些元数据上去。抽水泵和过滤器是akka的actor，并且整个过程是用单个m1.large EC2管理的。如果需要，可以用akka的远程actor将任务分发到集群中，轻松实现系统扩展。</p>
-<p>从这些信息项中，Serendip每天大概能得到850,000条有效的信息项(也就是真的包含相关音乐链接的信息项)。这些信息项在Elasticsearch中索引(还要在MongoDB中备份并持续计数)。因为每条有效的信息项都要更新几个对象，所以在Elasticsearch中的索引率大约为40条/秒。</p>
-<p>Serendip在Elasticsearch中保留一个月的信息项索引(微博和帖子)。每个月的索引大概包含25M信息项，有3个分片。集群运行着4个节点，每个都在m2.2xlarge实例上。这个配置有足够的内存运行Serendip所需的数据搜索。</p>
-<p>Serendip的MongoDB集群的操作频率大概是100次写/秒和300次读/秒，因为它处理更多的数据类型、技术和统计数据更新。复制集的主节点跑在一个m2.2xlarge实例上，副节点在一个m1.xlarge实例上。</p>
-<h2><span id="构建订阅源">构建订阅源</span></h2>
-<p>在设计Serendip主音乐订阅源的架构时，想让订阅源是动态的，并且可以根据用户的动作和输入作出反应。比如说，如果某位用户将一首歌标为“摇滚”，或将某位艺术家标为“趾高气昂”，那么这些动作应该马上反应到订阅源上。如果用户“不喜欢”一位艺术家，那以后就不应该再播放那些音乐。</p>
-<p>并且这个订阅源应该是几个源头的组合，比如朋友分享的音乐，喜爱的艺术家的音乐，以及有相同音乐品味的“建议”用户分享的音乐。</p>
-<p>这些需求意味着那种“fan-out-on-write”式的订阅源创建方式可能并不合适。应该实时构建订阅源，把跟用户相关的所有信号都用上。Elasticsearch的功能可以构建出这种实时的订阅源生成器。</p>
-<p>订阅源算法有几种选择信息项的“策略”，在每次订阅源的获取上都根据不同的比率动态组合。每个策略都会考虑到用户最近的动作和信号。策略的组合被转换成几种对鲜活数据的搜索，这些数据是不断地由Elasticsearch索引的。因为这些数据是基于时间的，并且索引每月创建一次，所以只需要查询全部数据中的一小部分子集。</p>
-<p>Elasticsearch非常擅于处理这些搜索。它还提供了一种扩展这种架构的著名路径-通过增加分片数量扩展写操作。通过增加更多的复制和物理节点扩展搜索。</p>
-<p>寻找“知音”的过程(根据用户的音乐品味进行匹配)充分利用了Elasticsearch的切面(聚合)能力。作为持续不断的社交流处理的一部分，系统通过计算顶级分享的艺术家来为它遇到的社交网络用户准备数据(在他们分享的音乐上使用切面搜索)。</p>
-<p>当Serendip用户给出一个信号(播放音乐或跟订阅源交互)时，它能为那位用户重新触发一次知音计算过程。这个算法按照喜爱艺术家(这个是不断在更新的)列表来寻找匹配程度最高的其他用户，并用一些额外的参数作为权重，比如流行程度、分享次数等。然后再用另一组算法过滤掉垃圾邮件发送者(是的，有音乐垃圾邮件发送者)和异常值。</p>
-<p>实践证明，这种处理能得出很好的结果，并不需要再用一套系统来运行更加复杂的聚类或推荐算法。</p>
-<h2><span id="监测与部署">监测与部署</span></h2>
-<p>Serendip用<a href="http://www.serverdensity.com/" target="_blank" rel="noopener">ServerDensity</a>做系统监测和报警。对于初创公司而言，它是一种易于使用的托管方案，有像样的功能集和合理的价格。ServerDensity原生提供了服务器和MongoDB的监测。Serendi还大量使用了它报告定制指标的能力来报告内部系统统计数据。</p>
-<p>内部统计数据采集机制负责采集系统内发生的所有动作，并把它们保留在一个MongoDB集合内。一个定期任务每隔一分钟从MongoDB中读取一次这些统计数据，并报告给ServerDensity。这样就可以用ServerDensity对Elasticsearch及运营数据进行监测和报警。</p>
-<p>服务器的管理和部署是用亚马逊Elastic Beanstalk完成的。Elastic Beanstalk是AWS的受限PaaS解决方案。很容易上手，但它不是功能完整的PaaS，对于大部分常见用例而言，它的基本功能已经足够了。它提供了易用的自动扩展配置，还可以通过EC2完整访问。</p>
-<p>应用程序的构建是由EC2上的Jenkins实例执行的。Play程序被打包成WAR。一个构建后置脚本将这个WAR作为新版本推送到Elastic Beanstalk上。这个新版本不会自动部署到服务器上-它的部署是手动完成的。通常是先部署到临时环境中进行测试，然后经过证实后再部署到生产环境中。</p>
-<h2><span id="外卖">外卖</span></h2>
-<p>作为结论，这里有一些在构建Serendip的过程中得到的最重要的经验教训，重要程度跟顺序没什么关系。</p>
-<ol>
-<li>知道如何扩展。一开始你可能并不需要扩展，但你得知道系统的每一部分能够如何扩展，以及能扩展到什么程度。如果扩展需要时间，要预先给你自己留出充足的时间。</li>
-<li>为峰值做好准备。特别是在创业阶段，如果你总是接近满负荷运行，一个lifehacker或reddit帖子就能把你的系统宕掉。保留充足的边界空间，这样才能应对突发负载，或时刻准备好真正快速地扩展。</li>
-<li>选择一门不会拖你后腿的语言。确保你所采用的技术在你的语言中有原生客户端，或者至少有维护得很活跃的一些。不要被等着类库更新给拖住。</li>
-<li>相信炒作。你想要技术跟你的产品共同成长，不会过早死掉。一个充满活力的活跃社区，以及跟该项技术有关的一些噪音，是这种技术存活的良好迹象。</li>
-<li>不要相信炒作。看看那些批判你正在评估的技术的帖子。它们可以告诉你它的弱点。但也不要太认真，当事情不能按照期望工作时，人们通常会变得情绪化。</li>
-<li>玩得开心点。选择会让你兴奋的技术。要能让你觉得“哦，我能用它做的事情太酷啦”。毕竟那(也)是我们来这里的目的。</li>
-</ol>
-]]></content>
-      
-        
-        <tags>
-            
-            <tag> ideal </tag>
             
         </tags>
         
@@ -12738,6 +12859,201 @@ published in Dr. Dobb’s Journal, March 2005, <a href="http://www.gotw.ca/publi
     </entry>
     
     <entry>
+      <title><![CDATA[Git使用说明]]></title>
+      <url>/2016/04/27/miscellaneous/git-branch/</url>
+      <content type="html"><![CDATA[<h4><span id="git使用说明">Git使用说明</span></h4>
+<h5><span id="git分支管理">Git分支管理</span></h5>
+<p>通常项目需要建立5种分支：<code>master</code>、<code>hostfix</code>、<code>release</code>、<code>develop</code>、<code>feature</code></p>
+<a id="more"></a>
+<p><img src="/img/git/git-branch.jpg" alt="项目分支管理"></p>
+<p>feature分支开始于develop分支，完成以后合并到develop分支。</p>
+<p>当完成一定数量feature分支以后，从develop再开一个release分支出来，这些特性将被更行到下一个发布的版本中，之后的feature将不会被合并到release中。</p>
+<p>之后在release分支中，只修改bug，然后完成release分支。完成release分支会完成以下三个操作：1、合并release分支到master；2、给master打上版本的标签；3、release回归到develop分支。</p>
+<p>当发现master上有bug时，开一个hotfix，完成后合并到master分支。</p>
+<p>基本的开发流程就是这样，不清楚的可以看看文档Gitflow Workflow。</p>
+<h6><span id="远程仓库有master和dev分支">远程仓库有<code>master</code>和<code>dev</code>分支</span></h6>
+<ol>
+<li>克隆代码</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/master-dev.git  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 这个git路径是无效的，示例而已</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>查看所有分支</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git branch --all  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认有了dev和master分支，所以会看到如下三个分支</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> master[本地主分支] origin/master[远程主分支] origin/dev[远程开发分支]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新克隆下来的代码默认master和origin/master是关联的，也就是他们的代码保持同步</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 但是origin/dev分支在本地没有任何的关联，所以我们无法在那里开发</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>创建本地关联origin/dev的分支</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev origin/dev  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建本地分支dev，并且和远程origin/dev分支关联，本地dev分支的初始代码和远程的dev分支代码一样</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>切换到dev分支进行开发</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev  # 这个是切换到dev分支，然后就是常规的开发</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>为了更好的理解，最好继续看看下文。</li>
+</ol>
+<h6><span id="假设远程仓库只有master分支">假设远程仓库只有<code>master</code>分支</span></h6>
+<ol>
+<li>克隆代码</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/master-dev.git  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 这个git路径是无效的，示例而已</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>查看所有分支</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git branch --all  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认只有master分支，所以会看到如下两个分支</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> master[本地主分支] origin/master[远程主分支]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新克隆下来的代码默认master和origin/master是关联的，也就是他们的代码保持同步</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>创建本地新的dev分支</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git branch dev  # 创建本地分支</span><br><span class="line">git branch  # 查看分支</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这是会看到master和dev，而且master上会有一个星号</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这个时候dev是一个本地分支，远程仓库不知道它的存在</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 本地分支可以不同步到远程仓库，我们可以在dev开发，然后merge到master，使用master同步代码，当然也可以同步</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>发布dev分支</li>
+</ol>
+<p>发布dev分支指的是同步dev分支的代码到远程服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin dev:dev  # 这样远程仓库也有一个dev分支了</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>在dev分支开发代码</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev  # 切换到dev分支进行开发</span><br><span class="line"><span class="meta">#</span><span class="bash"> 开发代码之后，我们有两个选择</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 第一个：如果功能开发完成了，可以合并主分支</span></span><br><span class="line">git checkout master  # 切换到主分支</span><br><span class="line">git merge dev  # 把dev分支的更改和master合并</span><br><span class="line">git push  # 提交主分支代码远程</span><br><span class="line">git checkout dev  # 切换到dev远程分支</span><br><span class="line">git push  # 提交dev分支到远程</span><br><span class="line"><span class="meta">#</span><span class="bash"> 第二个：如果功能没有完成，可以直接推送</span></span><br><span class="line">git push  # 提交到dev远程分支</span><br><span class="line"><span class="meta">#</span><span class="bash"> 注意：在分支切换之前最好先commit全部的改变，除非你真的知道自己在做什么</span></span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>删除分支</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git push origin :dev  # 删除远程dev分支，危险命令哦</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面两条是删除本地分支</span></span><br><span class="line">git checkout master  # 切换到master分支</span><br><span class="line">git branch -d dev  # 删除本地dev分支</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>子分支</li>
+</ol>
+<p>要在原来的<code>dev</code>上创建子分支<code>feature</code>，假设分支名为<code>feature-vulcan</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b feature-vulcan</span><br></pre></td></tr></table></figure>
+<p>开发完成后</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">git add vulcan.py</span><br><span class="line">git status</span><br><span class="line"><span class="meta">#</span><span class="bash"> On branch feature-vulcan</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Changes to be committed:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   (use <span class="string">"git reset HEAD &lt;file&gt;..."</span> to unstage)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">       new file:   vulcan.py</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">git commit -m "add feature vulcan"</span><br><span class="line">[feature-vulcan 756d4af] add feature vulcan</span><br><span class="line"> 1 file changed, 2 insertions(+)</span><br><span class="line"> create mode 100644 vulcan.py</span><br></pre></td></tr></table></figure>
+<p>切换回<code>dev</code>，准备合并</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev</span><br></pre></td></tr></table></figure>
+<p>如果要删除该功能，输入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch -d feature-vulcan</span><br><span class="line">error: The branch 'feature-vulcan' is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run 'git branch -D feature-vulcan'.</span><br></pre></td></tr></table></figure>
+<p>销毁失败。Git友情提醒，<code>feature-vulcan</code>分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用命令强行删除:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -D feature-vulcan</span><br></pre></td></tr></table></figure>
+<h5><span id="git常见操作">Git常见操作</span></h5>
+<ol>
+<li>新建代码库</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在当前目录新建一个Git代码库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git init</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个目录，将其初始化为Git代码库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git init [project-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载一个项目和它的整个代码历史</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> [url]</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>配置</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前的Git配置</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config --list</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑Git配置文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config -e [--global]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置提交代码时的用户信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config [--global] user.name <span class="string">"[name]"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config [--global] user.email <span class="string">"[email address]"</span></span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>增加/删除文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 添加指定文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add [file1] [file2] ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加指定目录到暂存区，包括子目录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add [dir]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加当前目录的所有文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加每个变化前，都会要求确认</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 对于同一个文件的多处变化，可以实现分次提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add -p</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除工作区文件，并且将这次删除放入暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git rm [file1] [file2] ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止追踪指定文件，但该文件会保留在工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git rm --cached [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 改名文件，并且将这个改名放入暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git mv [file-original] [file-renamed]</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>代码提交</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 提交暂存区到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交暂存区的指定文件到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit [file1] [file2] ... -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交工作区自上次commit之后的变化，直接到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -a</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交时显示所有diff信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -v</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用一次新的commit，替代上一次提交</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果代码没有任何新变化，则用来改写上一次commit的提交信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit --amend -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重做上一次commit，并包括指定文件的新变化</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit --amend [file1] [file2] ...</span></span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>分支</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 列出所有本地分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出所有远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -r</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出所有本地分支和远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -a</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，但依然停留在当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch [branch-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，并切换到该分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，指向指定commit</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch [branch] [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，与指定的远程分支建立追踪关系</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch --track [branch] [remote-branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换到指定分支，并更新工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [branch-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换到上一个分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 建立追踪关系，在现有分支与指定的远程分支之间</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch --<span class="built_in">set</span>-upstream [branch] [remote-branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 合并指定分支到当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git merge [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 选择一个commit，合并进当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cherry-pick [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -d [branch-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin --delete [branch-name]</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -dr [remote/branch]</span></span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>标签</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 列出所有tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个tag在当前commit</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个tag在指定commit</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag [tag] [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除本地tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag -d [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除远程tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin :refs/tags/[tagName]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看tag信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交指定tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交所有tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] --tags</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，指向某个tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b [branch] [tag]</span></span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>查看信息</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示有变更的文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示当前分支的版本历史</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示commit历史，以及每次commit发生变更的文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --<span class="built_in">stat</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 搜索提交历史，根据关键词</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> -S [keyword]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个commit之后的所有变动，每个commit占据一行</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> [tag] HEAD --pretty=format:%s</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个commit之后的所有变动，其<span class="string">"提交说明"</span>必须符合搜索条件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> [tag] HEAD --grep feature</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个文件的版本历史，包括文件改名</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --follow [file]</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git whatchanged [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示指定文件相关的每一次diff</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> -p [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示过去5次提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> -5 --pretty --oneline</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示所有提交过的用户，按提交次数排序</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git shortlog -sn</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示指定文件是什么人在什么时间修改过</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git blame [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示暂存区和工作区的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示暂存区和上一个commit的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff --cached [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示工作区与当前分支最新commit之间的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff HEAD</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示两次提交之间的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff [first-branch]...[second-branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示今天你写了多少行代码</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff --shortstat <span class="string">"@&#123;0 day ago&#125;"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某次提交的元数据和内容变化</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某次提交发生变化的文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show --name-only [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某次提交时，某个文件的内容</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show [commit]:[filename]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示当前分支的最近几次提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reflog</span></span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>远程同步</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载远程仓库的所有变动</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git fetch [remote]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示所有远程仓库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote -v</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个远程仓库的信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote show [remote]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 增加一个新的远程仓库，并命名</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote add [shortname] [url]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 取回远程仓库的变化，并与本地分支合并</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git pull [remote] [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 上传本地指定分支到远程仓库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 强行推送当前分支到远程仓库，即使有冲突</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] --force</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 推送所有分支到远程仓库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] --all</span></span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>撤销</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 恢复暂存区的指定文件到工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复某个commit的指定文件到暂存区和工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [commit] [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复暂存区的所有文件到工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置暂存区与工作区，与上一次commit保持一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前HEAD为指定commit，但保持暂存区和工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --keep [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个commit，用来撤销指定commit</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 后者的所有变化都将被前者抵消，并且应用到当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git revert [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 暂时将未提交的变化移除，稍后再移入</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash pop</span></span><br></pre></td></tr></table></figure>
+<ol start="10">
+<li>其它</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 生成一个可供发布的压缩包</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git archive</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> git </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> git </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>/2016/04/27/miscellaneous/hello-world/</url>
+      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<a id="more"></a>
+<h2><span id="quick-start">Quick Start</span></h2>
+<h3><span id="create-a-new-post">Create a new post</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3><span id="run-server">Run server</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3><span id="generate-static-files">Generate static files</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<h3><span id="hexo-highlight-syntax">Hexo highlight syntax</span></h3>
+<p>One way is <a href="https://hexo.io/docs/tag-plugins.html#Code-Block" target="_blank" rel="noopener">Code Block</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% codeblock [title] [lang:language] [url] [link text] %&#125;</span><br><span class="line">code snippet</span><br><span class="line">&#123;% endcodeblock %&#125;</span><br></pre></td></tr></table></figure>
+<p>Another way is <a href="https://hexo.io/docs/tag-plugins.html#Backtick-Code-Block" target="_blank" rel="noopener">Backtick Code Block</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">``` [language] [title] [url] [link text] code snippet ```</span><br></pre></td></tr></table></figure>]]></content>
+      
+        <categories>
+            
+            <category> beginning </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> highlight </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[test]]></title>
+      <url>/2016/04/27/miscellaneous/test/</url>
+      <content type="html"><![CDATA[<h4><span id="我是帅哥我会乱说吗">我是帅哥我会乱说吗</span></h4>
+<figure class="highlight scala"><figcaption><span>actor模型</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">ActorPath</span>, <span class="type">ActorSelection</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @author Barudisshu</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Name</span>(<span class="params">name: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  <span class="title">class</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Name</span>(n) =&gt; println(<span class="string">"Hello "</span> + n)</span><br><span class="line">      <span class="keyword">case</span> name: <span class="type">String</span> =&gt; println(<span class="string">"Goodbye "</span> + name)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"greetings"</span>)</span><br><span class="line">  <span class="keyword">val</span> a      = system.actorOf(<span class="type">Props</span>[<span class="type">GreetingsActor</span>], name = <span class="string">"greetings-actor"</span>)</span><br><span class="line"></span><br><span class="line">  a ! <span class="type">Name</span>(<span class="string">"Nilanjan"</span>)</span><br><span class="line">  a ! <span class="string">"World"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> path          : <span class="type">ActorPath</span>      = system / <span class="string">"GreetingsActor"</span></span><br><span class="line">  <span class="keyword">val</span> actorSelection: <span class="type">ActorSelection</span> = system.actorSelection(path)</span><br><span class="line"></span><br><span class="line">  actorSelection ! <span class="type">Name</span></span><br><span class="line"></span><br><span class="line">  <span class="type">Thread</span>.sleep(<span class="number">50</span>)</span><br><span class="line">  system.shutdown()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> scala </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> highlight </tag>
+            
+            <tag> akka </tag>
+            
+            <tag> actor </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Multi plugin]]></title>
       <url>/2016/04/27/miscellaneous/stack-edit/</url>
       <content type="html"><![CDATA[<p>Welcome to StackEdit!</p>
@@ -12985,201 +13301,6 @@ $$</p>
         <tags>
             
             <tag> hexo </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Hello World]]></title>
-      <url>/2016/04/27/miscellaneous/hello-world/</url>
-      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<a id="more"></a>
-<h2><span id="quick-start">Quick Start</span></h2>
-<h3><span id="create-a-new-post">Create a new post</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3><span id="run-server">Run server</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3><span id="generate-static-files">Generate static files</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-<h3><span id="hexo-highlight-syntax">Hexo highlight syntax</span></h3>
-<p>One way is <a href="https://hexo.io/docs/tag-plugins.html#Code-Block" target="_blank" rel="noopener">Code Block</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% codeblock [title] [lang:language] [url] [link text] %&#125;</span><br><span class="line">code snippet</span><br><span class="line">&#123;% endcodeblock %&#125;</span><br></pre></td></tr></table></figure>
-<p>Another way is <a href="https://hexo.io/docs/tag-plugins.html#Backtick-Code-Block" target="_blank" rel="noopener">Backtick Code Block</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">``` [language] [title] [url] [link text] code snippet ```</span><br></pre></td></tr></table></figure>]]></content>
-      
-        <categories>
-            
-            <category> beginning </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> highlight </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Git使用说明]]></title>
-      <url>/2016/04/27/miscellaneous/git-branch/</url>
-      <content type="html"><![CDATA[<h4><span id="git使用说明">Git使用说明</span></h4>
-<h5><span id="git分支管理">Git分支管理</span></h5>
-<p>通常项目需要建立5种分支：<code>master</code>、<code>hostfix</code>、<code>release</code>、<code>develop</code>、<code>feature</code></p>
-<a id="more"></a>
-<p><img src="/img/git/git-branch.jpg" alt="项目分支管理"></p>
-<p>feature分支开始于develop分支，完成以后合并到develop分支。</p>
-<p>当完成一定数量feature分支以后，从develop再开一个release分支出来，这些特性将被更行到下一个发布的版本中，之后的feature将不会被合并到release中。</p>
-<p>之后在release分支中，只修改bug，然后完成release分支。完成release分支会完成以下三个操作：1、合并release分支到master；2、给master打上版本的标签；3、release回归到develop分支。</p>
-<p>当发现master上有bug时，开一个hotfix，完成后合并到master分支。</p>
-<p>基本的开发流程就是这样，不清楚的可以看看文档Gitflow Workflow。</p>
-<h6><span id="远程仓库有master和dev分支">远程仓库有<code>master</code>和<code>dev</code>分支</span></h6>
-<ol>
-<li>克隆代码</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/master-dev.git  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 这个git路径是无效的，示例而已</span></span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>查看所有分支</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git branch --all  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认有了dev和master分支，所以会看到如下三个分支</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> master[本地主分支] origin/master[远程主分支] origin/dev[远程开发分支]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新克隆下来的代码默认master和origin/master是关联的，也就是他们的代码保持同步</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 但是origin/dev分支在本地没有任何的关联，所以我们无法在那里开发</span></span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>创建本地关联origin/dev的分支</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev origin/dev  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 创建本地分支dev，并且和远程origin/dev分支关联，本地dev分支的初始代码和远程的dev分支代码一样</span></span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>切换到dev分支进行开发</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev  # 这个是切换到dev分支，然后就是常规的开发</span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>为了更好的理解，最好继续看看下文。</li>
-</ol>
-<h6><span id="假设远程仓库只有master分支">假设远程仓库只有<code>master</code>分支</span></h6>
-<ol>
-<li>克隆代码</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/master-dev.git  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 这个git路径是无效的，示例而已</span></span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>查看所有分支</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git branch --all  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认只有master分支，所以会看到如下两个分支</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> master[本地主分支] origin/master[远程主分支]</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新克隆下来的代码默认master和origin/master是关联的，也就是他们的代码保持同步</span></span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>创建本地新的dev分支</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git branch dev  # 创建本地分支</span><br><span class="line">git branch  # 查看分支</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这是会看到master和dev，而且master上会有一个星号</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 这个时候dev是一个本地分支，远程仓库不知道它的存在</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 本地分支可以不同步到远程仓库，我们可以在dev开发，然后merge到master，使用master同步代码，当然也可以同步</span></span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>发布dev分支</li>
-</ol>
-<p>发布dev分支指的是同步dev分支的代码到远程服务器</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin dev:dev  # 这样远程仓库也有一个dev分支了</span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>在dev分支开发代码</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev  # 切换到dev分支进行开发</span><br><span class="line"><span class="meta">#</span><span class="bash"> 开发代码之后，我们有两个选择</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 第一个：如果功能开发完成了，可以合并主分支</span></span><br><span class="line">git checkout master  # 切换到主分支</span><br><span class="line">git merge dev  # 把dev分支的更改和master合并</span><br><span class="line">git push  # 提交主分支代码远程</span><br><span class="line">git checkout dev  # 切换到dev远程分支</span><br><span class="line">git push  # 提交dev分支到远程</span><br><span class="line"><span class="meta">#</span><span class="bash"> 第二个：如果功能没有完成，可以直接推送</span></span><br><span class="line">git push  # 提交到dev远程分支</span><br><span class="line"><span class="meta">#</span><span class="bash"> 注意：在分支切换之前最好先commit全部的改变，除非你真的知道自己在做什么</span></span><br></pre></td></tr></table></figure>
-<ol start="6">
-<li>删除分支</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git push origin :dev  # 删除远程dev分支，危险命令哦</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面两条是删除本地分支</span></span><br><span class="line">git checkout master  # 切换到master分支</span><br><span class="line">git branch -d dev  # 删除本地dev分支</span><br></pre></td></tr></table></figure>
-<ol start="7">
-<li>子分支</li>
-</ol>
-<p>要在原来的<code>dev</code>上创建子分支<code>feature</code>，假设分支名为<code>feature-vulcan</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b feature-vulcan</span><br></pre></td></tr></table></figure>
-<p>开发完成后</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">git add vulcan.py</span><br><span class="line">git status</span><br><span class="line"><span class="meta">#</span><span class="bash"> On branch feature-vulcan</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Changes to be committed:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   (use <span class="string">"git reset HEAD &lt;file&gt;..."</span> to unstage)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash">       new file:   vulcan.py</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">git commit -m "add feature vulcan"</span><br><span class="line">[feature-vulcan 756d4af] add feature vulcan</span><br><span class="line"> 1 file changed, 2 insertions(+)</span><br><span class="line"> create mode 100644 vulcan.py</span><br></pre></td></tr></table></figure>
-<p>切换回<code>dev</code>，准备合并</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout dev</span><br></pre></td></tr></table></figure>
-<p>如果要删除该功能，输入</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch -d feature-vulcan</span><br><span class="line">error: The branch 'feature-vulcan' is not fully merged.</span><br><span class="line">If you are sure you want to delete it, run 'git branch -D feature-vulcan'.</span><br></pre></td></tr></table></figure>
-<p>销毁失败。Git友情提醒，<code>feature-vulcan</code>分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用命令强行删除:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch -D feature-vulcan</span><br></pre></td></tr></table></figure>
-<h5><span id="git常见操作">Git常见操作</span></h5>
-<ol>
-<li>新建代码库</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在当前目录新建一个Git代码库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git init</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个目录，将其初始化为Git代码库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git init [project-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载一个项目和它的整个代码历史</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">clone</span> [url]</span></span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>配置</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示当前的Git配置</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config --list</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑Git配置文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config -e [--global]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置提交代码时的用户信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config [--global] user.name <span class="string">"[name]"</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git config [--global] user.email <span class="string">"[email address]"</span></span></span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>增加/删除文件</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 添加指定文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add [file1] [file2] ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加指定目录到暂存区，包括子目录</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add [dir]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加当前目录的所有文件到暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 添加每个变化前，都会要求确认</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 对于同一个文件的多处变化，可以实现分次提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git add -p</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除工作区文件，并且将这次删除放入暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git rm [file1] [file2] ...</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止追踪指定文件，但该文件会保留在工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git rm --cached [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 改名文件，并且将这个改名放入暂存区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git mv [file-original] [file-renamed]</span></span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>代码提交</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 提交暂存区到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交暂存区的指定文件到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit [file1] [file2] ... -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交工作区自上次commit之后的变化，直接到仓库区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -a</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交时显示所有diff信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit -v</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 使用一次新的commit，替代上一次提交</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果代码没有任何新变化，则用来改写上一次commit的提交信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit --amend -m [message]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重做上一次commit，并包括指定文件的新变化</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git commit --amend [file1] [file2] ...</span></span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>分支</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 列出所有本地分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出所有远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -r</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 列出所有本地分支和远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -a</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，但依然停留在当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch [branch-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，并切换到该分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，指向指定commit</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch [branch] [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，与指定的远程分支建立追踪关系</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch --track [branch] [remote-branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换到指定分支，并更新工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [branch-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 切换到上一个分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 建立追踪关系，在现有分支与指定的远程分支之间</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch --<span class="built_in">set</span>-upstream [branch] [remote-branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 合并指定分支到当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git merge [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 选择一个commit，合并进当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git cherry-pick [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -d [branch-name]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除远程分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin --delete [branch-name]</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git branch -dr [remote/branch]</span></span><br></pre></td></tr></table></figure>
-<ol start="6">
-<li>标签</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 列出所有tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个tag在当前commit</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个tag在指定commit</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag [tag] [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除本地tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git tag -d [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 删除远程tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push origin :refs/tags/[tagName]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看tag信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交指定tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] [tag]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 提交所有tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] --tags</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个分支，指向某个tag</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout -b [branch] [tag]</span></span><br></pre></td></tr></table></figure>
-<ol start="7">
-<li>查看信息</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 显示有变更的文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git status</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示当前分支的版本历史</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示commit历史，以及每次commit发生变更的文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --<span class="built_in">stat</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 搜索提交历史，根据关键词</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> -S [keyword]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个commit之后的所有变动，每个commit占据一行</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> [tag] HEAD --pretty=format:%s</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个commit之后的所有变动，其<span class="string">"提交说明"</span>必须符合搜索条件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> [tag] HEAD --grep feature</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个文件的版本历史，包括文件改名</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> --follow [file]</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git whatchanged [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示指定文件相关的每一次diff</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> -p [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示过去5次提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git <span class="built_in">log</span> -5 --pretty --oneline</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示所有提交过的用户，按提交次数排序</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git shortlog -sn</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示指定文件是什么人在什么时间修改过</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git blame [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示暂存区和工作区的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示暂存区和上一个commit的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff --cached [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示工作区与当前分支最新commit之间的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff HEAD</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示两次提交之间的差异</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff [first-branch]...[second-branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示今天你写了多少行代码</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git diff --shortstat <span class="string">"@&#123;0 day ago&#125;"</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某次提交的元数据和内容变化</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某次提交发生变化的文件</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show --name-only [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某次提交时，某个文件的内容</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git show [commit]:[filename]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示当前分支的最近几次提交</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reflog</span></span><br></pre></td></tr></table></figure>
-<ol start="8">
-<li>远程同步</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载远程仓库的所有变动</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git fetch [remote]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示所有远程仓库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote -v</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示某个远程仓库的信息</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote show [remote]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 增加一个新的远程仓库，并命名</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git remote add [shortname] [url]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 取回远程仓库的变化，并与本地分支合并</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git pull [remote] [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 上传本地指定分支到远程仓库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] [branch]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 强行推送当前分支到远程仓库，即使有冲突</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] --force</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 推送所有分支到远程仓库</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git push [remote] --all</span></span><br></pre></td></tr></table></figure>
-<ol start="9">
-<li>撤销</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 恢复暂存区的指定文件到工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复某个commit的指定文件到暂存区和工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout [commit] [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 恢复暂存区的所有文件到工作区</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git checkout .</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置暂存区的指定文件，与上一次commit保持一致，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [file]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置暂存区与工作区，与上一次commit保持一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前分支的指针为指定commit，同时重置暂存区，但工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前分支的HEAD为指定commit，同时重置暂存区和工作区，与指定commit一致</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --hard [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重置当前HEAD为指定commit，但保持暂存区和工作区不变</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git reset --keep [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 新建一个commit，用来撤销指定commit</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 后者的所有变化都将被前者抵消，并且应用到当前分支</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git revert [commit]</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 暂时将未提交的变化移除，稍后再移入</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git stash pop</span></span><br></pre></td></tr></table></figure>
-<ol start="10">
-<li>其它</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 生成一个可供发布的压缩包</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> git archive</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> git </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> git </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[test]]></title>
-      <url>/2016/04/27/miscellaneous/test/</url>
-      <content type="html"><![CDATA[<h4><span id="我是帅哥我会乱说吗">我是帅哥我会乱说吗</span></h4>
-<figure class="highlight scala"><figcaption><span>actor模型</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> akka.actor.&#123;<span class="type">ActorPath</span>, <span class="type">ActorSelection</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * @author Barudisshu</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> akka.actor.&#123;<span class="type">Actor</span>, <span class="type">ActorSystem</span>, <span class="type">Props</span>&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Name</span>(<span class="params">name: <span class="type">String</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  <span class="title">class</span> <span class="title">GreetingsActor</span> <span class="keyword">extends</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">receive</span></span>: <span class="type">Receive</span> = &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Name</span>(n) =&gt; println(<span class="string">"Hello "</span> + n)</span><br><span class="line">      <span class="keyword">case</span> name: <span class="type">String</span> =&gt; println(<span class="string">"Goodbye "</span> + name)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> system = <span class="type">ActorSystem</span>(<span class="string">"greetings"</span>)</span><br><span class="line">  <span class="keyword">val</span> a      = system.actorOf(<span class="type">Props</span>[<span class="type">GreetingsActor</span>], name = <span class="string">"greetings-actor"</span>)</span><br><span class="line"></span><br><span class="line">  a ! <span class="type">Name</span>(<span class="string">"Nilanjan"</span>)</span><br><span class="line">  a ! <span class="string">"World"</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> path          : <span class="type">ActorPath</span>      = system / <span class="string">"GreetingsActor"</span></span><br><span class="line">  <span class="keyword">val</span> actorSelection: <span class="type">ActorSelection</span> = system.actorSelection(path)</span><br><span class="line"></span><br><span class="line">  actorSelection ! <span class="type">Name</span></span><br><span class="line"></span><br><span class="line">  <span class="type">Thread</span>.sleep(<span class="number">50</span>)</span><br><span class="line">  system.shutdown()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> scala </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> highlight </tag>
-            
-            <tag> akka </tag>
-            
-            <tag> actor </tag>
             
         </tags>
         

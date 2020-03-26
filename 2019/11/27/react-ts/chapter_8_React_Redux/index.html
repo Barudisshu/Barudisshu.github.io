@@ -263,6 +263,72 @@
 <li>导入<code>connect</code>函数，</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; connect &#125; from &quot;react-redux&quot;;</span><br></pre></td></tr></table></figure>
+<p>我们将使用<code>connect</code>将<code>ProductsPage</code>连接到store。</p>
+<ol start="2">
+<li>导入store的state，以及<code>getProducts</code>action creator。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import &#123; IApplicationState &#125; from &quot;./Store&quot;;</span><br><span class="line">import &#123; getProducts &#125; from &quot;./ProductsActions&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>组件<code>ProductPage</code>不再包含任何state，因为将由Redux store装载。因此，需要将组件原有的state接口、静态方法<code>getDerivedStateFromProps</code>、以及构造器进行整改。<code>ProductsPage</code>原来的外形是：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">class ProductsPage extends React.Component&lt;RouteComponentProps&gt; &#123;</span><br><span class="line">  public async componentDidMount() &#123; ... &#125;</span><br><span class="line">  public render() &#123; ... &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>组件的数据将通过props从store获得。一次，重构props接口：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">interface IProps extends RouteComponentProps &#123;</span><br><span class="line">  getProducts: typeof getProducts;</span><br><span class="line">  loading: boolean;</span><br><span class="line">  products: IProduct[];</span><br><span class="line">&#125;</span><br><span class="line">class ProductsPage extends React.Component&lt;IProps&gt; &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p>因此，我们会将下面信息经由store传递给该组件：</p>
+<ul>
+<li>
+<p><code>getProducts</code> action creator</p>
+</li>
+<li>
+<p><code>loading</code>标志，表示当前是否在获取商品信息</p>
+</li>
+<li>
+<p>商品列表数组</p>
+</li>
+</ul>
+<ol start="5">
+<li>接下来调整组件的生命周期方法<code>componentDidMount</code>，通过调用<code>getProducts</code> 这个action creator来获取商品信息：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public componentDidMount() &#123;</span><br><span class="line">  this.props.getProducts();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>现在不再直接从<code>ProductsData.ts</code>中获取<code>products</code>商品列表了。将导入语句移除掉：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; IProduct &#125; from &quot;./ProductsData&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>还有一个未使用的<code>search</code>state也不需要了。如下，我们原来仅仅是将它放置在<code>render</code>方法，</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public render() &#123;</span><br><span class="line">  const searchParams = new URLSearchParams(this.props.location.search);</span><br><span class="line">  const search = searchParams.get(&quot;search&quot;) || &quot;&quot;;</span><br><span class="line">  return ( ... );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>现在需要替换掉原来对<code>state</code>的引用：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul className=&quot;product-list&quot;&gt;</span><br><span class="line">  &#123;this.props.products.map(product =&gt; &#123;</span><br><span class="line">    if (!search || (search &amp;&amp; product.name.toLowerCase().indexOf(search.toLowerCase()) &gt; -1)) &#123; ... &#125;</span><br><span class="line">  &#125;)&#125;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>在export语句之前，class语句之后，创建一个函数来映射store和组件props的state：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const mapStateToProps = (store: IApplicationState) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    loading: store.products.productsLoading,</span><br><span class="line">    products: store.products.products</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一来，我们可以得知商品是否在loading，以及从store存储的商品信息传递到我们的props中。</p>
+<ol start="10">
+<li>由前面得知，还有一个prop属性需要进行映射，即<code>getProducts</code>。因此创建另外一个函数来关联这种关系：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const mapDispatchToProps = (dispath: any) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    getProducts: () =&gt; dispatch(getProducts())</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="11">
+<li>剩下最后一件事，需要在该文件最后。包装React Redux的<code>connect</code> HOC（钩子）到<code>ProductsPage</code>中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export default connect (</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(ProductsPage);</span><br></pre></td></tr></table></figure>
+<p><code>connect</code>钩子将组件和Redux存储连接起来，由最高层的<code>Provider</code>提供。<code>connect</code>钩子会调用映射函数进行两者的state状态传递。</p>
+<ol start="12">
+<li>最后验证我们的结果：</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm start</span><br></pre></td></tr></table></figure>
+<p>我们会发现页面的行为并没有跟原来的有差异。唯一不同的是state现在由Redux store进行管理。</p>
+<p>接下来的小节，我们将商品页面添加加载进度条。</p>
+<h2><span id="connecting-productspage-to-the-loading-store-state">Connecting ProductsPage to the loading store state</span></h2>
+<p>本小节将添加一个加载进度条。在此之前，需要将商品信息进行萃取。然后添加<code>withLoader</code>HOC到组件中：</p>
+<ol>
+<li></li>
+</ol>
 </div></article><div id="base-discus"><div id="disqus_thread"></div><script>var disqus_shortname = 'barudisshu-github-io';
 var disqus_identifier = '2019/11/27/react-ts/chapter_8_React_Redux/';
 var disqus_title = '第八章 React Redux';

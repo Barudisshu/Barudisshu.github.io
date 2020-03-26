@@ -4,8 +4,56 @@
 
     
   <url>
+    <loc>http://galudisu.info/2020/03/27/ci/devops-ha-design/</loc>
+    <lastmod>2020-03-26T07:28:46.815Z</lastmod>
+    <data>
+        <display>
+        <title>简单构建的自动化devOps方案</title>
+        <pubTime>2020-03-27T07:50:03.000Z</pubTime>
+        
+        <tag>gitlab</tag>
+         
+        <tag>k8s</tag>
+         
+        <tag>jenkins</tag>
+         
+        <tag>harbor</tag>
+         
+         
+           
+             
+              <breadCrumb title="devOps" url="http://galudisu.info/categories/devOps/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
+    <lastmod>2020-03-26T06:10:41.816Z</lastmod>
+    <data>
+        <display>
+        <title>第八章 React Redux</title>
+        <pubTime>2019-11-27T07:50:08.000Z</pubTime>
+        
+        <tag>react</tag>
+         
+        <tag>typescript</tag>
+         
+         
+           
+             
+              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://galudisu.info/2020/03/11/learning-plan/2020_03_11_study_plan/</loc>
-    <lastmod>2020-03-11T09:03:06.464Z</lastmod>
+    <lastmod>2020-03-11T09:21:21.471Z</lastmod>
     <data>
         <display>
         <title>2020年学习计划</title>
@@ -49,28 +97,6 @@
          
          
            
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
-    <lastmod>2020-02-18T10:55:48.789Z</lastmod>
-    <data>
-        <display>
-        <title>第八章 React Redux</title>
-        <pubTime>2019-11-27T07:50:08.000Z</pubTime>
-        
-        <tag>react</tag>
-         
-        <tag>typescript</tag>
-         
-         
-           
-             
-              <breadCrumb title="react" url="http://galudisu.info/categories/react/"/>
-          
         </display>
     </data>
     </url>
