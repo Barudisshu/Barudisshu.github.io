@@ -12,12 +12,12 @@
 <li>动画转换</li>
 <li>lazy loading 路由</li>
 </ul>
-<h2><span id="installing-react-router-with-routing-types">Installing React Router with routing types</span></h2>
+<h2><span id="安装路由">安装路由</span></h2>
 <p>将React Router添加进项目中，</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add react-router-dom</span><br></pre></td></tr></table></figure>
 <p>以及将TypeScript版本的React Router添加到devDependency的开发依赖中，</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add -D @types/react-router-dom</span><br></pre></td></tr></table></figure>
-<h2><span id="declaring-routes">Declaring routes</span></h2>
+<h2><span id="声明路由">声明路由</span></h2>
 <p>在页面我们需要使用<code>BrowserRouter</code>和<code>Route</code>组件。<code>BrowserRouter</code>是top-level组件，会寻找下层的<code>Route</code>组件以决定不同的页面路径。</p>
 <p>在引入<code>BrowserRouter</code>和<code>Route</code>之前，首先创建两个页面，</p>
 <ol>
@@ -67,7 +67,7 @@
 <ol start="12">
 <li>目前页面上是什么也没有看到的，需要我们在浏览器直接输入地址，&quot;<code>/products</code>&quot;，或者访问另一个页面&quot;<code>/admin</code>&quot;,</li>
 </ol>
-<h2><span id="creating-navigation">Creating navigation</span></h2>
+<h2><span id="创建路由向导">创建路由向导</span></h2>
 <p>非常幸运的是，React Router有一些组件提供了向导的功能。</p>
 <h3><span id="using-the-link-component">Using the Link component</span></h3>
 <p>使用<code>Link</code>组件实现向导功能，</p>
@@ -191,7 +191,7 @@
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;Switch&gt;</span><br><span class="line">  &lt;Route exact=&#123;true&#125; path=&quot;/products&quot; component=&#123;ProductsPage&#125; /&gt;</span><br><span class="line">  &lt;Route path=&quot;/products/:id&quot; component=&#123;ProductPage&#125; /&gt;</span><br><span class="line">  &lt;Route path=&quot;/admin&quot; component=&#123;AdminPage&#125; /&gt;</span><br><span class="line">  &lt;Route component=&#123;NotFoundPage&#125; /&gt;</span><br><span class="line">&lt;/Switch&gt;</span><br></pre></td></tr></table></figure>
 <p><code>Switch</code>组件仅渲染第一个匹配到的<code>Route</code>组件。在我们案例中，当找不到页面是，第一个匹配到的就是<code>NotFoundPage</code>，这样就解决了我们的问题。</p>
-<h2><span id="implementing-page-redirects">Implementing page redirects</span></h2>
+<h2><span id="实现页面重定向">实现页面重定向</span></h2>
 <p>页面重定向使用了<code>Redirect</code>组件实现</p>
 <h3><span id="simple-redirect">Simple redirect</span></h3>
 <p>如果我们访问<code>/</code>路径，我们注意到它是个not found页面。我们希望当路径是<code>/</code>时，重定向到<code>/products</code>。</p>

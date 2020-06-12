@@ -324,11 +324,260 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm start</span><br></pre></td></tr></table></figure>
 <p>我们会发现页面的行为并没有跟原来的有差异。唯一不同的是state现在由Redux store进行管理。</p>
 <p>接下来的小节，我们将商品页面添加加载进度条。</p>
-<h2><span id="connecting-productspage-to-the-loading-store-state">Connecting ProductsPage to the loading store state</span></h2>
+<h3><span id="connecting-productspage-to-the-loading-store-state">Connecting ProductsPage to the loading store state</span></h3>
 <p>本小节将添加一个加载进度条。在此之前，需要将商品信息进行萃取。然后添加<code>withLoader</code>HOC到组件中：</p>
 <ol>
-<li></li>
+<li>首先为抽取的组件创建一个新文件<code>ProductsList.tsx</code>：</li>
 </ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import * as React from &apos;react&apos;;</span><br><span class="line">import &#123;Link&#125; from &apos;react-router-dom&apos;;</span><br><span class="line">import &#123;IProduct&#125; from &apos;./ProductsData&apos;;</span><br><span class="line">import withLoader from &apos;./withLoader&apos;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>该组件props作为商品数组信息和查询字符串的入参：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">interface IProps &#123;</span><br><span class="line">  products?: IProduct[];</span><br><span class="line">  search: string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>我们将调用<code>ProductList</code>组件作为一个SFC。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const ProductsList: React.SFC&lt;IProps&gt; = props =&gt; &#123;</span><br><span class="line">  const search = props.search;</span><br><span class="line">  return ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>现在将来自组件<code>ProductsPage</code>组件的 <code>ul</code>标签语句迁移到<code>ProductList</code>组件的return语句中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">return (</span><br><span class="line">  &lt;ul className=&quot;product-list&quot;&gt;</span><br><span class="line">    &#123;props.products &amp;&amp;</span><br><span class="line">      props.products.map(product =&gt; &#123;</span><br><span class="line">        if (!search || (search &amp;&amp; product.name.toLowerCase().indexOf(search.toLowerCase()) &gt; -1)) &#123;</span><br><span class="line">          return (</span><br><span class="line">            &lt;li key=&#123;product.id&#125; className=&quot;product-list-item&quot;&gt;</span><br><span class="line">              &lt;Link to=&#123;`/products/$&#123;product.id&#125;`&#125;&gt;&#123;product.name&#125;&lt;/Link&gt;</span><br><span class="line">            &lt;/li&gt;</span><br><span class="line">          );</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          return null;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)&#125;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>要注意的是，我们移除了原来this`的引用。</p>
+<ol start="5">
+<li>另外，还需要将组件暴露给钩子<code>withLoader</code>：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export default withLoader(ProductsList);</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>修改原来<code>ProductsPage.tsx</code>组件的返回语句，用新提取的组件替代：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">return (</span><br><span class="line">  &lt;div className=&quot;page-container&quot;&gt;</span><br><span class="line">    &lt;p&gt;Welcome to React Shop where you can get all your tools for ReactJS!&lt;/p&gt;</span><br><span class="line">    &lt;ProductsList search=&#123;search&#125; products=&#123;this.props.products&#125; loading=&#123;this.props.loading&#125; /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>以及在组件中引入引用：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import ProductsList from &quot;./ProductsList&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>
+<p>最后，移除在<code>ProductsPage.tsx</code>组件中的<code>Link</code>引用。</p>
+<p>运行应用，进入<code>Products</code>页面，可以看到一个加载spinner：</p>
+<p>现在，我们的<code>Products</code>页面已经接入到Redux store。下个小节会将`Product也接入到store中。</p>
+</li>
+</ol>
+<h3><span id="adding-product-stte-and-actions-to-the-store">Adding product stte and actions to the store</span></h3>
+<p>要将<code>ProductPage</code>组件连接到Redux存储中，需要创建额外的state，表示商品是否被添加到购物车。另外，需要额外的action和reducer，来表述获取商品、添加到购物篮的行为。</p>
+<ol>
+<li>首先，在<code>ProductsTypes.ts</code>添加相应的state，表述“当前”商品：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export interface IProductsState &#123;</span><br><span class="line">  readonly currentProduct: IProduct || null;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>为获取商品的行为添加相应action：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">enum</span> ProductsActionTypes &#123;</span><br><span class="line">  GETALL = <span class="string">"PRODUCTS/GETALL"</span>,</span><br><span class="line">  GETSINGLE = <span class="string">"PRODUCTS/GETSINGLE"</span>,</span><br><span class="line">  LOADING = <span class="string">"PRODUCTS/LOADING"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>为获取商品的行为添加action type：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> IProductsGetSingleAction &#123;</span><br><span class="line">  <span class="keyword">type</span>: ProductsActionTypes.GETSINGLE;</span><br><span class="line">  product: IProduct;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>添加到联合类型(union actions type)：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> ProductsActions = IProductsGetAllAction | IProductsGetSingleAction | IProductsLoadingAction;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>接着创建新的action creator。首先，导入假的api，用于表示获取商品：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; getProduct <span class="keyword">as</span> getProductFromAPI, getProducts <span class="keyword">as</span> getProductsFromAPI &#125; <span class="keyword">from</span> <span class="string">"./ProductsData"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>接着为action creator导入需要用到的类型：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; IProductsGetAllAction, IPrudctsGetSingleAction, IProductsLoadingAction, IProductsState, ProductsActionType &#125; from &quot;./productsTypes&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>实现action creator：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">export const getProduct: ActionCreator&lt;ThunkAction&lt;Promise&lt;any&gt;, IProductsState, null, IProductsGetSingleAction&gt;&gt; = (</span><br><span class="line">  id: number,</span><br><span class="line">) =&gt; &#123;</span><br><span class="line">  return async (dispatch: Dispatch) =&gt; &#123;</span><br><span class="line">    dispatch(loading());</span><br><span class="line">    const product = await getProductFromAPI(id);</span><br><span class="line">    dispatch(&#123;</span><br><span class="line">      product,</span><br><span class="line">      type: ProductsActionTypes.GETSINGLE,</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这个和<code>getProducts</code>非常相似。不同的是这里的入参是商品id。</p>
+<ol start="8">
+<li>在<code>ProductsReducer.ts</code>中，首先设置初始状态为null：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const initialProductState: IProductsState = &#123;</span><br><span class="line">  currentProduct: null,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>在<code>productReducer</code>函数中，添加相应新的分支语句：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">switch (action.type) &#123;</span><br><span class="line">    ...</span><br><span class="line">    case ProductsActionTypes.GETSINGLE: &#123;</span><br><span class="line">      return &#123;</span><br><span class="line">        ...state,</span><br><span class="line">        currentProduct: action.product,</span><br><span class="line">        productsLoading: false</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3><span id="adding-basket-state-and-actions-to-the-store">Adding basket state and actions to the store</span></h3>
+<p>这里需要为购物篮添加状态管理。</p>
+<ol>
+<li>首先，创建一个新文件<code>BasketTypes.ts</code>，内容如下：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import &#123;IProduct&#125; from &apos;./ProductsData&apos;;</span><br><span class="line"></span><br><span class="line">export enum BasketActionTypes &#123;</span><br><span class="line">  ADD = &apos;BASKET/ADD&apos;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export interface IBasketState &#123;</span><br><span class="line">  readonly products: IProduct[];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export interface IBasketAdd &#123;</span><br><span class="line">  type: BasketActionTypes.ADD;</span><br><span class="line">  product: IProduct;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export type BasketActions = IBasketAdd;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这里仅一个state，代表购物篮中的商品数组信息。</li>
+<li>这里仅一个action，表示向购物篮添加商品。</li>
+</ul>
+<ol start="2">
+<li>新建一个文件<code>BasketActions.ts</code>，包含下面内容：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import &#123;BasketActionTypes, IBasketAdd&#125; from &apos;./BasketTypes&apos;;</span><br><span class="line">import &#123;IProduct&#125; from &apos;./ProductsData&apos;;</span><br><span class="line"></span><br><span class="line">export const addToBasket = (product: IProduct): IBasketAdd =&gt; (&#123;</span><br><span class="line">  product,</span><br><span class="line">  type: BasketActionTypes.ADD,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这是商品添加到购物篮的action creator。该函数接收一个商品入参，返回相应的action。</p>
+<ol start="3">
+<li>在reducer中，创建文件<code>BasketReducer.ts</code>，内容如下：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Reducer&#125; from &apos;redux&apos;;</span><br><span class="line">import &#123;BasketActions, BasketActionTypes, IBasketState&#125; from &apos;./BasketTypes&apos;;</span><br><span class="line"></span><br><span class="line">const initialBasketState: IBasketState = &#123;</span><br><span class="line">  products: [],</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export const basketReducer: Reducer&lt;IBasketState, BasketActions&gt; = (state = initialBasketState, action) =&gt; &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case BasketActionTypes.ADD: &#123;</span><br><span class="line">      return &#123;</span><br><span class="line">        ...state,</span><br><span class="line">        products: state.products.concat(action.product),</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return state || initialBasketState;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里有趣的地方是，如何优雅地向<code>products</code>数组添加<code>product</code>，而不改变原来的数组变量信息。我们使用了JavaScript的<code>concat</code>函数，它会创建一个新的arrary，并将原来的数组以参数形式合并。</p>
+<ol start="6">
+<li>现在编译<code>Store.ts</code>，导入新的reducer和state：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; basketReducer &#125; <span class="keyword">from</span> <span class="string">"./BasketReducer"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; IBasketState &#125; <span class="keyword">from</span> <span class="string">"./BasketTypes"</span>;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>将购物篮的state添加到store中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export interface IApplicationState &#123;</span><br><span class="line">  basket: IBasketState;</span><br><span class="line">  products: IProductsState;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>现在有两个reducer。因此，添加购物篮reducer到<code>combineReducers</code>的函数调用中：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> rootReducer = combineReducers&lt;IApplicationState&gt;(&#123;</span><br><span class="line">  basket: basketReducer,</span><br><span class="line">  products: productsReducer</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>现在可以从Store连接到<code>ProductPage</code>组件了。</p>
+<h3><span id="connecting-productpage-to-the-store">Connecting ProductPage to the store</span></h3>
+<ol>
+<li>首先在<code>ProductPage.tsx</code>导入相应的组件：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import &#123;connect&#125; from &apos;react-redux&apos;;</span><br><span class="line">import &#123;addToBasket&#125; from &apos;./BasketActions&apos;;</span><br><span class="line">import &#123;getProduct&#125; from &apos;./ProductsActions&apos;;</span><br><span class="line">import &#123;IApplicationState&#125; from &apos;./Store&apos;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>因为是通过<code>getProduct</code>从获取商品信息，<code>ProductsData.ts</code>不再需要用到。移除该导入：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; IProduct &#125; from &quot;./ProductsData&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>接着，将state挪到props属性：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">interface IProps extends RouteComponentProps&lt;&#123;id: string&#125;&gt; &#123;</span><br><span class="line">  addToBasket: typeof addToBasket;</span><br><span class="line">  getProduct: typeof getProduct;</span><br><span class="line">  loading: boolean;</span><br><span class="line">  product?: IProduct;</span><br><span class="line">  added: boolean;</span><br><span class="line">&#125;</span><br><span class="line">class ProductPage extends React.Component&lt;IProps&gt; &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>我们可以移除掉构造函数，因为它不再需要初始化任何状态。</li>
+<li>以及，需要在<code>componentDidMount</code>生命周期函数中调用相应的action creator获取商品信息：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public componentDidMount() &#123;</span><br><span class="line">  if (this.props.match.params.id) &#123;</span><br><span class="line">    const id: number = parseInt(this.props.match.params.id, 10);</span><br><span class="line">    this.props.getProduct(id);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意我们也移除了<code>async</code>关键字，因为该方法不再是异步的。</p>
+<ol start="6">
+<li>移步到<code>render</code>函数，修改为：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public render() &#123;</span><br><span class="line">  const product = this.props.product;</span><br><span class="line">  return (</span><br><span class="line">    &lt;div className=&quot;page-container&quot;&gt;</span><br><span class="line">      &lt;Prompt when=&#123;!this.props.added&#125; message=&#123;this.navAwayMessage&#125; /&gt;</span><br><span class="line">      &#123;product || this.props.loading ? (</span><br><span class="line">        &lt;Product</span><br><span class="line">          loading=&#123;this.props.loading&#125;</span><br><span class="line">          product=&#123;product&#125;</span><br><span class="line">          inBasket=&#123;this.props.added&#125;</span><br><span class="line">          onAddToBasket=&#123;this.handleAddClick&#125;</span><br><span class="line">        /&gt;</span><br><span class="line">      ) : (</span><br><span class="line">        &lt;p&gt;Product not found!&lt;/p&gt;</span><br><span class="line">      )&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>在点击句柄中，对其重构为通过调用action creator来表示添加商品。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private handleAddClick = () =&gt; &#123;</span><br><span class="line">  if (this.props.product) &#123;</span><br><span class="line">    this.props.addToBasket(this.props.product);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>最后一步。需要实现对应的<code>mapDispatchToProps</code>，映射关联store和组件的props。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const mapDispatchToProps = (dispath: any) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    addToBasket: (product: IProduct) =&gt; dispatch(addToBasket(product)),</span><br><span class="line">    getProduct: (id: number) =&gt; dispatch(getProduct(id))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>以及添加state的映射。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const mapStateToProps = (store: IApplicationState) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    basketProducts: store.basket.products,</span><br><span class="line">    loading: store.products.productsLoading,</span><br><span class="line">    product: store.proucts.currentProduct || undefined</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>注意，我们将null的<code>currentProduct</code>映射为<code>undefined</code>。</p>
+<ol start="10">
+<li>剩余的需要映射的属性是<code>added</code>。我们需要检测当前商品对应的store中，是否为“已添加至购物篮”，这里用到<code>some</code>函数对数组进行处理：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const mapStateToProps = (store: IApplicationState) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    added: store.basket.products.some(p =&gt; store.products.currentProduct ? p.id === store.products.currentProduct.id : false),</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="11">
+<li>剩余步骤是，使用<code>connect</code>钩子连接<code>ProductPage</code>组件到store中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export default connect (</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(ProductPage);</span><br></pre></td></tr></table></figure>
+<p>现在回到页面App，尝试点击按钮，添加商品到购物篮看看效果，已添加的商品，再次进入商品的页面时，添加按钮会消失。</p>
+<h3><span id="creating-and-connecting-basketsummary-to-the-store">Creating and connecting BasketSummary to the store</span></h3>
+<p>在该小节，我们将创建新的组件<code>BasketSummary</code>。它会显示购物篮中商品的个数，并显示在右上角。</p>
+<ol>
+<li>首先创建一个新的文件<code>BasketSummary.tsx</code>，内容如下：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import * as React from &quot;react&quot;;</span><br><span class="line"></span><br><span class="line">interface IProps &#123;</span><br><span class="line">  count: number;</span><br><span class="line">&#125;</span><br><span class="line">const BasketSummary: React.SFC&lt;IProps&gt; = props =&gt; &#123;</span><br><span class="line">  return &lt;div className=&quot;basket-summary&quot;&gt;&#123;props.count&#125;&lt;/div&gt;</span><br><span class="line">&#125;;</span><br><span class="line">export default BasketSummary;</span><br></pre></td></tr></table></figure>
+<p>这是一个简单组件，props入参为商品个数，并显示值。</p>
+<ol start="2">
+<li>在<code>index.class</code>添加对应的CSS类，</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.basket-summary</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">margin-left</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">5px</span> <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">border</span>: white solid <span class="number">2px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>我们需要将该组件添加到header component中。因此，在<code>Header.tsx</code>添加：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import BasketSummary from &quot;./BasketSummary&quot;;</span><br><span class="line">import &#123; connect &#125; from &quot;react-redux&quot;;</span><br><span class="line">import &#123; IApplicationState &#125; from &quot;./Store&quot;;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>在<code>IProps</code>添加一个number属性：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">interface IProps extends RouteComponentProps &#123;</span><br><span class="line">  basketCount: number;</span><br><span class="line">&#125;</span><br><span class="line">class Header extends React.Component&lt;IProps, IState&gt; &#123;</span><br><span class="line">  public constructor(props: IProps) &#123; ... &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>添加<code>BasketSummary</code>组件到<code>Header</code>组件中：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;header className=&quot;header&quot;&gt;</span><br><span class="line">  &lt;div className=&quot;search-container&quot;&gt;</span><br><span class="line">    &lt;input ... /&gt;</span><br><span class="line">    &lt;BasketSummary count=&#123;this.props.basketCount&#125; /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  ...</span><br><span class="line">&lt;/header&gt;</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>最后一步就是添加映射：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const mapStateToProps = (store: IApplicationState) =&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    basketCount: store.basket.products.length</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>以及通过钩子暴露连接</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export default connect(mapStateToProps)(withRouter(Header));</span><br></pre></td></tr></table></figure>
+<p>现在<code>Header</code>组件消费<code>BasketSummary</code>组件信息，并连接到store中。尝试在页面中添加商品信息，可以看到数字增加了。</p>
+<h2><span id="managing-state-with-usereducer">Managing state with useReducer</span></h2>
+<p>Redux对于状态管理带来很大的帮助。但如果仅仅为了管理存在的单一组件的状态，则显得有点笨重。显然，我们，单一的组件直接使用<code>setState(for class compoents)</code>或<code>useState(for function compoents)</code>就可以了。然而，对于复杂的组件状态会怎样？有一大堆的state信息，并且这些state的交互可能涉及很多操作，某些甚至可能是异步的。</p>
+<p>在本小节，我们将探索使用<code>useReduder</code>函数来管理这些状态的方法。我们的例子将尽量人性化和简单，以理解这种管理方法。</p>
+<p>我们希望添加一个_<code>Like</code>_ 按钮到*<code>Product</code>* 页面。用户可以多次点击这个like按钮。<code>Product</code>组件会跟踪点击这个按钮的次数、最后一次like的时间，并显示。</p>
+<ol>
+<li>首先打开<code>Product.tsx</code>，创建一个接口，它包含了“like”的次数、最后“like”的时间：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">interface ILikeState &#123;</span><br><span class="line">  likes: number;</span><br><span class="line">  lastLike: Date | null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>创建一个变量表述初始状态：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const initialLikeState: ILikeState = &#123;</span><br><span class="line">  likes: 0,</span><br><span class="line">  lastLike: null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>创建action类型：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">enum LikeActionTypes &#123;</span><br><span class="line">  LIKE = &quot;LIKE&quot;</span><br><span class="line">&#125;</span><br><span class="line">interface ILikeAction &#123;</span><br><span class="line">  type: LikeActionTypes.LIKE;</span><br><span class="line">  now: Date;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>创建一个联合类型包含所有这些action。在我们的例子中，虽然仅只有一个action type，先理解这种方式带来的扩展性的好处：</li>
+</ol>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> LikeAction = ILikeAction;</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>在组件<code>Product</code>内部，让我们调用<code>useReducer</code>函数获取state和<code>dispatch</code>：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const [state, dispatch]: [ILikeState, (action: ILikeAction) =&gt; void] = React.useReducer(reducer, initialLikeState);</span><br></pre></td></tr></table></figure>
+<p>让我们分解下：</p>
+<ul>
+<li>我们向<code>useReducer</code>传入一个函数<code>reducer</code>函数参数。</li>
+<li>另外也传入了<code>useReducer</code>初始状态。</li>
+<li><code>useReducer</code>返回一个数组包含两个元素。第一个元素为当前state，另一个是<code>dispatch</code>用于调用一个action。</li>
+</ul>
+<ol start="6">
+<li>让我们重构该行，对state进行解构，这样我们就可以直接引用一系列state：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const [&#123; likes, lastLike &#125;, dispatch]: [</span><br><span class="line">  ILikeState,</span><br><span class="line">  (action: ILikeAction) =&gt; void</span><br><span class="line">] = React.useReducer(reducer, initialLikeState);</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>在<code>Product</code>组件的底部，添加相应的“like”信息和按钮：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;!props.inBasket &amp;&amp; &lt;button onClick=&#123;handleAddClick&#125;&gt;Add to basket&lt;/button&gt;&#125;</span><br><span class="line">&lt;div className=&quot;like-container&quot;&gt;</span><br><span class="line">  &#123;likes &gt; 0 &amp;&amp; &lt;div&gt;&#123;`I like this x $&#123;likes&#125;, last at $&#123;lastLike&#125;`&#125;&lt;/div&gt;&#125;</span><br><span class="line">  &lt;button onClick=&#123;handleLikeClick&#125;&gt;&#123;likes &gt; 0 ? &apos;Like again&apos; : &apos;Like&apos;&#125;&lt;/button&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>添加CSS样式：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.like-container &#123;</span><br><span class="line">  margin-top: 20px;</span><br><span class="line">&#125;</span><br><span class="line">.like-container button &#123;</span><br><span class="line">  margin-top: 5px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>为<code>Like</code>按钮实现点击事件处理：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const handleLikeClick = () =&gt; &#123;</span><br><span class="line">  dispatch(&#123; type: LikeActionTypes.LIKE, now: new Date() &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="10">
+<li>最后一步，在<code>Product</code>组件外部实现reducer函数，即在<code>LikeActions</code>类型下：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const reducer = (state: ILikeState = initialLikeState, action: LikeAction) =&gt; &#123;</span><br><span class="line">  switch (action.type) &#123;</span><br><span class="line">    case LikeAtionTypes.LIKE:</span><br><span class="line">      return &#123;</span><br><span class="line">        ...state,</span><br><span class="line">        likes: state.likes + 1,</span><br><span class="line">        lastLike: action.now </span><br><span class="line">      &#125;;</span><br><span class="line">      return state;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该实现方式和实现action、reducer相似，不同的是所有操作都在一个组件内实现。</p>
+<h2><span id="summary">Summary</span></h2>
+<p>下面是几个关键点：</p>
+<ul>
+<li>枚举类型的action type，在引用时能给我们更好的提示。</li>
+<li>使用接口来定义action带来更好的类型安全等级，这样允许我们创建联合类型(union type)，提供给reducer使用。</li>
+<li>使用readonly定义的state属性，帮助我们避免对state的直接更改。</li>
+<li>synchronous action creator返回action 对象。</li>
+<li>Asynchronous action creator返回一个function，该function最终返回action对象。</li>
+<li>reducer包含一系列的action type逻辑。</li>
+<li>Redux提供的<code>createStore</code>创建实际的store。</li>
+</ul>
+<p>要将组件衔接到store中，下面是几个关键点：</p>
+<ul>
+<li><code>Provider</code>组件需要放置在所有消费组件的顶部。它拥有一个prop定义了store。</li>
+<li><code>connect</code>钩子可以将独立的组件衔接到store中。它接收两个参数，用于将state和action creator映射到组件的props中。</li>
+</ul>
 </div></article><div id="base-discus"><div id="disqus_thread"></div><script>var disqus_shortname = 'barudisshu-github-io';
 var disqus_identifier = '2019/11/27/react-ts/chapter_8_React_Redux/';
 var disqus_title = '第八章 React Redux';
@@ -339,4 +588,21 @@ var disqus_url = 'http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux
   dsq.async = true;
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//barudisshu-github-io.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2020 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css"><script src="/js/base.js"></script><script src="/js/rabbit-lyrics.js"></script></div><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
+})();</script><script id="dsq-count-scr" src="//barudisshu-github-io.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2020 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css"><script src="/js/base.js"></script><script src="/js/rabbit-lyrics.js"></script></div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end --></body></html>

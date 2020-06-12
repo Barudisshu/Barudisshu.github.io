@@ -92,7 +92,7 @@
 <p>如果要覆盖默认属性，补充具体属性值即可，</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;Confirm</span><br><span class="line">	title=&quot;React and TypeScript&quot;</span><br><span class="line">	content=&quot;Are you sure you want to learn React and TypeScript?&quot;</span><br><span class="line">	cancelCaption=&quot;No way&quot;</span><br><span class="line">	okCaption=&quot;Yes please!&quot;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>带有默认值的可选属性便于组件使用，这样大部分通用的配置可以自动装配起来，不用组个指定。</p>
+<p>带有默认值的可选属性便于组件使用，这样大部分通用的配置可以自动装配起来，不用逐个指定。</p>
 </blockquote>
 <h2><span id="处理类组件事件">处理类组件事件</span></h2>
 <p>事件存在于多数编程语言中。以允许我们执行特定逻辑。</p>
@@ -113,7 +113,7 @@
 <p>在事件的处理上承受来自JavaScript的经典<code>this</code>问题。我们在事件处理上获取不到引用，譬如，</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">private handleOkClick() &#123;</span><br><span class="line">	console.log(&quot;Ok clicked&quot;, this.props):</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>点击按钮，会出现undefined！！原因是<code>this</code>代表的是当前这个事件，而不是我们的类！</p>
-<p>一种解决方法是，将<code>handleOkClick</code>方法改为 arrow function。</p>
+<p>一种解决方法是，将<code>handleOkClick</code>方法改为箭头函数(arrow function)。</p>
 <blockquote>
 <p>arrow function相当于一个表达式。它不会创建自身的<code>this</code>——这样解决了<code>this</code>的问题。</p>
 </blockquote>
@@ -144,7 +144,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">private handleOkConfirmClick = () =&gt; &#123;</span><br><span class="line">	this.state.confirmOpen = false;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>它会出现错误消息说状态是read-only!的。我们需要使用<code>setState</code>方法来改变状态。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">private handleOkConfirmClick = () =&gt; &#123;</span><br><span class="line">	this.setState(&#123; confirmOpen: false &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>我们仅能在构造函数中初始化State，其它类组件任何地方都不能初始化状态。以及，状态的更改，仅能在改组件内调用<code>setState</code>实现。</p>
+<p>我们仅能在构造函数中初始化State，其它类组件任何地方都不能初始化状态。以及，状态的更改，仅能在该组件内调用<code>setState</code>实现。</p>
 <h2><span id="class-component-life-cycle-methods">Class component life cycle methods</span></h2>
 <p>生命周期允许我们在特定点做某些处理。</p>
 <h3><span id="componentdidmount">componentDidMount</span></h3>

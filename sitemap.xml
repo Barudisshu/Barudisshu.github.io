@@ -2,16 +2,65 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://galudisu.info/2020/03/27/ci/devops-ha-design/</loc>
+    <loc>http://galudisu.info/2020/06/12/philosophy/architecture-retrospective-1/</loc>
     
-    <lastmod>2020-03-26T07:28:46.815Z</lastmod>
+    <lastmod>2020-06-12T02:49:28.838Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_9_Interacting_with_RESTful_APIs/</loc>
+    
+    <lastmod>2020-05-19T09:39:57.073Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_b_Unit_Testing_with_Jest/</loc>
+    
+    <lastmod>2020-05-19T09:39:57.067Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_a_Interacting_with_GraphQL_APIs/</loc>
+    
+    <lastmod>2020-05-19T09:39:57.058Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_4_Routing_with_React_Router/</loc>
+    
+    <lastmod>2020-05-19T09:36:36.059Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_3_Getting_Started_with_React_and_TypeScript/</loc>
+    
+    <lastmod>2020-05-19T09:33:42.144Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_1_TypeScript_Basics/</loc>
+    
+    <lastmod>2020-05-19T09:24:41.974Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
     
-    <lastmod>2020-03-26T06:10:41.816Z</lastmod>
+    <lastmod>2020-04-07T02:46:58.027Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/03/27/ci/devops-ha-design/</loc>
+    
+    <lastmod>2020-03-30T02:14:39.317Z</lastmod>
     
   </url>
   
@@ -51,23 +100,9 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_3_Getting_Started_with_React_and_TypeScript/</loc>
-    
-    <lastmod>2019-11-05T03:57:08.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_2_TypeScript_3/</loc>
     
     <lastmod>2019-11-05T03:57:07.995Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_1_TypeScript_Basics/</loc>
-    
-    <lastmod>2019-11-05T03:57:07.992Z</lastmod>
     
   </url>
   
@@ -82,13 +117,6 @@
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_5_Advanced_Types/</loc>
     
     <lastmod>2019-11-05T03:57:07.982Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_4_Routing_with_React_Router/</loc>
-    
-    <lastmod>2019-11-05T03:57:07.972Z</lastmod>
     
   </url>
   
