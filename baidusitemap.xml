@@ -5,14 +5,21 @@
     
   <url>
     <loc>http://galudisu.info/2020/06/23/certificate/generate-server-client-pk/</loc>
-    <lastmod>2020-06-23T09:27:07.923Z</lastmod>
+    <lastmod>2020-06-23T09:29:34.424Z</lastmod>
     <data>
         <display>
-        <title></title>
-        <pubTime>2020-06-23T08:36:57.608Z</pubTime>
+        <title>如何生成测试用服务端和客户端证书</title>
+        <pubTime>2020-06-23T07:50:03.000Z</pubTime>
         
+        <tag>certificate</tag>
+         
+        <tag>ssl</tag>
+         
          
            
+             
+              <breadCrumb title="k8s" url="http://galudisu.info/categories/k8s/"/>
+          
         </display>
     </data>
     </url>
