@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://galudisu.info/2020/03/04/spark/installation/</loc>
+    
+    <lastmod>2020-07-13T06:22:57.982Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/03/04/flink/installation/</loc>
+    
+    <lastmod>2020-07-13T05:57:28.707Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://galudisu.info/2020/06/23/certificate/generate-server-client-pk/</loc>
     
     <lastmod>2020-06-28T07:55:58.741Z</lastmod>
@@ -89,13 +103,6 @@
     <loc>http://galudisu.info/2020/03/04/hadoop/installation/</loc>
     
     <lastmod>2020-03-11T08:18:20.698Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/03/04/flink/installation/</loc>
-    
-    <lastmod>2020-03-11T08:18:20.696Z</lastmod>
     
   </url>
   

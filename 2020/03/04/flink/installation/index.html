@@ -7,7 +7,7 @@
 <li>节点两两之间可以SSH免密码登录</li>
 <li>已部署Hadoop（如果只是部署Standalone Cluster则不需要Hadoop）</li>
 </ol>
-<p>如果你已经按照<a href="/2020/03/04/hadoop/installation.md">Hadoop集群搭建教程</a>成功建立了Hadoop集群，那么以上条件均已满足。</p>
+<p>如果你已经按照<a href="/2020/03/04/hadoop/installation">Hadoop集群搭建教程</a>成功建立了Hadoop集群，那么以上条件均已满足。</p>
 <h3><span id="下载flink二进制文件">下载Flink二进制文件</span></h3>
 <p>在Flink的<a href="https://flink.apache.org/downloads.html" target="_blank" rel="noopener">下载页面</a>中有多个版本可以选择，因为之前选择了Hadoop 2.7.7版本，所以这里选择与之对应的 <a href="https://www.apache.org/dyn/closer.lua/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.12.tgz" target="_blank" rel="noopener">Apache Flink 1.9.2 for Scala 2.12</a>版本，Scala版本选择最新的2.12。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">wget https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.12.tgz</span><br><span class="line">tar -xzvf flink-1.9.2-bin-scala_2.12.tgz</span><br></pre></td></tr></table></figure>
