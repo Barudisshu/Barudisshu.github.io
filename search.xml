@@ -304,20 +304,20 @@
 <li>已部署Hadoop（如果只是部署Standalone Cluster则不需要Hadoop）</li>
 </ol>
 <p>如果你已经按照<a href="/2020/03/04/hadoop/installation">Hadoop集群搭建教程</a>成功建立了Hadoop集群，那么以上条件均已满足。</p>
-<h3><span id="下载flink二进制文件">下载Flink二进制文件</span></h3>
-<p>在Flink的<a href="https://spark.apache.org/downloads.html" target="_blank" rel="noopener">下载页面</a>中有多个版本可以选择，因为之前选择了Hadoop 2.7.7版本，所以这里选择与之对应的 <a href="https://www.apache.org/dyn/closer.lua/spark/spark-3.0.0/spark-3.0.0-bin-without-hadoop.tgz" target="_blank" rel="noopener">Pre-built with user-provided Apache Hadoop</a>版本，Scala版本选择最新的2.12。</p>
+<h3><span id="下载spark二进制文件">下载Spark二进制文件</span></h3>
+<p>在Spark的<a href="https://spark.apache.org/downloads.html" target="_blank" rel="noopener">下载页面</a>中有多个版本可以选择，因为之前选择了Hadoop 2.7.7版本，所以这里选择与之对应的 <a href="https://www.apache.org/dyn/closer.lua/spark/spark-3.0.0/spark-3.0.0-bin-without-hadoop.tgz" target="_blank" rel="noopener">Pre-built with user-provided Apache Hadoop</a>版本，Scala版本选择最新的2.12。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /opt</span><br><span class="line">wget wget https://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-3.0.0/spark-3.0.0-bin-without-hadoop.tgz</span><br><span class="line">tar -xzvf spark-3.0.0-bin-without-hadoop.tgz</span><br></pre></td></tr></table></figure>
 <h3><span id="配置spark环境变量">配置Spark环境变量</span></h3>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> Spark environment</span><br><span class="line">export SPARK_HOME=/opt/spark-3.0.0-bin-without-hadoop</span><br><span class="line">export PATH=$PATH:$&#123;SPARK_HOME&#125;/bin</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Spark environment</span></span><br><span class="line">export SPARK_HOME=/opt/spark-3.0.0-bin-without-hadoop</span><br><span class="line">export PATH=$PATH:$&#123;SPARK_HOME&#125;/bin</span><br></pre></td></tr></table></figure>
 <h4><span id="spark-envsh"></span></h4>
 <p>因为我们下载的是不带hadoop依赖jar的spark版本，所以需要在spark中指定hadoop的classpath</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">配置文件spark-env.sh：</span><br><span class="line"><span class="meta">#</span>## in conf/spark-env.sh ###</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> If 'hadoop' binary is on your PATH</span><br><span class="line">export SPARK_DIST_CLASSPATH=$(hadoop classpath)</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> With explicit path to 'hadoop' binary</span><br><span class="line">export SPARK_DIST_CLASSPATH=$(/path/to/hadoop/bin/hadoop classpath)</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Passing a Hadoop configuration directory</span><br><span class="line">export SPARK_DIST_CLASSPATH=$(hadoop --config /path/to/configs classpath)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">配置文件spark-env.sh：</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">## in conf/spark-env.sh ###</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> If <span class="string">'hadoop'</span> binary is on your PATH</span></span><br><span class="line">export SPARK_DIST_CLASSPATH=$(hadoop classpath)</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> With explicit path to <span class="string">'hadoop'</span> binary</span></span><br><span class="line">export SPARK_DIST_CLASSPATH=$(/path/to/hadoop/bin/hadoop classpath)</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Passing a Hadoop configuration directory</span></span><br><span class="line">export SPARK_DIST_CLASSPATH=$(hadoop --config /path/to/configs classpath)</span><br></pre></td></tr></table></figure>
 <p>这里在最后一行添加：</p>
 <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_CONF_DIR=$&#123;HADOOP_HOME&#125;/etc/hadoop</span><br><span class="line">export SPARK_DIST_CLASSPATH=$(/opt/hadoop-2.7.7/bin/hadoop classpath)</span><br></pre></td></tr></table></figure>
 <h3><span id="slaves">slaves</span></h3>
 <p>向slaves文件写入slave节点的host/IP地址</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">huawei-02</span><br><span class="line">huawei-03</span><br></pre></td></tr></table></figure>
-<h3><span id="将配置好的flink分发到其它节点">将配置好的Flink分发到其它节点</span></h3>
+<h3><span id="将配置好的spark分发到其它节点">将配置好的Spark分发到其它节点</span></h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scp -r /opt/spark-3.0.0-bin-without-hadoop huawei-02:/opt/spark-3.0.0-bin-without-hadoop</span><br><span class="line">scp -r /opt/spark-3.0.0-bin-without-hadoop huawei-03:/opt/spark-3.0.0-bin-without-hadoop</span><br></pre></td></tr></table></figure>
 <h3><span id="启动spark">启动Spark</span></h3>
 <figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./opt/spark-3.0.0=bin-without-hadoop/sbin/start-all.sh</span><br></pre></td></tr></table></figure>
@@ -14807,6 +14807,45 @@ published in Dr. Dobb’s Journal, March 2005, <a href="http://www.gotw.ca/publi
     </entry>
     
     <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>/2016/04/27/miscellaneous/hello-world/</url>
+      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<a id="more"></a>
+<h2><span id="quick-start">Quick Start</span></h2>
+<h3><span id="create-a-new-post">Create a new post</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3><span id="run-server">Run server</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3><span id="generate-static-files">Generate static files</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<h3><span id="hexo-highlight-syntax">Hexo highlight syntax</span></h3>
+<p>One way is <a href="https://hexo.io/docs/tag-plugins.html#Code-Block" target="_blank" rel="noopener">Code Block</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% codeblock [title] [lang:language] [url] [link text] %&#125;</span><br><span class="line">code snippet</span><br><span class="line">&#123;% endcodeblock %&#125;</span><br></pre></td></tr></table></figure>
+<p>Another way is <a href="https://hexo.io/docs/tag-plugins.html#Backtick-Code-Block" target="_blank" rel="noopener">Backtick Code Block</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">``` [language] [title] [url] [link text] code snippet ```</span><br></pre></td></tr></table></figure>]]></content>
+      
+        <categories>
+            
+            <category> beginning </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> highlight </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Multi plugin]]></title>
       <url>/2016/04/27/miscellaneous/stack-edit/</url>
       <content type="html"><![CDATA[<p>Welcome to StackEdit!</p>
@@ -15054,45 +15093,6 @@ $$</p>
         <tags>
             
             <tag> hexo </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[Hello World]]></title>
-      <url>/2016/04/27/miscellaneous/hello-world/</url>
-      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<a id="more"></a>
-<h2><span id="quick-start">Quick Start</span></h2>
-<h3><span id="create-a-new-post">Create a new post</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3><span id="run-server">Run server</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3><span id="generate-static-files">Generate static files</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-<h3><span id="hexo-highlight-syntax">Hexo highlight syntax</span></h3>
-<p>One way is <a href="https://hexo.io/docs/tag-plugins.html#Code-Block" target="_blank" rel="noopener">Code Block</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% codeblock [title] [lang:language] [url] [link text] %&#125;</span><br><span class="line">code snippet</span><br><span class="line">&#123;% endcodeblock %&#125;</span><br></pre></td></tr></table></figure>
-<p>Another way is <a href="https://hexo.io/docs/tag-plugins.html#Backtick-Code-Block" target="_blank" rel="noopener">Backtick Code Block</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">``` [language] [title] [url] [link text] code snippet ```</span><br></pre></td></tr></table></figure>]]></content>
-      
-        <categories>
-            
-            <category> beginning </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> highlight </tag>
             
         </tags>
         
