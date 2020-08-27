@@ -61,8 +61,8 @@
     <entry>
       <title><![CDATA[基于scala-swing构建的推箱子游戏]]></title>
       <url>/2020/06/24/game/sokoban/</url>
-      <content type="html"><![CDATA[<p><img src="/img/game/sokoban/sokoban-screenshot.png" alt="game"></p>
-<a id="more"></a>
+      <content type="html"><![CDATA[<a id="more"></a>
+<p><img src="/img/game/sokoban/sokoban-screenshot.png" alt="game"></p>
 <p>推箱子游戏属于一种解谜问题。开发思路比较简单，并且有比较正规定义。</p>
 <h2><span id="首先定义地图">首先定义地图</span></h2>
 <p>地图格式可以参考<a href="http://www.sokobano.de/wiki/index.php?title=Level_format" target="_blank" rel="noopener">这里</a></p>
