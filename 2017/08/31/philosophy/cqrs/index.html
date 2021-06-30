@@ -1,6 +1,11 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>Command Query Responsibility Segregation Pattern</title><link rel="stylesheet" href="/css/layout.css">
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css"><link rel="shortcut icon" href="/img/favicon.ico"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav><div id="mobile-menu-toggle" class="toggle-menu"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">Command Query Responsibility Segregation Pattern</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2017-08-31</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a href="/tags/cqrs/" class="tag-link">cqrs</a></p></div><div class="article-content"><p>在面向对象设计中，常常忽略了一个概念，对象是用于描述一个单一职责的，它要求我们：一个对象包含自身属性、行为、内在调用等行为。对象间通过相互调用完成一项工作。因此，我们在做面向对象设计时，应该分清一个对象应该包含多少东西，对象的属性是否 <code>belong to</code>它自身。如果一个对象的行为模糊不清，是否该对象设计合理？</p>
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><a id="more"></a>
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>Command Query Responsibility Segregation Pattern</title>
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css">
+<link rel="shortcut icon" href="/img/favicon.ico"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="简单易懂の现代魔法" type="application/atom+xml">
+</head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav><div class="toggle-menu" id="mobile-menu-toggle"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">Command Query Responsibility Segregation Pattern</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2017-08-31</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a class="tag-link" href="/tags/cqrs/">cqrs</a></p></div><div class="article-content"><p>在面向对象设计中，常常忽略了一个概念，对象是用于描述一个单一职责的，它要求我们：一个对象包含自身属性、行为、内在调用等行为。对象间通过相互调用完成一项工作。因此，我们在做面向对象设计时，应该分清一个对象应该包含多少东西，对象的属性是否 <code>belong to</code>它自身。如果一个对象的行为模糊不清，是否该对象设计合理？</p>
+<span id="more"></span>
 <h3><span id="什么是cqrs">什么是CQRS？</span></h3>
 <p>CQRS即 <code>Command Query Responsibility Segregation</code>——命令查询职责分离。该术语描述了一个对象的方法应该 <code>要么是 commands 要么是 queries</code>。</p>
 <ul>
@@ -32,8 +37,8 @@
 </ul>
 <blockquote>
 <p>注意：<br>
-	上图描述了CQRS在<code>read</code>和<code>write</code>使用了不同的数据存储，不是要求你使用不同的数据库。它仅仅描述CQRS这个模型，鼓励你分离读写部分。<br>
-	上图建议<code>write</code>和<code>read</code>可能存在一一对应(one-to-one)关系，实际上没有必要要求建立这种关系。仅当你使用接口时，这种一一对应关系才明显。</p>
+上图描述了CQRS在<code>read</code>和<code>write</code>使用了不同的数据存储，不是要求你使用不同的数据库。它仅仅描述CQRS这个模型，鼓励你分离读写部分。<br>
+上图建议<code>write</code>和<code>read</code>可能存在一一对应(one-to-one)关系，实际上没有必要要求建立这种关系。仅当你使用接口时，这种一一对应关系才明显。</p>
 </blockquote>
 <p>在实践和适应这种架构的同时，可能会潜在一系列问题：</p>
 <ul>
@@ -106,4 +111,14 @@ var disqus_url = 'http://galudisu.info/2017/08/31/philosophy/cqrs/';
   dsq.async = true;
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//barudisshu-github-io.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2020 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css"><script src="/js/base.js"></script><script src="/js/rabbit-lyrics.js"></script></div><!-- hexo-inject:begin --><!-- hexo-inject:end --></body></html>
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2021 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+
+<link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css">
+
+<script src="/js/base.js"></script>
+
+<script src="/js/rabbit-lyrics.js"></script>
+</div></body></html>

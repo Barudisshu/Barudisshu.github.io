@@ -1,8 +1,13 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>CentOS 7.5 搭建Zookeeper集群与命令行操作</title><link rel="stylesheet" href="/css/layout.css">
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css"><link rel="shortcut icon" href="/img/favicon.ico"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav><div id="mobile-menu-toggle" class="toggle-menu"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">CentOS 7.5 搭建Zookeeper集群与命令行操作</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2018-10-21</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a href="/tags/zookeeper/" class="tag-link">zookeeper</a></p></div><div class="article-content"><a id="more"></a>
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><h2><span id="分布式安装部署">分布式安装部署</span></h2>
-<p>官网首页：<a href="https://zookeeper.apache.org/" target="_blank" rel="noopener">https://zookeeper.apache.org/</a><br>
-下载地址：<a href="http://mirror.bit.edu.cn/apache/zookeeper/" target="_blank" rel="noopener">http://mirror.bit.edu.cn/apache/zookeeper/</a></p>
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>CentOS 7.5 搭建Zookeeper集群与命令行操作</title>
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css">
+<link rel="shortcut icon" href="/img/favicon.ico"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="简单易懂の现代魔法" type="application/atom+xml">
+</head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav><div class="toggle-menu" id="mobile-menu-toggle"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">CentOS 7.5 搭建Zookeeper集群与命令行操作</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2018-10-21</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a class="tag-link" href="/tags/zookeeper/">zookeeper</a></p></div><div class="article-content"><span id="more"></span>
+<h2><span id="分布式安装部署">分布式安装部署</span></h2>
+<p>官网首页：<a target="_blank" rel="noopener" href="https://zookeeper.apache.org/">https://zookeeper.apache.org/</a><br>
+下载地址：<a target="_blank" rel="noopener" href="http://mirror.bit.edu.cn/apache/zookeeper/">http://mirror.bit.edu.cn/apache/zookeeper/</a></p>
 <p><img src="/img/spark/zookeeper-releases.png" alt="zookeeper-release"></p>
 <h3><span id="集群规划">集群规划</span></h3>
 <p>在node1，node2和node3三个节点上部署zookeeper，三个节点都已安装jdk。</p>
@@ -133,7 +138,7 @@
 <ol start="5">
 <li>创建普通节点</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 3] create /opt <span class="string">"aa"</span></span><br><span class="line">Created /opt</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4] create /opt/s <span class="string">"bb"</span></span><br><span class="line">Created /opt</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 3] create /opt <span class="string">&quot;aa&quot;</span></span><br><span class="line">Created /opt</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4] create /opt/s <span class="string">&quot;bb&quot;</span></span><br><span class="line">Created /opt</span><br></pre></td></tr></table></figure>
 <ol start="6">
 <li>获取节点值</li>
 </ol>
@@ -152,7 +157,7 @@
 <li>创建带序号的节点</li>
 </ol>
 <p>先创建一个普通的根节点app</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 1] create /app <span class="string">"app"</span></span><br><span class="line">create /app <span class="string">"app"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 1] create /app <span class="string">&quot;app&quot;</span></span><br><span class="line">create /app <span class="string">&quot;app&quot;</span></span><br></pre></td></tr></table></figure>
 <p>创建带序号的节点</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 2] create -s /app/aa 888</span><br><span class="line">Created /app/aa0000000000</span><br><span class="line">[zk: localhost:2181(CONNECTED) 3] create -s /app/bb 888</span><br><span class="line">Created /app/bb0000000001</span><br><span class="line">[zk: localhost:2181(CONNECTED) 4] create -s /app/cc 888</span><br><span class="line">Created /app/cc0000000002</span><br></pre></td></tr></table></figure>
 <p>如果原节点下有1个节点，则在排序时从1开始，以此类推。</p>
@@ -205,21 +210,14 @@ var disqus_url = 'http://galudisu.info/2018/10/21/spark/spark-zookeeper-1/';
   dsq.async = true;
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//barudisshu-github-io.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2020 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css"><script src="/js/base.js"></script><script src="/js/rabbit-lyrics.js"></script></div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2021 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
 
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end --></body></html>
+<link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css">
+
+<script src="/js/base.js"></script>
+
+<script src="/js/rabbit-lyrics.js"></script>
+</div></body></html>

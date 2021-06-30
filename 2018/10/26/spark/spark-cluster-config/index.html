@@ -1,10 +1,15 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>CentOS 7 搭建Spark2.3.1分布式集群</title><link rel="stylesheet" href="/css/layout.css">
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css"><link rel="shortcut icon" href="/img/favicon.ico"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav><div id="mobile-menu-toggle" class="toggle-menu"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">CentOS 7 搭建Spark2.3.1分布式集群</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2018-10-26</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a href="/tags/spark/" class="tag-link">spark</a></p></div><div class="article-content"><a id="more"></a>
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><h2><span id="下载安装包">下载安装包</span></h2>
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>CentOS 7 搭建Spark2.3.1分布式集群</title>
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css">
+<link rel="shortcut icon" href="/img/favicon.ico"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="简单易懂の现代魔法" type="application/atom+xml">
+</head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav><div class="toggle-menu" id="mobile-menu-toggle"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">CentOS 7 搭建Spark2.3.1分布式集群</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2018-10-26</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a class="tag-link" href="/tags/spark/">spark</a></p></div><div class="article-content"><span id="more"></span>
+<h2><span id="下载安装包">下载安装包</span></h2>
 <ol>
 <li>官方下载</li>
 </ol>
-<p>点击<a href="http://spark.apache.org/downloads.html" target="_blank" rel="noopener">这里</a>下载，官方提供几种构建方式。为了节省时间，选择预先编译版本的hadoop。</p>
+<p>点击<a target="_blank" rel="noopener" href="http://spark.apache.org/downloads.html">这里</a>下载，官方提供几种构建方式。为了节省时间，选择预先编译版本的hadoop。</p>
 <ol start="2">
 <li>安装前提</li>
 </ol>
@@ -14,7 +19,7 @@
 <li>Hadoop，安装参考这里</li>
 <li>Scala</li>
 </ul>
-<p>注意：从Spark2.0版开始，默认使用Scala 2.11构建。Scala 2.10用户应该下载Spark源包并使用<a href="https://spark.apache.org/docs/latest/building-spark.html#building-for-scala-210" target="_blank" rel="noopener">Scala2.10</a>支持构建。</p>
+<p>注意：从Spark2.0版开始，默认使用Scala 2.11构建。Scala 2.10用户应该下载Spark源包并使用<a target="_blank" rel="noopener" href="https://spark.apache.org/docs/latest/building-spark.html#building-for-scala-210">Scala2.10</a>支持构建。</p>
 <ol start="3">
 <li>集群规划</li>
 </ol>
@@ -69,7 +74,7 @@
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[xxx@spark-node1 conf]$ cp spark-env.sh.template spark-env.sh</span><br><span class="line">[xxx@spark-node1 conf]$ vim spark-env.sh</span><br></pre></td></tr></table></figure>
 <p>编辑并在文件末尾添加如下配置内容</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#指定默认master的ip或主机名</span></span><br><span class="line"><span class="built_in">export</span> SPARK_MASTER_HOST=node21  </span><br><span class="line"><span class="comment">#指定maaster提交任务的默认端口为7077    </span></span><br><span class="line"><span class="built_in">export</span> SPARK_MASTER_PORT=7077 </span><br><span class="line"><span class="comment">#指定masster节点的webui端口       </span></span><br><span class="line"><span class="built_in">export</span> SPARK_MASTER_WEBUI_PORT=8080 </span><br><span class="line"><span class="comment">#每个worker从节点能够支配的内存数 </span></span><br><span class="line"><span class="built_in">export</span> SPARK_WORKER_MEMORY=1g        </span><br><span class="line"><span class="comment">#允许Spark应用程序在计算机上使用的核心总数（默认值：所有可用核心）</span></span><br><span class="line"><span class="built_in">export</span> SPARK_WORKER_CORES=1    </span><br><span class="line"><span class="comment">#每个worker从节点的实例（可选配置） </span></span><br><span class="line"><span class="built_in">export</span> SPARK_WORKER_INSTANCES=1   </span><br><span class="line"><span class="comment">#指向包含Hadoop集群的（客户端）配置文件的目录，运行在Yarn上配置此项   </span></span><br><span class="line"><span class="built_in">export</span> HADOOP_CONF_DIR=/opt/module/hadoop-2.7.6/etc/hadoop</span><br><span class="line"><span class="comment">#指定整个集群状态是通过zookeeper来维护的，包括集群恢复</span></span><br><span class="line"><span class="built_in">export</span> SPARK_DAEMON_JAVA_OPTS=<span class="string">"      </span></span><br><span class="line"><span class="string">-Dspark.deploy.recoveryMode=ZOOKEEPER </span></span><br><span class="line"><span class="string">-Dspark.deploy.zookeeper.url=node21:2181,node22:2181,node23:2181</span></span><br><span class="line"><span class="string">-Dspark.deploy.zookeeper.dir=/spark"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#指定默认master的ip或主机名</span></span><br><span class="line"><span class="built_in">export</span> SPARK_MASTER_HOST=node21  </span><br><span class="line"><span class="comment">#指定maaster提交任务的默认端口为7077    </span></span><br><span class="line"><span class="built_in">export</span> SPARK_MASTER_PORT=7077 </span><br><span class="line"><span class="comment">#指定masster节点的webui端口       </span></span><br><span class="line"><span class="built_in">export</span> SPARK_MASTER_WEBUI_PORT=8080 </span><br><span class="line"><span class="comment">#每个worker从节点能够支配的内存数 </span></span><br><span class="line"><span class="built_in">export</span> SPARK_WORKER_MEMORY=1g        </span><br><span class="line"><span class="comment">#允许Spark应用程序在计算机上使用的核心总数（默认值：所有可用核心）</span></span><br><span class="line"><span class="built_in">export</span> SPARK_WORKER_CORES=1    </span><br><span class="line"><span class="comment">#每个worker从节点的实例（可选配置） </span></span><br><span class="line"><span class="built_in">export</span> SPARK_WORKER_INSTANCES=1   </span><br><span class="line"><span class="comment">#指向包含Hadoop集群的（客户端）配置文件的目录，运行在Yarn上配置此项   </span></span><br><span class="line"><span class="built_in">export</span> HADOOP_CONF_DIR=/opt/module/hadoop-2.7.6/etc/hadoop</span><br><span class="line"><span class="comment">#指定整个集群状态是通过zookeeper来维护的，包括集群恢复</span></span><br><span class="line"><span class="built_in">export</span> SPARK_DAEMON_JAVA_OPTS=<span class="string">&quot;      </span></span><br><span class="line"><span class="string">-Dspark.deploy.recoveryMode=ZOOKEEPER </span></span><br><span class="line"><span class="string">-Dspark.deploy.zookeeper.url=node21:2181,node22:2181,node23:2181</span></span><br><span class="line"><span class="string">-Dspark.deploy.zookeeper.dir=/spark&quot;</span></span><br></pre></td></tr></table></figure>
 <ol start="3">
 <li>复制<code>slaves.template</code>成<code>slaves</code>，并修改配置内容</li>
 </ol>
@@ -112,10 +117,10 @@
 <ol>
 <li>看Web页面Master状态</li>
 </ol>
-<p>spark-node1是ALIVE状态，spark-node2为STANDBY状态，WebUI查看：<a href="http://spark-node1:8080/" target="_blank" rel="noopener">http://spark-node1:8080/</a></p>
+<p>spark-node1是ALIVE状态，spark-node2为STANDBY状态，WebUI查看：<a target="_blank" rel="noopener" href="http://spark-node1:8080/">http://spark-node1:8080/</a></p>
 <p><img src="/img/spark/spark-master1.png" alt="spark-master1"><br>
 <img src="/img/spark/spark-master2.png" alt="spark-master2"></p>
-<p>从节点连接地址：<a href="http://spark-node2:8081" target="_blank" rel="noopener">http://spark-node2:8081/</a></p>
+<p>从节点连接地址：<a target="_blank" rel="noopener" href="http://spark-node2:8081">http://spark-node2:8081/</a></p>
 <p><img src="/img/spark/spark-worker1.png" alt="spark-worker1"><br>
 <img src="/img/spark/spark-worker2.png" alt="spark-worker2"></p>
 <ol start="2">
@@ -287,21 +292,14 @@ var disqus_url = 'http://galudisu.info/2018/10/26/spark/spark-cluster-config/';
   dsq.async = true;
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//barudisshu-github-io.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2020 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css"><script src="/js/base.js"></script><script src="/js/rabbit-lyrics.js"></script></div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2021 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
 
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end --></body></html>
+<link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css">
+
+<script src="/js/base.js"></script>
+
+<script src="/js/rabbit-lyrics.js"></script>
+</div></body></html>

@@ -2,703 +2,1281 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://galudisu.info/2020/06/24/game/sokoban/</loc>
+    <loc>http://galudisu.info/2016/10/27/scala/04-fp-structure/</loc>
     
-    <lastmod>2020-08-27T01:36:21.172Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/07/30/musics/%E7%BF%B1%E7%BF%94%E5%A4%A9%E9%99%85%E3%81%AE%E4%BA%BA/</loc>
-    
-    <lastmod>2020-08-26T12:59:55.146Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/08/26/gentoo/Gentoo-Enlightenment-Systemd/</loc>
-    
-    <lastmod>2020-08-26T12:43:17.997Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/03/04/spark/installation/</loc>
-    
-    <lastmod>2020-07-13T06:27:30.255Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/03/04/flink/installation/</loc>
-    
-    <lastmod>2020-07-13T05:57:28.707Z</lastmod>
+    <lastmod>2021-06-30</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2020/06/23/certificate/generate-server-client-pk/</loc>
     
-    <lastmod>2020-06-28T07:55:58.741Z</lastmod>
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/06/24/game/sokoban/</loc>
+    
+    <lastmod>2020-08-27</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/07/30/musics/%E7%BF%B1%E7%BF%94%E5%A4%A9%E9%99%85%E3%81%AE%E4%BA%BA/</loc>
+    
+    <lastmod>2020-08-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/08/26/gentoo/Gentoo-Enlightenment-Systemd/</loc>
+    
+    <lastmod>2020-08-26</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/03/04/spark/installation/</loc>
+    
+    <lastmod>2020-07-13</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/03/04/flink/installation/</loc>
+    
+    <lastmod>2020-07-13</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2020/06/12/philosophy/architecture-retrospective-1/</loc>
     
-    <lastmod>2020-06-12T02:49:28.838Z</lastmod>
+    <lastmod>2020-06-12</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_9_Interacting_with_RESTful_APIs/</loc>
     
-    <lastmod>2020-05-19T09:39:57.073Z</lastmod>
+    <lastmod>2020-05-19</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_b_Unit_Testing_with_Jest/</loc>
     
-    <lastmod>2020-05-19T09:39:57.067Z</lastmod>
+    <lastmod>2020-05-19</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_a_Interacting_with_GraphQL_APIs/</loc>
     
-    <lastmod>2020-05-19T09:39:57.058Z</lastmod>
+    <lastmod>2020-05-19</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_4_Routing_with_React_Router/</loc>
     
-    <lastmod>2020-05-19T09:36:36.059Z</lastmod>
+    <lastmod>2020-05-19</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_3_Getting_Started_with_React_and_TypeScript/</loc>
     
-    <lastmod>2020-05-19T09:33:42.144Z</lastmod>
+    <lastmod>2020-05-19</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_1_TypeScript_Basics/</loc>
     
-    <lastmod>2020-05-19T09:24:41.974Z</lastmod>
+    <lastmod>2020-05-19</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
     
-    <lastmod>2020-04-07T02:46:58.027Z</lastmod>
+    <lastmod>2020-04-07</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2020/03/27/ci/devops-ha-design/</loc>
     
-    <lastmod>2020-03-30T02:14:39.317Z</lastmod>
+    <lastmod>2020-03-30</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2020/03/11/learning-plan/2020_03_11_study_plan/</loc>
     
-    <lastmod>2020-03-11T09:21:21.471Z</lastmod>
+    <lastmod>2020-03-11</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2020/03/04/hadoop/installation/</loc>
     
-    <lastmod>2020-03-11T08:18:20.698Z</lastmod>
+    <lastmod>2020-03-11</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2020/01/03/akka/typed/akka-typed/</loc>
     
-    <lastmod>2020-02-18T05:02:16.095Z</lastmod>
+    <lastmod>2020-02-18</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_7_Working_with_Forms/</loc>
     
-    <lastmod>2019-11-05T03:57:08.008Z</lastmod>
+    <lastmod>2019-11-05</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_2_TypeScript_3/</loc>
     
-    <lastmod>2019-11-05T03:57:07.995Z</lastmod>
+    <lastmod>2019-11-05</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_6_Component_Patterns/</loc>
     
-    <lastmod>2019-11-05T03:57:07.987Z</lastmod>
+    <lastmod>2019-11-05</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_5_Advanced_Types/</loc>
     
-    <lastmod>2019-11-05T03:57:07.982Z</lastmod>
+    <lastmod>2019-11-05</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/10/21/jira/jira-install/</loc>
     
-    <lastmod>2019-11-05T03:31:35.052Z</lastmod>
+    <lastmod>2019-11-05</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/07/24/algorithm/ga/genetic-algorithm/</loc>
     
-    <lastmod>2019-08-27T09:09:37.878Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/googleb2c148fa0e421596.html</loc>
     
-    <lastmod>2019-08-27T09:05:47.658Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/about/index.html</loc>
     
-    <lastmod>2019-08-27T09:05:47.656Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/09/14/youtrack/youtrack-install/</loc>
     
-    <lastmod>2019-08-27T09:05:47.653Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/21/spark/spark-zookeeper-2/</loc>
     
-    <lastmod>2019-08-27T09:05:47.649Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/21/spark/spark-zookeeper-1/</loc>
     
-    <lastmod>2019-08-27T09:05:47.646Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/22/spark/spark-hadoop-1/</loc>
     
-    <lastmod>2019-08-27T09:05:47.643Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/26/spark/spark-cluster-config/</loc>
     
-    <lastmod>2019-08-27T09:05:47.639Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/07/12/slick/slick3-with-code-generator/</loc>
     
-    <lastmod>2019-08-27T09:05:47.636Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/12-akka-app/</loc>
     
-    <lastmod>2019-08-27T09:05:47.633Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/11-jvm-integrate/</loc>
     
-    <lastmod>2019-08-27T09:05:47.631Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/10-scala-test/</loc>
     
-    <lastmod>2019-08-27T09:05:47.629Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/09-scala-concurrency/</loc>
     
-    <lastmod>2019-08-27T09:05:47.625Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/08-scala-components/</loc>
     
-    <lastmod>2019-08-27T09:05:47.622Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/07-fp-database/</loc>
     
-    <lastmod>2019-08-27T09:05:47.618Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/06-functional-webapp/</loc>
     
-    <lastmod>2019-08-27T09:05:47.616Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/05-fp-practise/</loc>
     
-    <lastmod>2019-08-27T09:05:47.613Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2016/10/27/scala/04-fp-structure/</loc>
-    
-    <lastmod>2019-08-27T09:05:47.609Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/03-scala-oop/</loc>
     
-    <lastmod>2019-08-27T09:05:47.605Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/02-getting-started/</loc>
     
-    <lastmod>2019-08-27T09:05:47.603Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/10/27/scala/01-scala-conception/</loc>
     
-    <lastmod>2019-08-27T09:05:47.600Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/07/11/scala-exercises/type-level-in-scala/</loc>
     
-    <lastmod>2019-08-27T09:05:47.597Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/04/16/scala-exercises/shapeless-hlist/</loc>
     
-    <lastmod>2019-08-27T09:05:47.595Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/11/19/react/react-webpack-babel/</loc>
     
-    <lastmod>2019-08-27T09:05:47.593Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/01/16/react/react-storybook-live-editing/</loc>
     
-    <lastmod>2019-08-27T09:05:47.590Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/11/19/react/react-redux-tutorial-beginners/</loc>
     
-    <lastmod>2019-08-27T09:05:47.587Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/01/postgresql/ubuntu-install-postgresql/</loc>
     
-    <lastmod>2019-08-27T09:05:47.585Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/01/24/postgresql/postgresql-relational-databases-on-centos-7/</loc>
     
-    <lastmod>2019-08-27T09:05:47.583Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/03/php/ubuntu-install-php/</loc>
     
-    <lastmod>2019-08-27T09:05:47.580Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/10/23/philosophy/monoids-and-monad/</loc>
     
-    <lastmod>2019-08-27T09:05:47.578Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/08/31/philosophy/cqrs/</loc>
     
-    <lastmod>2019-08-27T09:05:47.575Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/12/29/philosophy/circuit-breaker/</loc>
     
-    <lastmod>2019-08-27T09:05:47.573Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/11/06/philosophy/cap-theorem/</loc>
     
-    <lastmod>2019-08-27T09:05:47.571Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/10/09/pattern/magent/scala-method-overloading-and-default-argument-values/</loc>
     
-    <lastmod>2019-08-27T09:05:47.568Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/04/10/pattern/futures/Execute-Scala-Futures-in-serial-one-after-the-other-non-blocking/</loc>
     
-    <lastmod>2019-08-27T09:05:47.566Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/11/07/pattern/ddd/functional-ddd/</loc>
     
-    <lastmod>2019-08-27T09:05:47.562Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/12/21/pattern/ddd/event-sourcing-feedback/</loc>
     
-    <lastmod>2019-08-27T09:05:47.561Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/11/13/pattern/ddd/dddfs/</loc>
     
-    <lastmod>2019-08-27T09:05:47.558Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/04/27/pattern/akkas/Akka-Patterns/</loc>
     
-    <lastmod>2019-08-27T09:05:47.555Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/07/16/mysql/mysql-master-slave-config/</loc>
     
-    <lastmod>2019-08-27T09:05:47.551Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/11/22/musics/audio-player-nest/</loc>
     
-    <lastmod>2019-08-27T09:05:47.549Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/31/mongo/mongo-cluster-sharding/</loc>
     
-    <lastmod>2019-08-27T09:05:47.543Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/31/mongo/deploying-mongodb-shared-cluster-on-centos-7/</loc>
     
-    <lastmod>2019-08-27T09:05:47.541Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/04/27/miscellaneous/test/</loc>
     
-    <lastmod>2019-08-27T09:05:47.538Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/04/27/miscellaneous/stack-edit/</loc>
     
-    <lastmod>2019-08-27T09:05:47.536Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/04/27/miscellaneous/hello-world/</loc>
     
-    <lastmod>2019-08-27T09:05:47.534Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2016/04/27/miscellaneous/git-branch/</loc>
     
-    <lastmod>2019-08-27T09:05:47.532Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/07/26/linux/gentoo/gentoo-install-guide/</loc>
     
-    <lastmod>2019-08-27T09:05:47.528Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/07/31/linux/gentoo/gentoo-fresh-installation/</loc>
     
-    <lastmod>2019-08-27T09:05:47.526Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/02/08/kubernetes/kubernetes-04-theory-and-concpetion-md/</loc>
     
-    <lastmod>2019-08-27T09:05:47.521Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/02/06/kubernetes/kubernetes-03-theory-and-concpetion-md/</loc>
     
-    <lastmod>2019-08-27T09:05:47.519Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/02/04/kubernetes/kubernetes-02-theory-and-concpetion-md/</loc>
     
-    <lastmod>2019-08-27T09:05:47.517Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/02/03/kubernetes/kubernetes-01-centos-installation/</loc>
     
-    <lastmod>2019-08-27T09:05:47.515Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/01/java/ubuntu-oracle-jdk/</loc>
     
-    <lastmod>2019-08-27T09:05:47.512Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/08/11/intellij/docker-compose-idea-plugin/</loc>
     
-    <lastmod>2019-08-27T09:05:47.509Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/12/23/ideal/using-intellij-bookmarks/</loc>
     
-    <lastmod>2019-08-27T09:05:47.507Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/26/ideal/ideal-reference/</loc>
     
-    <lastmod>2019-08-27T09:05:47.505Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/01/gitlab/ubuntu-gitlab-install/</loc>
     
-    <lastmod>2019-08-27T09:05:47.502Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/09/27/gitlab/gitlab-ce-zh/</loc>
     
-    <lastmod>2019-08-27T09:05:47.500Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/07/03/gentoo/Gentoo-Gnome-Systemd/</loc>
     
-    <lastmod>2019-08-27T09:05:47.497Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/05/22/elasticsearch/Elasticsearch-Cluster-Setup/</loc>
     
-    <lastmod>2019-08-27T09:05:47.495Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/04/28/docker/docker-learning/</loc>
     
-    <lastmod>2019-08-27T09:05:47.492Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/20/docker/docker-keycloak/</loc>
     
-    <lastmod>2019-08-27T09:05:47.489Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/20/docker/docker-kafka/</loc>
     
-    <lastmod>2019-08-27T09:05:47.487Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/10/20/docker/docker-elk/</loc>
     
-    <lastmod>2019-08-27T09:05:47.485Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/05/06/docker/Modifying-an-Existing-Docker-Image/</loc>
     
-    <lastmod>2019-08-27T09:05:47.482Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/01/ci/linux-CI-config/</loc>
     
-    <lastmod>2019-08-27T09:05:47.480Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/02/08/ceph/quickly-build-a-new-ceph-cluster-with-ceph-deploy-on-centos-7/</loc>
     
-    <lastmod>2019-08-27T09:05:47.477Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/01/10/cassandra/cassandra-beginning/</loc>
     
-    <lastmod>2019-08-27T09:05:47.473Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/08/04/auth-oauth2/oauth2-authentication-models/</loc>
     
-    <lastmod>2019-08-27T09:05:47.471Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2019/02/26/algorithm/probabilistic/birthday-paradox-problem/</loc>
     
-    <lastmod>2019-08-27T09:05:47.468Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/26/akka/streaming/akka-streams-learning/</loc>
     
-    <lastmod>2019-08-27T09:05:47.462Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/24/akka/streaming/akka-reactive-streams/</loc>
     
-    <lastmod>2019-08-27T09:05:47.460Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/07/26/akka/http/writing-an-api-client-with-akka-http/</loc>
     
-    <lastmod>2019-08-27T09:05:47.457Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/18/akka/http/spray-to-akka-http/</loc>
     
-    <lastmod>2019-08-27T09:05:47.455Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2017/05/23/akka/future/future-and-execute/</loc>
     
-    <lastmod>2019-08-27T09:05:47.452Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
   </url>
   
   <url>
     <loc>http://galudisu.info/2018/06/06/akka/ddata/Akka-Distributed-Data-Deep-Dive/</loc>
     
-    <lastmod>2019-08-27T09:05:47.448Z</lastmod>
+    <lastmod>2019-08-27</lastmod>
     
+  </url>
+  
+
+  <url>
+    <loc>http://galudisu.info/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>http://galudisu.info/tags/auth/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ceph/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/cassandra/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/gitlab/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/k8s/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/jenkins/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/harbor/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/docker-elk/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/teamcity/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/docker/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/docker-keycloak/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/elasticsearch/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/gentoo-linux/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/flink/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/gitlab-zh/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/scala/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/game/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/hadoop/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ideal/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/idea/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/jdk/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/jira/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/kubernetes/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/git/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/study/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/hexo/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/highlight/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/akka/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/actor/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/mongo/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/audio/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/mysql-lvs/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/5g/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/cap/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/cqrs/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/circuit-breaker-reactivemanifesto/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/scala-fp/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ubuntu/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/postgreSQL/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/react-redux-webpack-hot/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/react/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/typescript/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/spark/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/zookeeper/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/slick-hikariCP/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/scala-shapeless-typeclass/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/scala-type-level/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/youtrack/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/akka-typed/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/akka-streaming/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/gentoo/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ga-ml-scala/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/probabilistic/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ddd-shard/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/akka-ddd-cqrs/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/akka-scala-pattern/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ddd/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/scala-future/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/scala-magent-implicits-typeclasses/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ddata/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/react-redux/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/certificate/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/tags/ssl/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>http://galudisu.info/categories/oauth2/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/devOps/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/ci/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/algorithm/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/ubuntu/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/git/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/beginning/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/scala/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/php/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/sql/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/react/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/future/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/akka-http/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/akka/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/learning/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/streaming/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/k8s/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/categories/docker/</loc>
+    <lastmod>2021-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
   </url>
   
 </urlset>

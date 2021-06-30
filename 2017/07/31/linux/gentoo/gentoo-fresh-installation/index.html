@@ -1,25 +1,30 @@
-<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>Gentoo fresh installation</title><link rel="stylesheet" href="/css/layout.css">
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css"><link rel="shortcut icon" href="/img/favicon.ico"><!-- hexo-inject:begin --><!-- hexo-inject:end --></head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a href="/" class="menu-link">简单易懂の现代魔法</a></li><li class="menu-item"><a href="/archives/" class="menu-link">Archives</a></li><li class="menu-item"><a href="http://weibo.com/u/2360401155" class="menu-link">Weibo</a></li><li class="menu-item"><a href="/about" class="menu-link">About</a></li><li class="menu-item"><a href="/atom.xml" class="menu-link">Rss</a></li></ul></nav><div id="mobile-menu-toggle" class="toggle-menu"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">Gentoo fresh installation</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2017-07-31</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a href="/tags/gentoo/" class="tag-link">gentoo</a></p></div><div class="article-content"><p>Gentoo fresh installation through Virtualbox and livecd.</p>
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><p>Introduction:<br>
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><title>Gentoo fresh installation</title>
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="/css/vendors/rabbit-lyrics.css">
+<link rel="shortcut icon" href="/img/favicon.ico"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="简单易懂の现代魔法" type="application/atom+xml">
+</head><body><header class="base-menu"><div class="menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav></div></header><header class="base-mobile-menu"><div class="mobile-menu-wrapper"><div class="menu-layout-bg"></div><nav class="menu-content"><ul class="menu-list"><li class="menu-item"><a class="menu-link" href="/">简单易懂の现代魔法</a></li><li class="menu-item"><a class="menu-link" href="/archives/">Archives</a></li><li class="menu-item"><a class="menu-link" target="_blank" rel="noopener" href="http://weibo.com/u/2360401155">Weibo</a></li><li class="menu-item"><a class="menu-link" href="/about">About</a></li><li class="menu-item"><a class="menu-link" href="/atom.xml">Rss</a></li></ul></nav><div class="toggle-menu" id="mobile-menu-toggle"><span class="menu-bar"></span><span class="menu-bar"> </span><span class="menu-bar"></span></div></div></header><div class="base-content"><div class="base-content-main"><article class="article-main"><h1 class="article-title">Gentoo fresh installation</h1><div class="article-meta"><p class="meta-item meta-time"><span class="meta-item-title"></span><i class="icon-calendar"> </i>2017-07-31</p><p class="meta-item meta-tag"><span class="meta-item-title"></span><i class="icon-tag"> </i><a class="tag-link" href="/tags/gentoo/">gentoo</a></p></div><div class="article-content"><p>Gentoo fresh installation through Virtualbox and livecd.</p>
+<p>Introduction:<br>
 Gentoo are very customizable distro compared to others such as ubuntu. You can go easymode and use ubuntu cause ubuntu is for people that dont know how to use or install gentoo. Gentoo is totally free from 3rd party application or commercial.</p>
 <p>Note:<br>
 You better stick with Gentoo handbook until you know what you doing.<br>
 Learn from mistakes. Do it again until you familiar with your basic setting.</p>
-<a id="more"></a>
+<span id="more"></span>
 <p>Part 1: Partitioning the HDD (This Virtual HDD is 40gb as example and we will be using gparted)</p>
 <p>fdisk -l				View HDD details<br>
 parted -a optimal /dev/sda	Configuring HDD<br>
 mklabel gpt			Make label for HDD<br>
 unit Mib				This will set metric unit<br>
 mkpart primary 1 3		Creating grub partition (1 to 3 is HDD block unit count or ‘size’)<br>
-name 1 grub			Name it to 'grub’<br>
+name 1 grub			Name it to ‘grub’<br>
 set 1 bios_grub on		Enable the grub<br>
 mkpart primary 3 131		Creating boot partition (3 to 131 is HDD block unit count or ‘size’)<br>
-name 2 boot			Name it to 'boot’<br>
+name 2 boot			Name it to ‘boot’<br>
 mkpart primary 131 2179		Creating swap partition (131 to 2179 is HDD block unit count or ‘size’)<br>
 name 3 swap			Swap should be more than 1gb. We use 2gb (2048) as example<br>
 mkpart primary 2179 40000	Creating root partition (2179 to 20000 is HDD block unit count or ‘size’)<br>
-name 4 rootfs			Name it to 'rootfs’<br>
+name 4 rootfs			Name it to ‘rootfs’<br>
 set 2 boot on			Enable the boot<br>
 quit				Quit gparted</p>
 <p>Part 2: File System and mount (You can use any filesystem, we just do it simple)</p>
@@ -35,16 +40,16 @@ mount /dev/sda2 /mnt/gentoo/boot		Mounting boot partition</p>
 <p>Part 3: Set the clock and downloading the stage tarball</p>
 <p>date MMDDhhmmYYYY			Format is month - day - hour - minutes - year</p>
 <p>cd /mnt/gentoo				Go into root directory<br>
-ping -c 3 <a href="http://gentoo.org" target="_blank" rel="noopener">gentoo.org</a>			Ping the address. I assume you got ur internet running or you will<br>
-					need to figure it out by using ‘ifconfig’ or ‘net-setup’.<br>
-links <a href="http://www.gentoo.org/main/en/mirror.xml" target="_blank" rel="noopener">www.gentoo.org/main/en/mirror.xml</a>	Go to website and choose current stage 3 and download<br>
+ping -c 3 <a target="_blank" rel="noopener" href="http://gentoo.org">gentoo.org</a>			Ping the address. I assume you got ur internet running or you will<br>
+need to figure it out by using ‘ifconfig’ or ‘net-setup’.<br>
+links <a target="_blank" rel="noopener" href="http://www.gentoo.org/main/en/mirror.xml">www.gentoo.org/main/en/mirror.xml</a>	Go to website and choose current stage 3 and download<br>
 tar xvjpf ‘stage3’ --xattrs			Untar the compressed tarball</p>
 <p>Part 4: Configuring the make.conf</p>
 <p>nano -w /mnt/gentoo/etc/portage/make.conf		Open the make.conf and edit few things below<br>
-CFLAGS=&quot;-march=native -02 -pipe&quot;		March native will utilize CPU architecture<br>
-MAKEOPTS=&quot;-j4&quot;					Set the number of ur CPU cores plus 1 or any value<br>
+CFLAGS=“-march=native -02 -pipe”		March native will utilize CPU architecture<br>
+MAKEOPTS=“-j4”					Set the number of ur CPU cores plus 1 or any value<br>
 USE=“python icu bindist mmx sse sse2”		Set the basic USE flags.<br>
-ALSA_CARDS=&quot;&quot;					Sound Cards. (ex, hda-intel) This are not necessary because new kernel version already know your alsa cards<br>
+ALSA_CARDS=“”					Sound Cards. (ex, hda-intel) This are not necessary because new kernel version already know your alsa cards<br>
 VIDEO_CARDS=&quot; &quot;				Video Cards. (ex, nvidia) Dont put anything yet<br>
 INPUT_DEVICES=&quot; &quot;				Input Devices. (ex, keyboard) Dont put anything yet</p>
 <p>Both VIDEO_CARDS and INPUT_DEVICES are better to be add after successful boot and @world merge to avoid conflict.</p>
@@ -58,7 +63,7 @@ mount --rbind /dev /mnt/gentoo/dev<br>
 mount --make-rslave /mnt/gentoo/dev</p>
 <p>chroot /mnt/gentoo /bin/bash<br>
 source /etc/profile<br>
-export PS1=&quot;(chroot) $PS1&quot;<br>
+export PS1=“(chroot) $PS1”<br>
 emerge-webrsync			Or you can also ‘emerge --sync’ to sync all file</p>
 <p>Selecting the right profile. This are important because it will pull all lib and package dependencies depend on what you want to use. KDE, Gnome, Xfce, Plasma, Hardened all have different USE Flags and libs dependencies.<br>
 eselect profile list			Select profile to use. We will be using desktop for example<br>
@@ -68,16 +73,16 @@ eselect profile set X			Set the Plasma desktop profile</p>
 ls /usr/share/zoneinfo/‘ur country’			Choose country and state from list<br>
 echo “ur country/ur state” &gt; /etc/timezone		Save timezone info into /etc/timezone<br>
 emerge --config sys-libs/timezone-data		Install timezone configuration</p>
-<p>nano -w /etc/locale.gen				Edit locale.gen and set to 'local’<br>
+<p>nano -w /etc/locale.gen				Edit locale.gen and set to ‘local’<br>
 locale-gen					Generate locale<br>
 eselect locale list				Select appropriate locale<br>
 eselect locale set #				Set locale</p>
-<p>env-update &amp;&amp; source /etc/profile &amp;&amp; export PS1=&quot;(chroot) $PS1&quot;		Update the environment</p>
+<p>env-update &amp;&amp; source /etc/profile &amp;&amp; export PS1=“(chroot) $PS1”		Update the environment</p>
 <p>Note:<br>
 if occur SYNC setting found in make.conf. warning</p>
 <p>comment <code>sync</code></p>
 <p>vi /etc/portage/make.conf<br>
-GENTOO_MIRRORS=&quot;<a href="http://ftp.iij.ad.jp/pub/linux/gentoo/" target="_blank" rel="noopener">http://ftp.iij.ad.jp/pub/linux/gentoo/</a>&quot;<br>
+GENTOO_MIRRORS=“<a target="_blank" rel="noopener" href="http://ftp.iij.ad.jp/pub/linux/gentoo/">http://ftp.iij.ad.jp/pub/linux/gentoo/</a>”<br>
 SYNC=“rsync://rsync1.jp.gentoo.org/gentoo-portage”</p>
 <p>mkdir /etc/portage/repos.conf<br>
 cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf</p>
@@ -95,16 +100,16 @@ emerge genkernel					Install  kernel</p>
 sr0 are cd/dvd drive and iso9660 is its default kernel module. Adding ‘user’ will allow user to mount cd/dvd<br>
 When all done, save the configuration press ‘Ctrl + X’ to save press ‘Y’. And proceed to next step.</p>
 <p>genkernel --menuconfig all	This will open a GUI (Generated User Interface) kernel for customization<br>
-				Add your hostname in General Setup. When you done, save it to .config<br>
-				(by default name). Then exit. This will take a while to process.</p>
+Add your hostname in General Setup. When you done, save it to .config<br>
+(by default name). Then exit. This will take a while to process.</p>
 <p>emerge -av sys-kernel/linux-firmware		Apply linux firmware</p>
 <p>Part 8: Hostname and DHCP</p>
-<p>nano -w /etc/conf.d/hostname			Set hostname for &quot;localhost&quot;<br>
+<p>nano -w /etc/conf.d/hostname			Set hostname for “localhost”<br>
 ifconfig						View networking adapter and adapter name<br>
 emerge --ask --noreplace net-misc/netifrc<br>
 nano /etc/conf.d/net				Configure network adapter to use dhcp on boot. Make<br>
-						sure adapter name is same from ifconfig<br>
-						config_enp0s3=“dhcp”</p>
+sure adapter name is same from ifconfig<br>
+config_enp0s3=“dhcp”</p>
 <p>cd /etc/init.d<br>
 ln -s net.lo net.enp0s3				Prepares the adapter on boot<br>
 ls -lsa						View (list) net.lo is redirected to net.enp0s3</p>
@@ -133,14 +138,14 @@ shutdown -P now</p>
 cd /<br>
 rm /stage3-*.tar.bz2</p>
 <p>emerge -uvDNa world							This will pull all libs and dependencies needed for the selected profile and also update all the package. This will takes hours depends on your CPU and internet.<br>
-									It took more than 5 hours for me.</p>
+It took more than 5 hours for me.</p>
 <p>EXTRAS</p>
 <p>Part 13: Installing Xorg.</p>
 <p>Both VIDEO_CARDS and INPUT_DEVICES will need to be configured again with the appropriate cards and devices.<br>
 Depends on your cards, you might need to configure your kernel too because some nvidia provided driver conflicts with nouveu in kernel driver<br>
 I will use VIDEO_CARDS=“vesa intel fbdev” and INPUT_DEVICES=“evdev mouse keyboard” as test, because im building this Gentoo in virtual environment.<br>
 Add this In /etc/portage/make.conf</p>
-<p>VIDEO_CARDS=&quot;vesa intel fbdev&quot;<br>
+<p>VIDEO_CARDS=“vesa intel fbdev”<br>
 INPUT_DEVICES=“evdev mouse keyboard”</p>
 <p>When done, press ‘Ctrl + X’ to save and press ‘Y’.</p>
 <p>emerge -av xorg-drivers							Install the video cards<br>
@@ -216,7 +221,7 @@ emerge -av adobe</p>
 mount -t iso9660 /dev/sr0 /mnt/cdrom</p>
 <p>mkdir /mnt/usb<br>
 mount /dev/sdb1 /mnt/usb</p>
-<p><a href="https://gist.github.com/kidlj/f30e82c2c6f064990596" target="_blank" rel="noopener">https://gist.github.com/kidlj/f30e82c2c6f064990596</a> 		font config</p>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/kidlj/f30e82c2c6f064990596">https://gist.github.com/kidlj/f30e82c2c6f064990596</a> 		font config</p>
 <p>Any question, post in my channel. I’ll reply later.<br>
 I will upload the “Configuring WIFI” and “Installing Wine, Winetricks, 32bit Wineprefix, including Steam” in another video.</p>
 </div></article><div id="base-discus"><div id="disqus_thread"></div><script>var disqus_shortname = 'barudisshu-github-io';
@@ -229,21 +234,14 @@ var disqus_url = 'http://galudisu.info/2017/07/31/linux/gentoo/gentoo-fresh-inst
   dsq.async = true;
   dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
   (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();</script><script id="dsq-count-scr" src="//barudisshu-github-io.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2020 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready"><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css"><script src="/js/base.js"></script><script src="/js/rabbit-lyrics.js"></script></div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
-</script>
+})();</script><script id="dsq-count-scr" src="//#{theme.disqus}.disqus.com/count.js" async>  </script></div></div></div><footer class="base-footer"><div class="footer-wrapper"><span>©2016 - 2021 <a href="http://galudisu.info">barudisshu</a>, unless otherwise noted.</span></div></footer><div class="dom-ready">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for(i=0; i < all.length; i += 1) {
-      all[i].SourceElement().parentNode.className += ' has-jax';
-    }
-  });
-</script>
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
 
-<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
-</script>
-<!-- End: Injected MathJax -->
-<!-- hexo-inject:end --></body></html>
+<link rel="stylesheet" href="//cdn.bootcss.com/pace/1.0.2/themes/green/pace-theme-flash.min.css">
+
+<script src="/js/base.js"></script>
+
+<script src="/js/rabbit-lyrics.js"></script>
+</div></body></html>

@@ -1897,7 +1897,7 @@ body .dom-ready {
   right: 20px;
   width: 25px;
   height: 20px;
-  opacity: .5;
+  opacity: 0.5;
   cursor: pointer;
 }
 .base-mobile-menu .mobile-menu-wrapper .toggle-menu .menu-bar {
@@ -1998,5 +1998,5 @@ body .dom-ready {
 .base-footer .footer-wrapper {
   padding: 5px 0;
   text-align: right;
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
