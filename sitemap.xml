@@ -2,7 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://galudisu.info/2016/10/27/scala/04-fp-structure/</loc>
+    <loc>http://galudisu.info/2020/03/27/ci/devops-ha-design/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/08/26/gentoo/Gentoo-Enlightenment-Systemd/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/05/06/docker/Modifying-an-Existing-Docker-Image/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/02/08/kubernetes/kubernetes-04-theory-and-concpetion-md/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/01/10/cassandra/cassandra-beginning/</loc>
     
     <lastmod>2021-06-30</lastmod>
     
@@ -10,6 +38,216 @@
   
   <url>
     <loc>http://galudisu.info/2020/06/23/certificate/generate-server-client-pk/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_1_TypeScript_Basics/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/10/20/docker/docker-keycloak/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_a_Interacting_with_GraphQL_APIs/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_3_Getting_Started_with_React_and_TypeScript/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2017/11/13/pattern/ddd/dddfs/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/07/16/mysql/mysql-master-slave-config/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2017/10/09/pattern/magent/scala-method-overloading-and-default-argument-values/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/02/04/kubernetes/kubernetes-02-theory-and-concpetion-md/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2017/07/26/linux/gentoo/gentoo-install-guide/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/10/20/docker/docker-kafka/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_b_Unit_Testing_with_Jest/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/01/24/postgresql/postgresql-relational-databases-on-centos-7/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/10/20/docker/docker-elk/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_4_Routing_with_React_Router/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/10/22/spark/spark-hadoop-1/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/09/14/youtrack/youtrack-install/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/02/06/kubernetes/kubernetes-03-theory-and-concpetion-md/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2016/10/27/scala/06-functional-webapp/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/10/21/spark/spark-zookeeper-2/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/10/26/spark/spark-cluster-config/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/02/08/ceph/quickly-build-a-new-ceph-cluster-with-ceph-deploy-on-centos-7/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/05/22/elasticsearch/Elasticsearch-Cluster-Setup/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/10/21/jira/jira-install/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/09/27/gitlab/gitlab-ce-zh/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2018/10/21/spark/spark-zookeeper-1/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2017/08/11/intellij/docker-compose-idea-plugin/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/02/03/kubernetes/kubernetes-01-centos-installation/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2019/01/16/react/react-storybook-live-editing/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2020/03/04/spark/installation/</loc>
+    
+    <lastmod>2021-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://galudisu.info/2016/10/27/scala/04-fp-structure/</loc>
     
     <lastmod>2021-06-30</lastmod>
     
@@ -26,20 +264,6 @@
     <loc>http://galudisu.info/2020/07/30/musics/%E7%BF%B1%E7%BF%94%E5%A4%A9%E9%99%85%E3%81%AE%E4%BA%BA/</loc>
     
     <lastmod>2020-08-26</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/08/26/gentoo/Gentoo-Enlightenment-Systemd/</loc>
-    
-    <lastmod>2020-08-26</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/03/04/spark/installation/</loc>
-    
-    <lastmod>2020-07-13</lastmod>
     
   </url>
   
@@ -65,51 +289,9 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_b_Unit_Testing_with_Jest/</loc>
-    
-    <lastmod>2020-05-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_a_Interacting_with_GraphQL_APIs/</loc>
-    
-    <lastmod>2020-05-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_4_Routing_with_React_Router/</loc>
-    
-    <lastmod>2020-05-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_3_Getting_Started_with_React_and_TypeScript/</loc>
-    
-    <lastmod>2020-05-19</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/11/27/react-ts/chapter_1_TypeScript_Basics/</loc>
-    
-    <lastmod>2020-05-19</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2019/11/27/react-ts/chapter_8_React_Redux/</loc>
     
     <lastmod>2020-04-07</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2020/03/27/ci/devops-ha-design/</loc>
-    
-    <lastmod>2020-03-30</lastmod>
     
   </url>
   
@@ -163,13 +345,6 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2019/10/21/jira/jira-install/</loc>
-    
-    <lastmod>2019-11-05</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2018/07/24/algorithm/ga/genetic-algorithm/</loc>
     
     <lastmod>2019-08-27</lastmod>
@@ -185,41 +360,6 @@
   
   <url>
     <loc>http://galudisu.info/about/index.html</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/09/14/youtrack/youtrack-install/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/10/21/spark/spark-zookeeper-2/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/10/21/spark/spark-zookeeper-1/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/10/22/spark/spark-hadoop-1/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/10/26/spark/spark-cluster-config/</loc>
     
     <lastmod>2019-08-27</lastmod>
     
@@ -275,13 +415,6 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2016/10/27/scala/06-functional-webapp/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2016/10/27/scala/05-fp-practise/</loc>
     
     <lastmod>2019-08-27</lastmod>
@@ -331,13 +464,6 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2019/01/16/react/react-storybook-live-editing/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2018/11/19/react/react-redux-tutorial-beginners/</loc>
     
     <lastmod>2019-08-27</lastmod>
@@ -346,13 +472,6 @@
   
   <url>
     <loc>http://galudisu.info/2017/05/01/postgresql/ubuntu-install-postgresql/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/01/24/postgresql/postgresql-relational-databases-on-centos-7/</loc>
     
     <lastmod>2019-08-27</lastmod>
     
@@ -394,13 +513,6 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2017/10/09/pattern/magent/scala-method-overloading-and-default-argument-values/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2018/04/10/pattern/futures/Execute-Scala-Futures-in-serial-one-after-the-other-non-blocking/</loc>
     
     <lastmod>2019-08-27</lastmod>
@@ -422,21 +534,7 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2017/11/13/pattern/ddd/dddfs/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2018/04/27/pattern/akkas/Akka-Patterns/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/07/16/mysql/mysql-master-slave-config/</loc>
     
     <lastmod>2019-08-27</lastmod>
     
@@ -492,13 +590,6 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2017/07/26/linux/gentoo/gentoo-install-guide/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2017/07/31/linux/gentoo/gentoo-fresh-installation/</loc>
     
     <lastmod>2019-08-27</lastmod>
@@ -506,42 +597,7 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2019/02/08/kubernetes/kubernetes-04-theory-and-concpetion-md/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/02/06/kubernetes/kubernetes-03-theory-and-concpetion-md/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/02/04/kubernetes/kubernetes-02-theory-and-concpetion-md/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/02/03/kubernetes/kubernetes-01-centos-installation/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2017/05/01/java/ubuntu-oracle-jdk/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2017/08/11/intellij/docker-compose-idea-plugin/</loc>
     
     <lastmod>2019-08-27</lastmod>
     
@@ -569,21 +625,7 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2018/09/27/gitlab/gitlab-ce-zh/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2018/07/03/gentoo/Gentoo-Gnome-Systemd/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/05/22/elasticsearch/Elasticsearch-Cluster-Setup/</loc>
     
     <lastmod>2019-08-27</lastmod>
     
@@ -597,49 +639,7 @@
   </url>
   
   <url>
-    <loc>http://galudisu.info/2018/10/20/docker/docker-keycloak/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/10/20/docker/docker-kafka/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/10/20/docker/docker-elk/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/05/06/docker/Modifying-an-Existing-Docker-Image/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://galudisu.info/2017/05/01/ci/linux-CI-config/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2019/02/08/ceph/quickly-build-a-new-ceph-cluster-with-ceph-deploy-on-centos-7/</loc>
-    
-    <lastmod>2019-08-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://galudisu.info/2018/01/10/cassandra/cassandra-beginning/</loc>
     
     <lastmod>2019-08-27</lastmod>
     

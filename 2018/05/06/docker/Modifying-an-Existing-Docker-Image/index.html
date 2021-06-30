@@ -12,7 +12,7 @@
 <span id="more"></span>
 <h3><span id="running-a-docker-container-from-an-image">Running a docker container from an image</span></h3>
 <p>The command to do this is,</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it yhat/scienceops-python:0.0.2 /bin/bash</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it yhat/scienceops-python:0.0.2 /bin/bash</span><br></pre></td></tr></table></figure>
 <ul>
 <li>The -i tells docker to attach stdin to the container</li>
 <li>The -t tells docker to give us a pseudo-terminal</li>
@@ -20,19 +20,19 @@
 </ul>
 <h3><span id="modify-the-docker-container">Modify the docker container</span></h3>
 <p>Once we are in our container we can install package(s), and set environment variables</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install vim</span><br><span class="line">$ <span class="built_in">export</span> AWS_SECRET_KEY=mysecretkey123</span><br><span class="line">$ <span class="built_in">export</span> AWS_ACCESS_KEY=fooKey</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo apt-get install vim</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> AWS_SECRET_KEY=mysecretkey123</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">export</span> AWS_ACCESS_KEY=fooKey</span></span><br></pre></td></tr></table></figure>
 <p>When you are done modifying your container you must exit by running the exit command. Once we exit the container, we need to find the container ID by running</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
 <h3><span id="commit-the-changes-to-the-container-as-a-new-image">Commit the changes to the container as a new image</span></h3>
 <p>Copy the container ID for the container you just modified, and then run the docker commit command to commit changes to your container as an image.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit [options] [container ID] [repository:tag]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit [options] [container ID] [repository:tag]</span><br></pre></td></tr></table></figure>
 <p>An example docker commit command is the following.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit e8f0671518a2 yhat/scienceops-python:0.0.2</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit e8f0671518a2 yhat/scienceops-python:0.0.2</span><br></pre></td></tr></table></figure>
 <p>Note here! You must commit the changes with the same tags as the scienceops image on your system. To see your new image run.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
 <h3><span id="test-changes-made-to-image">Test changes made to image</span></h3>
 <p>To test your changes when adding an environment variable run the test command</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it yhat/scienceops-python:0.0.2 <span class="built_in">echo</span> <span class="variable">$AWS_SECRET_KEY</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> docker run -it yhat/scienceops-python:0.0.2 <span class="built_in">echo</span> <span class="variable">$AWS_SECRET_KEY</span></span></span><br></pre></td></tr></table></figure>
 </div></article><div id="base-discus"><div id="disqus_thread"></div><script>var disqus_shortname = 'barudisshu-github-io';
 var disqus_identifier = '2018/05/06/docker/Modifying-an-Existing-Docker-Image/';
 var disqus_title = 'Modifying an Existing Docker Image';

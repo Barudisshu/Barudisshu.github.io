@@ -55,7 +55,7 @@
 <ol start="6">
 <li>运行命令进行单元测试：</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm test</span><br></pre></td></tr></table></figure>
 <p>该命名启动后进入watch mode。意思是每次更改代码，它都持续运行检测更新。</p>
 <p><img src="/img/react-ts/test_pass.png" alt="test pass"></p>
 <ol start="7">
@@ -78,7 +78,7 @@
 <p>当我们保存更改后，测试通过了。</p>
 <h3><span id="understanding-jest-watch-options">Understanding Jest watch options</span></h3>
 <p>Jest在执行测试后，会提供给我们下面一些选项：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; Press f to run only failed tests.</span><br><span class="line">&gt; Press o to only run tests related to changed files.</span><br><span class="line">&gt; Press p to filter by a filename regex pattern.</span><br><span class="line">&gt; Press t to filter by a <span class="built_in">test</span> name regex pattern.</span><br><span class="line">&gt; Press q to quit watch mode.</span><br><span class="line">&gt; Press Enter to trigger a <span class="built_in">test</span> run.</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> Press f to run only failed tests.</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> Press o to only run tests related to changed files.</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> Press p to filter by a filename regex pattern.</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> Press t to filter by a <span class="built_in">test</span> name regex pattern.</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> Press q to quit watch mode.</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> Press Enter to trigger a <span class="built_in">test</span> run.</span></span><br></pre></td></tr></table></figure>
 <p>这些选项提供了可以特定测试的执行。</p>
 <h3><span id="adding-structure-to-unit-test-results">Adding structure to unit test results</span></h3>
 <p>随着单元测试实现的增加，为了易读性需要添加一些结构处理结果。Jest提供了一个<code>describe</code>函数对测试结果进行分组。使得对测试结果更易读。</p>
@@ -148,7 +148,7 @@
 <p>react-testing-library是一系列测试工具集。</p>
 <h3><span id="installing-react-testing-library">Installing react-testing-library</span></h3>
 <p>首先安装该工具：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev react-testing-library</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev react-testing-library</span><br></pre></td></tr></table></figure>
 <h3><span id="removing-css-class-references-from-our-test">Removing CSS class references from our test</span></h3>
 <ol>
 <li>导入相应的函数:</li>

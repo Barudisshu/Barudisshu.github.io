@@ -19,9 +19,9 @@
 </ul>
 <h2><span id="安装路由">安装路由</span></h2>
 <p>将React Router添加进项目中，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add react-router-dom</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add react-router-dom</span><br></pre></td></tr></table></figure>
 <p>以及将TypeScript版本的React Router添加到devDependency的开发依赖中，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add -D @types/react-router-dom</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add -D @types/react-router-dom</span><br></pre></td></tr></table></figure>
 <h2><span id="声明路由">声明路由</span></h2>
 <p>在页面我们需要使用<code>BrowserRouter</code>和<code>Route</code>组件。<code>BrowserRouter</code>是top-level组件，会寻找下层的<code>Route</code>组件以决定不同的页面路径。</p>
 <p>在引入<code>BrowserRouter</code>和<code>Route</code>之前，首先创建两个页面，</p>
@@ -255,7 +255,7 @@
 <ol start="5">
 <li>不幸的是，<code>URLsearchParams</code>没有在所有浏览器中实现，所以我们需要用到<code>url-search-params-polyfill</code>，</li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add -D url-search-params-polyfill</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add -D url-search-params-polyfill</span><br></pre></td></tr></table></figure>
 <ol start="6">
 <li>导入到<code>ProductPages.tsx</code>中，</li>
 </ol>
